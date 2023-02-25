@@ -2,6 +2,7 @@ package net.energogroup.akafist;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -53,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
         super.onPostResume();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         supToolBar = findViewById(R.id.supToolBar);
         setSupportActionBar(supToolBar);
         supToolBar.inflateMenu(R.menu.nav_menu);
