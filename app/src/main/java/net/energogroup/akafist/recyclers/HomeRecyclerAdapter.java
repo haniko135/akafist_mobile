@@ -71,11 +71,11 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
         }
         if (homeBlocksModels.get(position).getDate().equals("onlineMichael")){
             homeBlocksModels.get(position).setLinks(R.string.link_Michael);
-            homeBlocksModels.get(position).setAdditions("Трансляция арх. Михаил");
+            homeBlocksModels.get(position).setAdditions("Трансляция арх. Михаила");
         }
         if (homeBlocksModels.get(position).getDate().equals("onlineVarvara")){
             homeBlocksModels.get(position).setLinks(R.string.link_Varvara);
-            homeBlocksModels.get(position).setAdditions("Трансляция св. Варвара");
+            homeBlocksModels.get(position).setAdditions("Трансляция св. Варвары");
         }
         if (homeBlocksModels.get(position).getDate().equals("molitvyOfflain")){
             homeBlocksModels.get(position).setLinks(R.id.action_home2_to_linksFragment);

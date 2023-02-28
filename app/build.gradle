@@ -52,6 +52,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1'
     implementation 'androidx.work:work-runtime:2.8.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.25'
 
     //implementation files("C:/Users/Nastya/AppData/Local/Android/Sdk/platforms/android-33/android.jar")
 

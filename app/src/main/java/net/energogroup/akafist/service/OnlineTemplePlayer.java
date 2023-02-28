@@ -53,7 +53,6 @@ public class OnlineTemplePlayer extends Worker {
             OnlineTempleViewModel.getMediaPlayer().setOnCompletionListener(mediaPlayer -> {
                 OnlineTempleViewModel.initStage = true;
                 OnlineTempleViewModel.playPause = false;
-                //playStopButton.setImageResource(android.R.drawable.ic_media_play);
                 OnlineTempleViewModel.getMediaPlayer().stop();
                 OnlineTempleViewModel.getMediaPlayer().reset();
             });

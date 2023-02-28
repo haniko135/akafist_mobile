@@ -27,9 +27,10 @@ import net.energogroup.akafist.service.OnlineTemplePlayer;
  */
 public class OnlineTempleViewModel extends ViewModel {
     private static MediaPlayer mediaPlayer = new MediaPlayer();
-    private AudioManager audioManager;
+    private static AudioManager audioManager;
     public static boolean playPause;
     public static boolean initStage = true;
+    private static SeekBar volumeBar;
     private static ProgressDialog progressDialog;
     private ImageButton playStopButton;
 
@@ -39,6 +40,14 @@ public class OnlineTempleViewModel extends ViewModel {
 
     public static ProgressDialog getProgressDialog() {
         return progressDialog;
+    }
+
+    public static SeekBar getVolumeBar() {
+        return volumeBar;
+    }
+
+    public static AudioManager getAudioManager() {
+        return audioManager;
     }
 
     /**
@@ -54,13 +63,13 @@ public class OnlineTempleViewModel extends ViewModel {
         int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         int curValue = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
-        SeekBar volumeBar = view.findViewById(R.id.volumeBar);
+        volumeBar = view.findViewById(R.id.volumeBar);
         volumeBar.setMax(maxVolume);
         volumeBar.setProgress(curValue);
         volumeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i, 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i, AudioManager.FLAG_SHOW_UI);
             }
 
             @Override

@@ -12,10 +12,12 @@ import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.res.Configuration;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -26,6 +28,7 @@ import net.energogroup.akafist.R;
 
 import net.energogroup.akafist.databinding.ActivityMainBinding;
 import net.energogroup.akafist.service.NetworkConnection;
+import net.energogroup.akafist.viewmodel.OnlineTempleViewModel;
 
 /**
  * Класс главной активности
@@ -139,5 +142,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode ==   KeyEvent.KEYCODE_VOLUME_UP){
+            if(OnlineTempleViewModel.getAudioManager() != null && OnlineTempleViewModel.getVolumeBar() != null) {
+                OnlineTempleViewModel.getVolumeBar().setProgress(OnlineTempleViewModel.getAudioManager().getStreamVolume(AudioManager.STREAM_MUSIC));
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

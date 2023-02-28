@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.databinding.FragmentOnlineTempleBinding;
+import net.energogroup.akafist.service.NetworkConnection;
 import net.energogroup.akafist.viewmodel.OnlineTempleViewModel;
 
 /**
@@ -27,7 +28,7 @@ public class OnlineTempleFragment extends Fragment {
 
     public FragmentOnlineTempleBinding onlineTempleBinding;
     private String urlSound;
-    private MediaPlayer mediaPlayer;
+    private NetworkConnection networkConnection;
     private OnlineTempleViewModel onlineTempleViewModel;
 
     /**
@@ -52,8 +53,10 @@ public class OnlineTempleFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ViewModelProvider provider = new ViewModelProvider(this);
         onlineTempleViewModel = provider.get(OnlineTempleViewModel.class);
-        if(((AppCompatActivity)getActivity()).getSupportActionBar() != null)
-            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Трансляция общины");
+        if(((AppCompatActivity)getActivity()).getSupportActionBar() != null) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Трансляция общины");
+            networkConnection = new NetworkConnection(getContext().getApplicationContext());
+        }
     }
 
     /**
@@ -67,51 +70,40 @@ public class OnlineTempleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         onlineTempleBinding = FragmentOnlineTempleBinding.inflate(getLayoutInflater());
-        return onlineTempleBinding.getRoot();
-    }
 
-    /**
-     * Этот метод определяет основные переменные после создания фрагмента
-     * @param view View
-     * @param savedInstanceState Bundle
-     */
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        if (getArguments() != null) {
-            if (getActivity().getApplicationContext() != null) {
-                MainActivity.networkConnection.observe(getViewLifecycleOwner(), isChecked->{
-                    if (isChecked){
-                        onlineTempleBinding.noInternet2.setVisibility(View.INVISIBLE);
-                        urlSound = getArguments().getString("urlToSound");
-                        Log.d("ONLINE_TEMPLE_ERROR", urlSound);
-                        String soundTitle = getArguments().getString("soundTitle");
-                        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(soundTitle);
-                        onlineTempleBinding.stopPlayButton.setOnClickListener(view1 -> onlineTempleViewModel.play(getLayoutInflater(), getView(), urlSound));
-                    }else {
-                        onlineTempleBinding.noInternet2.setVisibility(View.VISIBLE);
-                    }
-                });
-            }
+        if (getArguments() != null && getActivity().getApplicationContext() != null) {
+            networkConnection.observe(getViewLifecycleOwner(), isChecked->{
+                if (isChecked){
+                    onlineTempleBinding.noInternet2.setVisibility(View.INVISIBLE);
+                    urlSound = getArguments().getString("urlToSound");
+                    Log.d("ONLINE_TEMPLE_ERROR", urlSound);
+                    String soundTitle = getArguments().getString("soundTitle");
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(soundTitle);
+                    onlineTempleBinding.stopPlayButton.setOnClickListener(view1 -> {
+                        onlineTempleViewModel.play(getLayoutInflater(), getView(), urlSound);
+                        String transName = soundTitle.substring(0,10);
+                        transName += " богослужения общины ";
+                        transName += soundTitle.substring(11, soundTitle.length());
+                        onlineTempleBinding.transName.setText(transName);
+                    });
+                }else {
+                    onlineTempleBinding.noInternet2.setVisibility(View.VISIBLE);
+                }
+            });
         }
+
+        return onlineTempleBinding.getRoot();
     }
 
     /**
      * Этот метод уничтожает фрагмент
      */
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         onlineTempleViewModel.checkPlaying();
-    }
-
-    /**
-     * Этот метод обрабатывает фоновую активность фрагмента
-     */
-    @Override
-    public void onPause() {
-        super.onPause();
-        onlineTempleViewModel.checkPlaying();
+        OnlineTempleViewModel.initStage = true;
+        OnlineTempleViewModel.playPause = false;
+        OnlineTempleViewModel.getMediaPlayer().reset();
     }
 }
