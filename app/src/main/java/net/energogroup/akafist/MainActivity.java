@@ -1,16 +1,20 @@
 package net.energogroup.akafist;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.os.Build;
@@ -24,7 +28,6 @@ import android.view.MenuItem;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import net.energogroup.akafist.R;
 
 import net.energogroup.akafist.databinding.ActivityMainBinding;
 import net.energogroup.akafist.service.NetworkConnection;
@@ -36,6 +39,17 @@ import net.energogroup.akafist.viewmodel.OnlineTempleViewModel;
  * @version 1.0.0
  */
 public class MainActivity extends AppCompatActivity {
+
+    @RequiresApi(api = Build.VERSION_CODES.R)
+    private final String[] PERMISSION_NOTIFICATION = {
+            Manifest.permission.POST_NOTIFICATIONS
+    };
+
+    private final String[] PERMISSION_STORAGE = {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.MANAGE_EXTERNAL_STORAGE
+    };
 
     public ActivityMainBinding binding;
     public static String secToken;
@@ -78,6 +92,15 @@ public class MainActivity extends AppCompatActivity {
         AkafistApplication akafistApplication = (AkafistApplication)getApplication();
         akafistApplication.globalIsChecked = isChecked;
         secToken = akafistApplication.secToken;
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+            verifyNotificationPerm();
+        }
+        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.R){
+            verifyStoragePerm();
+        }
+
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String description = "Для загрузки уведомления пользователя";
@@ -152,5 +175,18 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private void verifyNotificationPerm(){
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                ActivityCompat.requestPermissions(this, PERMISSION_NOTIFICATION, 2);
+            }
+        }
+    }
+    private void verifyStoragePerm() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, PERMISSION_STORAGE, 1);
+        }
     }
 }
