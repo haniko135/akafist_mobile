@@ -59,7 +59,13 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
         String tomorrow = dateFormat.format(tom);
 
         //назначение ссылок
-        holder.getMenuListBlock().setText(modelList.get(position).getDateTxt());
+        if(modelList.get(position).getDateTxt().equals("Онлайн-трансляция")){
+            String name = modelList.get(position).getDateTxt()+" "+modelList.get(position).getName();
+            holder.getMenuListBlock().setText(name);
+        }else {
+            holder.getMenuListBlock().setText(modelList.get(position).getDateTxt());
+        }
+
         if (modelList.get(position).getDate().equals("skypeConfs")){
             modelList.get(position).setLinks(R.id.action_menu_to_skypesFragment);
         }

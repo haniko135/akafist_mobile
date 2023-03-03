@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/cyrillic_old"
         android:padding="15dp"
+        android:textSize="22sp"
         android:text=""
         android:textColor="@color/white" />
 

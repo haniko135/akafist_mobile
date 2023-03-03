@@ -13,7 +13,8 @@
         android:textColor="@color/white"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
+        android:textSize="20sp"
         android:fontFamily="@font/cyrillic_old"
-        android:text="@string/hello_blank_fragment"/>
+        android:text=""/>
 
 </LinearLayout>

@@ -16,7 +16,7 @@
         android:layout_marginBottom="8dp"
         android:fontFamily="@font/cyrillic_old"
         android:padding="8dp"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:text=""
         android:textColor="@color/white"
         android:layout_weight="1"/>
