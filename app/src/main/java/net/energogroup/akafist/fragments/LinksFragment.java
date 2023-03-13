@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,11 +113,10 @@ public class LinksFragment extends Fragment {
 
         //список загруженных аудиофайлов
         downloadAudio = linksViewModel.getDownload(finalPath);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            downloadAudio.forEach(it -> {
-                downloadAudioNames.add(it.getName().substring(0, it.getName().length()-4));
-            });
-        }
+        downloadAudio.forEach(it -> {
+            Log.e("DOWNLOADDDD", it.getName());
+            downloadAudioNames.add(it.getName());
+        });
 
         //пользовательское соглашение
         /*binding.warningToUser.setVisibility(View.VISIBLE);
@@ -186,11 +186,9 @@ public class LinksFragment extends Fragment {
             binding.linksRoot.setRefreshing(true);
             downloadAudio = linksViewModel.getDownload(finalPath);
             downloadAudioNames.clear();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                downloadAudio.forEach(it -> {
-                    downloadAudioNames.add(it.getName().substring(0, it.getName().length()-4));
-                });
-            }
+            downloadAudio.forEach(it -> {
+                downloadAudioNames.add(it.getName());
+            });
             linksViewModel.retryGetJson(date, getLayoutInflater());
             binding.linksRoot.setRefreshing(false);
         });
@@ -204,8 +202,10 @@ public class LinksFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if(recyclerAdapter.playAudios != null) {
-            recyclerAdapter.playAudios.destroyPlayAudios();
+        if(recyclerAdapter != null) {
+            if (recyclerAdapter.playAudios != null) {
+                recyclerAdapter.playAudios.destroyPlayAudios();
+            }
         }
     }
 

@@ -205,7 +205,8 @@ public class LinksViewModel extends ViewModel {
         File[] files = directory.listFiles();
         if (files != null && files.length > 0)
         for (File file : files) {
-            downloadAudio.add(new LinksModel(fullPath + file.getName(), file.getName()));
+            String filename = file.getName().substring(0,file.getName().length()-4);
+            downloadAudio.add(new LinksModel(fullPath + file.getName(), filename));
         }
         return downloadAudio;
     }
