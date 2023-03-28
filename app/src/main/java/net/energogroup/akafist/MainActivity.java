@@ -31,6 +31,7 @@ import com.android.volley.toolbox.Volley;
 
 import net.energogroup.akafist.databinding.ActivityMainBinding;
 import net.energogroup.akafist.service.NetworkConnection;
+import net.energogroup.akafist.service.NotificationForPlay;
 import net.energogroup.akafist.viewmodel.OnlineTempleViewModel;
 
 /**
@@ -109,6 +110,10 @@ public class MainActivity extends AppCompatActivity {
             channel.setDescription(description);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
+
+            NotificationChannel channel2 = new NotificationChannel(NotificationForPlay.CHANNEL_ID,
+                    "Для отображения музыки", NotificationManager.IMPORTANCE_LOW);
+            notificationManager.createNotificationChannel(channel2);
         }
     }
 

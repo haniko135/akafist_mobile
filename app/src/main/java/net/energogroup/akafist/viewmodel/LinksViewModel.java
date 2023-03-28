@@ -46,6 +46,7 @@ public class LinksViewModel extends ViewModel {
     private MutableLiveData<List<LinksModel>> mutableLinksDate = new MutableLiveData<>();
     private List<LinksModel> downloadAudio = new ArrayList<>();
     private OneTimeWorkRequest workRequest;
+    private int image;
 
     /**
      * Этот метод возвращает текущее значение MutableLiveData<List<LinksModel>>
@@ -70,6 +71,7 @@ public class LinksViewModel extends ViewModel {
             JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, //получение данных
                     urlToGet, null, response -> {
                 JSONObject jsonObject;
+                image = R.mipmap.ic_launcher;
                 int id;
                 String url, name;
                 try {
@@ -79,7 +81,7 @@ public class LinksViewModel extends ViewModel {
                         id = jsonObject.getInt("id");
                         name = StringEscapeUtils.unescapeJava(jsonObject.getString("name"));
                         url = StringEscapeUtils.unescapeJava(jsonObject.getString("url"));
-                        linksModelList.add(new LinksModel(id, url, name));
+                        linksModelList.add(new LinksModel(id, url, name, image));
                         mutableLinksDate.setValue(linksModelList);
                         Log.e("PARSING", name);
                         i++;
@@ -101,10 +103,11 @@ public class LinksViewModel extends ViewModel {
             MainActivity.mRequestQueue.add(request);
         }
         else if(cas.equals("molitvyOfflain")){
+            image = R.mipmap.ic_launcher;
             List<String> molitvyName = Arrays.asList(inflater.getContext().getResources().getStringArray(R.array.molitvy_offline_audio_name));
             List<String> molitvyLink = Arrays.asList(inflater.getContext().getResources().getStringArray(R.array.molitvy_offline_audio_link));
             for (int i=0; i<molitvyName.size(); i++){
-                linksModelList.add(new LinksModel(molitvyLink.get(i), molitvyName.get(i)));
+                linksModelList.add(new LinksModel(molitvyLink.get(i), molitvyName.get(i), image));
             }
             mutableLinksDate.setValue(linksModelList);
         }

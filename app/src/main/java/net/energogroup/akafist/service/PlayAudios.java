@@ -1,7 +1,10 @@
 package net.energogroup.akafist.service;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
@@ -12,21 +15,27 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import net.energogroup.akafist.R;
+import net.energogroup.akafist.models.LinksModel;
 import net.energogroup.akafist.recyclers.AudioRecyclerAdapter;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Класс для воспроизведения аудиофайлов
  * @author Nastya Izotina
  * @version 1.0.0
  */
-public class PlayAudios {
+public class PlayAudios implements Serializable {
 
-    private final MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer;
     private final SeekBar seekBar;
     private final ImageButton playStopButton;
     private final TextView seekBarHint;
     private final Handler handler = new Handler();
     private final View view;
+    private boolean isPrepared = false;
+    private LinksModel linksModelPlay = new LinksModel();
     public static Runnable runnable;
 
     /**
@@ -36,17 +45,24 @@ public class PlayAudios {
         return mediaPlayer;
     }
 
+    public void setLinksModelPlay(LinksModel linksModelPlay) {
+        this.linksModelPlay.setId(linksModelPlay.getId());
+        this.linksModelPlay.setName(linksModelPlay.getName());
+        this.linksModelPlay.setUrl(linksModelPlay.getUrl());
+        this.linksModelPlay.setImage(linksModelPlay.getImage());
+    }
+
     /**
      * Конструктор класса PlayAudios, где объявляются основные параметры медиаплеера и сопуствующих
      * элементов. Есть в классе {@link AudioRecyclerAdapter}
      * @param name String - Ссылка на аудиофайл
      * @param context Context
      * @param view View
-     * @param text CharSequence - Название аудио
      */
     @SuppressLint("ClickableViewAccessibility")
-    public PlayAudios(String name, Context context, View view, CharSequence text){
+    public PlayAudios(String name, Context context, View view, LinksModel linksModel){
         this.view = view;
+        setLinksModelPlay(linksModel);
 
         this.mediaPlayer = MediaPlayer.create(context, Uri.parse(name));
         mediaPlayer.setVolume(0.5f, 0.5f);
@@ -61,6 +77,7 @@ public class PlayAudios {
         playStopButton = view.findViewById(R.id.imageButtonPlay);
         TextView textPlayer = view.findViewById(R.id.text_player);
 
+        CharSequence text = linksModel.getName();
         textPlayer.setVisibility(View.VISIBLE);
         textPlayer.setText(text);
 
@@ -107,6 +124,10 @@ public class PlayAudios {
                 }
             }
         });
+
+        isPrepared = true;
+        view.getContext().registerReceiver(broadcastReceiver, new IntentFilter("AUDIOS"));
+        view.getContext().startService(new Intent(view.getContext(), OnClearFromRecentService.class));
     }
 
     /**
@@ -144,21 +165,45 @@ public class PlayAudios {
      */
     public void playAndStop(){
         if (!mediaPlayer.isPlaying()) {
+            if(isPrepared){
+                NotificationForPlay.createNotification(view.getContext(), linksModelPlay, android.R.drawable.ic_media_pause);
+                isPrepared = false;
+            }
+            NotificationForPlay.createNotification(view.getContext(), linksModelPlay, android.R.drawable.ic_media_pause);
             playStopButton.setImageResource(android.R.drawable.ic_media_pause);
             mediaPlayer.start();
             Log.d("AUDIO_RECYCLER", "Started in");
         }else {
+            NotificationForPlay.createNotification(view.getContext(), linksModelPlay, android.R.drawable.ic_media_play);
             playStopButton.setImageResource(android.R.drawable.ic_media_play);
             mediaPlayer.pause();
             Log.d("AUDIO_RECYCLER", "Paused in");
         }
     }
 
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getExtras().getString("actionName");
+
+            if (Objects.equals(action, NotificationForPlay.ACTION_PLAY)){
+                if (mediaPlayer.isPlaying()){
+                    playAndStop();
+                    //NotificationForPlay.createNotification(view.getContext(), linksModelPlay, android.R.drawable.ic_media_play);
+                }else {
+                    playAndStop();
+                    //NotificationForPlay.createNotification(view.getContext(), linksModelPlay, android.R.drawable.ic_media_pause);
+                }
+            }
+        }
+    };
+
     /**
      * Этот метод уничтожает проигрывание аудиофайла
      */
     public void destroyPlayAudios() {
         mediaPlayer.stop();
+        view.getContext().unregisterReceiver(broadcastReceiver);
     }
 
 }

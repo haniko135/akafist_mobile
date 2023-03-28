@@ -22,6 +22,7 @@ import net.energogroup.akafist.service.PlayAudios;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -31,7 +32,7 @@ import java.util.List;
  * @author Nastya Izotina
  * @version 1.0.0
  */
-public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdapter.AudioViewHolder> {
+public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdapter.AudioViewHolder> implements Serializable {
 
     private MediaPlayer mediaPlayer;
     public PlayAudios playAudios;
@@ -41,6 +42,7 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
     private LinksFragment fragment;
     private List<LinksModel> audios;
     private List<String> audiosDown;
+    boolean recIsChecked;
 
     /**
      * Этот метод обновляет листы скачанных аудио и онлайн-аудио
@@ -116,26 +118,31 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
             fragment.urlForLink = urlForLink;
             fragment.fileName = audios.get(position).getName();
             MainActivity.networkConnection.observe(fragment.getViewLifecycleOwner(), isChecked->{
+                recIsChecked = isChecked;
                 if (isChecked){
                     fragment.binding.downloadLinkButton.setVisibility(View.VISIBLE);
-                    if (playAudios != null) {
-                        playAudios.destroyPlayAudios();
-                    }
-                    playAudios = new PlayAudios(urlPattern + urlForLink + "?alt=media", fragment.getContext(),
-                            fragment.getView(), audios.get(position).getName());
-                    mediaPlayer = playAudios.getMediaPlayer();
-                    playAudios.playAndStop();
                 }else {
                     fragment.binding.downloadLinkButton.setVisibility(View.GONE);
-                    if (playAudios != null) {
-                        playAudios.destroyPlayAudios();
-                    }
-                    playAudios = new PlayAudios(urlForLink, fragment.getContext(),
-                            fragment.getView(), audios.get(position).getName());
-                    mediaPlayer = playAudios.getMediaPlayer();
-                    playAudios.playAndStop();
                 }
             });
+
+            if(recIsChecked){
+                if (playAudios != null) {
+                    playAudios.destroyPlayAudios();
+                }
+                playAudios = new PlayAudios(urlPattern + urlForLink + "?alt=media", fragment.getContext(),
+                        fragment.getView(), audios.get(position));
+                mediaPlayer = playAudios.getMediaPlayer();
+                playAudios.playAndStop();
+            }else {
+                if (playAudios != null) {
+                    playAudios.destroyPlayAudios();
+                }
+                playAudios = new PlayAudios(urlForLink, fragment.getContext(),
+                        fragment.getView(), audios.get(position));
+                mediaPlayer = playAudios.getMediaPlayer();
+                playAudios.playAndStop();
+            }
         });
     }
 
