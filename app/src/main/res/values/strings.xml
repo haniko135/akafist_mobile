@@ -175,7 +175,7 @@
 
     <string name="playbuttonforlinks">playButtonForLinks</string>
     <string name="downloadbuttonfrolinks">downloadButtonFroLinks</string>
-
+    <string name="title_activity_start">Помощник чтеца</string>
 
 
     <string-array name="molitvy_offline_audio_name">
