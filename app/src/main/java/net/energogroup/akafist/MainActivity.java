@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     public ActivityMainBinding binding;
     public static String secToken;
     public static boolean isChecked = false;
+    public static String APP_PREFERENCES = "app_pref";
     public static final String CHANNEL_ID = "downloadNote";
     public static RequestQueue mRequestQueue;
     public static NetworkConnection networkConnection;
@@ -142,6 +143,9 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.menuFragment:
                 navController.navigate(R.id.action_global_menu);
+                return true;
+            case R.id.settingsFrag:
+                navController.navigate(R.id.action_global_settingsFragment);
                 return true;
             case R.id.quitApp:
                 MainActivity.this.finish();

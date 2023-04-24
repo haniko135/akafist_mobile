@@ -176,6 +176,8 @@
     <string name="playbuttonforlinks">playButtonForLinks</string>
     <string name="downloadbuttonfrolinks">downloadButtonFroLinks</string>
     <string name="title_activity_start">Помощник чтеца</string>
+    <string name="settings_name">Настройки</string>
+    <string name="login_quest">Вы являетесь сотрудником группы компаний Energogroup?</string>
 
 
     <string-array name="molitvy_offline_audio_name">

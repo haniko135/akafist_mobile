@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/routes"
-    app:startDestination="@id/home2">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/home2"
@@ -157,4 +157,28 @@
             android:id="@+id/action_churchFragment_to_prayerFragment"
             app:destination="@id/prayerFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="net.energogroup.akafist.fragments.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_home2"
+            app:destination="@id/home2" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_loginFragment"
+        app:destination="@id/loginFragment" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="net.energogroup.akafist.fragments.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_settingsFragment"
+        app:destination="@id/settingsFragment" />
 </navigation>

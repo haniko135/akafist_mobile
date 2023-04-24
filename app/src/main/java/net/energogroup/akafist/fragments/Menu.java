@@ -1,5 +1,7 @@
 package net.energogroup.akafist.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.databinding.FragmentMenuBinding;
 import net.energogroup.akafist.recyclers.MenuRecyclerAdapter;
 import net.energogroup.akafist.viewmodel.MenuViewModel;
@@ -51,7 +54,13 @@ public class Menu extends Fragment {
 
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Меню");
 
-        menuViewModel.firstSet();
+        SharedPreferences appPref = getActivity().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
+        String userName = appPref.getString("app_pref_username", "guest");
+        if(userName.startsWith("Guest_")){
+            menuViewModel.firstSet("guest");
+        }else {
+            menuViewModel.firstSet("energogroup");
+        }
         menuViewModel.getJson("menu");
     }
 

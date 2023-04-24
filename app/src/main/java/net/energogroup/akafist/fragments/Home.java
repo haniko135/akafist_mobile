@@ -1,5 +1,7 @@
 package net.energogroup.akafist.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,10 +9,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
 
 import net.energogroup.akafist.databinding.FragmentHomeBinding;
@@ -26,6 +31,8 @@ public class Home extends Fragment {
 
     private MenuViewModel menuViewModel;
     public FragmentHomeBinding homeBinding;
+    private SharedPreferences appPref;
+    private String userName;
     AppCompatActivity fragActivity;
 
     /**
@@ -56,7 +63,16 @@ public class Home extends Fragment {
             }
             ViewModelProvider provider = new ViewModelProvider(this);
             menuViewModel = provider.get(MenuViewModel.class);
-            menuViewModel.firstSet();
+
+            appPref = getActivity().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
+            userName = appPref.getString("app_pref_username", "guest");
+            Log.e("USERNAME", userName);
+            if(userName.startsWith("Guest_")){
+                menuViewModel.firstSet("guest");
+            }else {
+                menuViewModel.firstSet("energogroup");
+            }
+
             menuViewModel.getJson("home");
         }
 
@@ -79,6 +95,8 @@ public class Home extends Fragment {
         }
 
         homeBinding = FragmentHomeBinding.inflate(getLayoutInflater());
+
+        Toast.makeText(getContext(), "Вы вошли как "+userName, Toast.LENGTH_SHORT).show();
 
         Home fr = this;
         homeBinding.homeRv.setLayoutManager(new LinearLayoutManager(getContext()));

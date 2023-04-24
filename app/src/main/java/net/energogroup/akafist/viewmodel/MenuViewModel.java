@@ -44,8 +44,10 @@ public class MenuViewModel extends ViewModel {
     /**
      * Этот метод производит первую инициализацию списка блоков страниц "Главная" и "Меню"
      */
-    public void firstSet(){
-        blocksModelList.add(new HomeBlocksModel("skypeConfs", "Онлайн конференции", "для групп"));
+    public void firstSet(String mode){
+        if (mode.equals("energogroup")) {
+            blocksModelList.add(new HomeBlocksModel("skypeConfs", "Онлайн конференции", "для групп"));
+        }
         blocksModelList.add(new HomeBlocksModel("onlineMichael", "Онлайн-трансляция", "общины арх. Михаила"));
         blocksModelList.add(new HomeBlocksModel("onlineVarvara", "Онлайн-трансляция", "общины вмц. Варвары"));
         blocksModelList.add(new HomeBlocksModel("molitvyOfflain", "Молитвы", "оффлайн"));

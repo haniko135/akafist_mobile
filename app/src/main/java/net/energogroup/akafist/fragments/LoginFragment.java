@@ -1,0 +1,122 @@
+package net.energogroup.akafist.fragments;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.FragmentKt;
+
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+
+import net.energogroup.akafist.MainActivity;
+import net.energogroup.akafist.R;
+import net.energogroup.akafist.databinding.FragmentLoginBinding;
+import net.energogroup.akafist.viewmodel.LoginViewModel;
+
+import java.util.UUID;
+
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link LoginFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class LoginFragment extends Fragment {
+
+    public FragmentLoginBinding loginBinding;
+    private LoginViewModel authService;
+    private String name, email;
+    private SharedPreferences appPref;
+
+    public LoginFragment() {
+        // Required empty public constructor
+    }
+
+    public static LoginFragment newInstance() {
+        return new LoginFragment();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        appPref = getActivity().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
+
+        if(appPref.contains("app_pref_username") && appPref.contains("app_pref_email")){
+            FragmentKt.findNavController(this).navigate(R.id.action_loginFragment_to_home2);
+        }
+        ViewModelProvider provider = new ViewModelProvider(this);
+        authService = provider.get(LoginViewModel.class);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        loginBinding = FragmentLoginBinding.inflate(inflater, container, false);
+
+        loginBinding.warningToUserLogin.setVisibility(View.VISIBLE);
+        loginBinding.webViewLog.setVisibility(View.INVISIBLE);
+        loginBinding.loginRoot.setBackgroundColor(getResources().getColor(R.color.greyGrad));
+
+        loginBinding.warningToUserYesLogin.setOnClickListener(v -> {
+            authService.getFirst();
+
+            loginBinding.loginRoot.setBackgroundColor(getResources().getColor(R.color.white));
+            loginBinding.webViewLog.setVisibility(View.VISIBLE);
+            loginBinding.warningToUserLogin.setVisibility(View.INVISIBLE);
+
+            loginBinding.webViewLog.getSettings().setJavaScriptEnabled(true);
+            loginBinding.webViewLog.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+            loginBinding.webViewLog.setWebViewClient(new WebViewClient(){
+                public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request){
+                    if (request.getUrl().toString().startsWith("https://dev-knowledge-api.energogroup.org/auth/login#code"))
+                    {
+                        String code = request.getUrl().toString().substring(58);
+                        authService.getSecond(code);
+                        return true;
+                    } else {
+                        Log.e("URL_YES", "Clown");
+                        return false;
+                    }
+                }
+            });
+        });
+
+        loginBinding.warningToUserNoLogin.setOnClickListener(v -> {
+            SharedPreferences.Editor editor = appPref.edit();
+
+            UUID uuid = UUID.randomUUID();
+
+            editor.putString("app_pref_username", "Guest_" + uuid);
+            editor.putString("app_pref_email", uuid+"@guest");
+            editor.apply();
+            FragmentKt.findNavController(this).navigate(R.id.action_loginFragment_to_home2);
+        });
+
+        authService.getAuthorizationURL().observe(getViewLifecycleOwner(), s -> {
+            loginBinding.webViewLog.loadUrl(s);
+            Log.e("URL_LOGIN", s);
+        });
+
+        authService.getNameMLD().observe(getViewLifecycleOwner(), s -> {
+            name = authService.getNameMLD().getValue();
+            email = authService.getEmailMLD().getValue();
+
+            SharedPreferences.Editor editor = appPref.edit();
+
+            editor.putString("app_pref_username", name);
+            editor.putString("app_pref_email", email);
+            editor.apply();
+
+            FragmentKt.findNavController(this).navigate(R.id.action_loginFragment_to_home2);
+        });
+
+        return loginBinding.getRoot();
+    }
+}

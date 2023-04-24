@@ -14,5 +14,9 @@
         app:showAsAction="ifRoom"
         android:id="@+id/menuFragment"
         android:icon="@drawable/ic_baseline_menu_24"/>
+    <item android:title="@string/settings_name"
+        app:showAsAction="ifRoom"
+        android:id="@+id/settingsFrag"
+        android:icon="@drawable/ic_baseline_settings_24"/>
 
 </menu>
