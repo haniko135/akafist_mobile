@@ -4,16 +4,25 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.FragmentKt;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
@@ -21,6 +30,10 @@ import net.energogroup.akafist.R;
 import net.energogroup.akafist.databinding.FragmentHomeBinding;
 import net.energogroup.akafist.recyclers.HomeRecyclerAdapter;
 import net.energogroup.akafist.viewmodel.MenuViewModel;
+
+import org.w3c.dom.Text;
+
+import java.util.Objects;
 
 /**
  * Класс фрагмента "Главная"
@@ -33,13 +46,13 @@ public class Home extends Fragment {
     public FragmentHomeBinding homeBinding;
     private SharedPreferences appPref;
     private String userName;
+    private boolean isFirstTime = false;
     AppCompatActivity fragActivity;
 
     /**
      * Обязательный конструктор класса
      */
-    public Home() {
-    }
+    public Home() { }
 
     /**
      * Этот метод отвечает за создание класса фрагмента "Главная"
@@ -56,17 +69,18 @@ public class Home extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if((AppCompatActivity)getActivity() != null) {
+        if(getActivity() != null) {
             if (((AppCompatActivity)getActivity()).getSupportActionBar() != null){
                 fragActivity = (AppCompatActivity)getActivity();
                 ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getResources().getString(R.string.home_title));
             }
+
             ViewModelProvider provider = new ViewModelProvider(this);
             menuViewModel = provider.get(MenuViewModel.class);
 
             appPref = getActivity().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
             userName = appPref.getString("app_pref_username", "guest");
-            Log.e("USERNAME", userName);
+            Log.e("YOU_ARE_LOH", userName);
             if(userName.startsWith("Guest_")){
                 menuViewModel.firstSet("guest");
             }else {
@@ -96,7 +110,7 @@ public class Home extends Fragment {
 
         homeBinding = FragmentHomeBinding.inflate(getLayoutInflater());
 
-        Toast.makeText(getContext(), "Вы вошли как "+userName, Toast.LENGTH_SHORT).show();
+        Log.e("YOU_ARE_LOH", String.valueOf(appPref.getBoolean("app_pref_firstlogin", true)));
 
         Home fr = this;
         homeBinding.homeRv.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -112,5 +126,17 @@ public class Home extends Fragment {
         });
 
         return homeBinding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Snackbar.make(view.findViewById(R.id.home_root), "Вы вошли как " + userName, Snackbar.LENGTH_SHORT)
+                .setAction("Изменить", v -> {
+                    appPref.edit().remove("app_pref_username").remove("app_pref_email").apply();
+                    FragmentKt.findNavController(this).navigate(R.id.action_home2_to_loginFragment);
+                }).setActionTextColor(getResources().getColor(R.color.block_main))
+                .setBackgroundTint(getResources().getColor(R.color.white))
+                .setTextColor(getResources().getColor(R.color.black)).show();
     }
 }

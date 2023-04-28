@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.FragmentKt;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import net.energogroup.akafist.R;
 import net.energogroup.akafist.databinding.FragmentLoginBinding;
 import net.energogroup.akafist.viewmodel.LoginViewModel;
 
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -35,9 +37,7 @@ public class LoginFragment extends Fragment {
     private String name, email;
     private SharedPreferences appPref;
 
-    public LoginFragment() {
-        // Required empty public constructor
-    }
+    public LoginFragment() { }
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -46,13 +46,25 @@ public class LoginFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        appPref = getActivity().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
+        if(getActivity() != null) {
+            appPref = getActivity().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        if(appPref.contains("app_pref_username") && appPref.contains("app_pref_email")){
-            FragmentKt.findNavController(this).navigate(R.id.action_loginFragment_to_home2);
+            SharedPreferences.Editor editor = appPref.edit();
+            editor.apply();
+            Log.e("YOU_ARE_LOH", String.valueOf(appPref.getBoolean("app_pref_firstlogin", true))+"123");
+            if (appPref.getBoolean("app_pref_firstlogin", true)) {
+                editor.putBoolean("app_pref_firstlogin", false);
+                editor.apply();
+                guestFunc(editor);
+                FragmentKt.findNavController(this).navigate(R.id.action_loginFragment_to_home2);
+            } else {
+                if (appPref.contains("app_pref_username") && appPref.contains("app_pref_email")) {
+                    FragmentKt.findNavController(this).navigate(R.id.action_loginFragment_to_home2);
+                }
+            }
+            ViewModelProvider provider = new ViewModelProvider(this);
+            authService = provider.get(LoginViewModel.class);
         }
-        ViewModelProvider provider = new ViewModelProvider(this);
-        authService = provider.get(LoginViewModel.class);
     }
 
     @Override
@@ -90,12 +102,7 @@ public class LoginFragment extends Fragment {
 
         loginBinding.warningToUserNoLogin.setOnClickListener(v -> {
             SharedPreferences.Editor editor = appPref.edit();
-
-            UUID uuid = UUID.randomUUID();
-
-            editor.putString("app_pref_username", "Guest_" + uuid);
-            editor.putString("app_pref_email", uuid+"@guest");
-            editor.apply();
+            guestFunc(editor);
             FragmentKt.findNavController(this).navigate(R.id.action_loginFragment_to_home2);
         });
 
@@ -118,5 +125,16 @@ public class LoginFragment extends Fragment {
         });
 
         return loginBinding.getRoot();
+    }
+
+    public void guestFunc(SharedPreferences.Editor editor){
+        Random random = new Random();
+        int rand1 = random.nextInt(100);
+        int rand2 = random.nextInt(1000);
+        int rand3 = random.nextInt(7548);
+
+        editor.putString("app_pref_username", "Guest_" + rand1+"_"+rand2+"_"+rand3);
+        editor.putString("app_pref_email", rand1+"_"+rand2+"_"+rand3+"@guest");
+        editor.apply();
     }
 }
