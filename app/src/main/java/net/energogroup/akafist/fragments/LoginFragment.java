@@ -54,11 +54,14 @@ public class LoginFragment extends Fragment {
             Log.e("YOU_ARE_LOH", String.valueOf(appPref.getBoolean("app_pref_firstlogin", true))+"123");
             if (appPref.getBoolean("app_pref_firstlogin", true)) {
                 editor.putBoolean("app_pref_firstlogin", false);
+                editor.putBoolean("app_pref_first_login_snack", true);
                 editor.apply();
                 guestFunc(editor);
                 FragmentKt.findNavController(this).navigate(R.id.action_loginFragment_to_home2);
             } else {
                 if (appPref.contains("app_pref_username") && appPref.contains("app_pref_email")) {
+                    editor.putBoolean("app_pref_first_login_snack", true);
+                    editor.apply();
                     FragmentKt.findNavController(this).navigate(R.id.action_loginFragment_to_home2);
                 }
             }
@@ -102,6 +105,8 @@ public class LoginFragment extends Fragment {
 
         loginBinding.warningToUserNoLogin.setOnClickListener(v -> {
             SharedPreferences.Editor editor = appPref.edit();
+            editor.putBoolean("app_pref_first_login_snack", true);
+            editor.apply();
             guestFunc(editor);
             FragmentKt.findNavController(this).navigate(R.id.action_loginFragment_to_home2);
         });

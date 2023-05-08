@@ -73,37 +73,75 @@ public class MainActivity extends AppCompatActivity {
         super.onPostResume();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        unableNightTheme();
+        enableSupToolBar();
+        enableNavigation();
+        enableNetwork();
+        globals();
+        enablePermissions();
+        enableNotifications();
+    }
 
+    /**
+     * Этот метод отключает ночную тему
+     */
+    public void unableNightTheme(){
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+    }
 
+    /**
+     * Этот метод создаёт верхнюю панель
+     */
+    public void enableSupToolBar(){
         supToolBar = findViewById(R.id.supToolBar);
         setSupportActionBar(supToolBar);
         supToolBar.inflateMenu(R.menu.nav_menu);
         supToolBar.setTitle("Помощник чтеца");
+    }
 
-        NavHostFragment navHostFragment =
-                (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_fragment);
-
+    /**
+     * Этот метод создаёт навигацию между фрагментами
+     */
+    public void enableNavigation(){
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_fragment);
         navController = navHostFragment.getNavController();
         navController.setGraph(R.navigation.routes);
+    }
 
+    /**
+     * Этот метод создаёт отслеживание состояния сети
+     */
+    public void enableNetwork(){
         if(getApplicationContext() != null) {
             networkConnection = new NetworkConnection(getApplicationContext());
         }
+    }
 
+    /**
+     * Этот метод инициализирует глобальные переменные
+     */
+    public void globals(){
         AkafistApplication akafistApplication = (AkafistApplication)getApplication();
         akafistApplication.globalIsChecked = isChecked;
         secToken = akafistApplication.secToken;
+    }
 
+    /**
+     * Этот метод спрашивает разрешения у пользователя
+     */
+    public void enablePermissions(){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
             verifyNotificationPerm();
         }
         if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.R){
             verifyStoragePerm();
         }
+    }
 
-
-
+    /**
+     * Этот метод создаёт каналы уведомлений в приложении
+     */
+    public void enableNotifications(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String description = "Для загрузки уведомления пользователя";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;

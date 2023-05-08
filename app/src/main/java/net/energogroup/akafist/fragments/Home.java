@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -88,6 +89,14 @@ public class Home extends Fragment {
             }
 
             menuViewModel.getJson("home");
+
+            requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+                    requireActivity().finish();
+                    System.exit(0);
+                }
+            });
         }
 
     }
@@ -125,18 +134,20 @@ public class Home extends Fragment {
             homeBinding.homeSwipe.setRefreshing(false);
         });
 
-        return homeBinding.getRoot();
-    }
+        SharedPreferences.Editor editor = appPref.edit();
+        editor.apply();
+        if (appPref.getBoolean("app_pref_first_login_snack", true)) {
+            Snackbar.make(homeBinding.getRoot(), "Вы вошли как " + userName, Snackbar.LENGTH_LONG)
+                    .setAction("Изменить", v -> {
+                        appPref.edit().remove("app_pref_username").remove("app_pref_email").apply();
+                        FragmentKt.findNavController(this).navigate(R.id.action_home2_to_loginFragment);
+                    }).setActionTextColor(getResources().getColor(R.color.block_main))
+                    .setBackgroundTint(getResources().getColor(R.color.white))
+                    .setTextColor(getResources().getColor(R.color.black)).show();
+            editor.putBoolean("app_pref_first_login_snack", false);
+            editor.apply();
+        }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        Snackbar.make(view.findViewById(R.id.home_root), "Вы вошли как " + userName, Snackbar.LENGTH_SHORT)
-                .setAction("Изменить", v -> {
-                    appPref.edit().remove("app_pref_username").remove("app_pref_email").apply();
-                    FragmentKt.findNavController(this).navigate(R.id.action_home2_to_loginFragment);
-                }).setActionTextColor(getResources().getColor(R.color.block_main))
-                .setBackgroundTint(getResources().getColor(R.color.white))
-                .setTextColor(getResources().getColor(R.color.black)).show();
+        return homeBinding.getRoot();
     }
 }
