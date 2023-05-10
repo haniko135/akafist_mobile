@@ -1,6 +1,7 @@
 package net.energogroup.akafist.fragments;
 
-import android.os.Build;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import net.energogroup.akafist.dialogs.DialogLinks;
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
 
@@ -44,7 +46,8 @@ public class LinksFragment extends Fragment {
     private ArrayList<String> downloadAudioNames = new ArrayList<>();
     public String urlForLink;
     public String fileName;
-    private boolean isChecked; //для пользовательского соглашения
+    private SharedPreferences appPref;
+    public static boolean isChecked = false; //для пользовательского соглашения
     public FragmentLinksBinding binding;
 
     /**
@@ -83,6 +86,11 @@ public class LinksFragment extends Fragment {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(dateTxt);
             linksViewModel.getJson(date, getLayoutInflater());
         }
+
+        appPref = getActivity().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
+        if(appPref.contains("app_pref_checked")){
+            isChecked = appPref.getBoolean("app_pref_checked", false);
+        }
     }
 
     /**
@@ -114,34 +122,15 @@ public class LinksFragment extends Fragment {
         //список загруженных аудиофайлов
         downloadAudio = linksViewModel.getDownload(finalPath);
         downloadAudio.forEach(it -> {
-            Log.e("DOWNLOADDDD", it.getName());
             downloadAudioNames.add(it.getName());
         });
 
-        //пользовательское соглашение
-        /*binding.warningToUser.setVisibility(View.VISIBLE);
-        binding.molitvyPlayer.setVisibility(View.INVISIBLE);
-        binding.linksRv.setVisibility(View.INVISIBLE);
-        binding.linksRoot.setBackgroundColor(getResources().getColor(R.color.greyGrad));
+        if (!isChecked) {
+            SharedPreferences.Editor editor = appPref.edit();
+            DialogLinks dialogLinks = new DialogLinks(editor);
+            dialogLinks.show(requireActivity().getSupportFragmentManager(), "userAlertLinks");
+        }
 
-        binding.warningToUserYes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                binding.molitvyPlayer.setVisibility(View.VISIBLE);
-                binding.linksRv.setVisibility(View.VISIBLE);
-                binding.warningToUser.setVisibility(View.INVISIBLE);
-                binding.linksRoot.setBackgroundColor(getResources().getColor(R.color.white));
-                isChecked = true;
-                MainActivity.isChecked = isChecked;
-            }
-        });
-        binding.warningToUserNo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                isChecked = false;
-                FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_linksFragment_to_home2);
-            }
-        });*/
 
         if(getActivity().getApplicationContext() != null) {
             //проверка на наличие интернет-соединения

@@ -20,6 +20,7 @@ import android.webkit.WebViewClient;
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
 import net.energogroup.akafist.databinding.FragmentLoginBinding;
+import net.energogroup.akafist.dialogs.DialogLogin;
 import net.energogroup.akafist.viewmodel.LoginViewModel;
 
 import java.util.Random;
@@ -51,7 +52,6 @@ public class LoginFragment extends Fragment {
 
             SharedPreferences.Editor editor = appPref.edit();
             editor.apply();
-            Log.e("YOU_ARE_LOH", String.valueOf(appPref.getBoolean("app_pref_firstlogin", true))+"123");
             if (appPref.getBoolean("app_pref_firstlogin", true)) {
                 editor.putBoolean("app_pref_firstlogin", false);
                 editor.putBoolean("app_pref_first_login_snack", true);
@@ -75,41 +75,10 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         loginBinding = FragmentLoginBinding.inflate(inflater, container, false);
 
-        loginBinding.warningToUserLogin.setVisibility(View.VISIBLE);
-        loginBinding.webViewLog.setVisibility(View.INVISIBLE);
-        loginBinding.loginRoot.setBackgroundColor(getResources().getColor(R.color.greyGrad));
-
-        loginBinding.warningToUserYesLogin.setOnClickListener(v -> {
-            authService.getFirst();
-
-            loginBinding.loginRoot.setBackgroundColor(getResources().getColor(R.color.white));
-            loginBinding.webViewLog.setVisibility(View.VISIBLE);
-            loginBinding.warningToUserLogin.setVisibility(View.INVISIBLE);
-
-            loginBinding.webViewLog.getSettings().setJavaScriptEnabled(true);
-            loginBinding.webViewLog.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-            loginBinding.webViewLog.setWebViewClient(new WebViewClient(){
-                public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request){
-                    if (request.getUrl().toString().startsWith("https://dev-knowledge-api.energogroup.org/auth/login#code"))
-                    {
-                        String code = request.getUrl().toString().substring(58);
-                        authService.getSecond(code);
-                        return true;
-                    } else {
-                        Log.e("URL_YES", "Clown");
-                        return false;
-                    }
-                }
-            });
-        });
-
-        loginBinding.warningToUserNoLogin.setOnClickListener(v -> {
-            SharedPreferences.Editor editor = appPref.edit();
-            editor.putBoolean("app_pref_first_login_snack", true);
-            editor.apply();
-            guestFunc(editor);
-            FragmentKt.findNavController(this).navigate(R.id.action_loginFragment_to_home2);
-        });
+        if (!appPref.getBoolean("app_pref_firstlogin", true) && !appPref.contains("app_pref_username") && !appPref.contains("app_pref_email")) {
+            DialogLogin dialogLogin = new DialogLogin(authService, loginBinding, appPref, this);
+            dialogLogin.show(requireActivity().getSupportFragmentManager(), "userAlertLogin");
+        }
 
         authService.getAuthorizationURL().observe(getViewLifecycleOwner(), s -> {
             loginBinding.webViewLog.loadUrl(s);

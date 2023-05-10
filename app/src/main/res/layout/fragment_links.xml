@@ -126,39 +126,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/warningToUser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:padding="10dp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="200dp">
-
-        <TextView
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:text="@string/text_for_agreement"
-            android:textAlignment="center"
-            android:textSize="16sp" />
-
-        <Button
-            android:id="@+id/warningToUserYes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/agree_agreement" />
-
-        <Button
-            android:id="@+id/warningToUserNo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/disagree_agrrement" />
-    </LinearLayout>
-
     <TextView
         android:id="@+id/nothing_dowload"
         android:layout_width="wrap_content"
