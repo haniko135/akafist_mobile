@@ -1,5 +1,7 @@
 package net.energogroup.akafist.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -18,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
 
 import net.energogroup.akafist.databinding.FragmentPrayerBinding;
@@ -34,6 +37,7 @@ public class PrayerFragment extends Fragment {
     private String prevMenu;
     private int prayerId;
     private PrayerViewModel prayerViewModel;
+    private SharedPreferences appPref;
     FragmentPrayerBinding binding;
 
     /**
@@ -56,6 +60,7 @@ public class PrayerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        appPref = requireActivity().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
         if(getArguments() != null){
             prevMenu = getArguments().getString("prevMenu");
             prayerId = getArguments().getInt("prayerId");
@@ -94,8 +99,13 @@ public class PrayerFragment extends Fragment {
         if(getArguments() != null){
             prevMenu = getArguments().getString("prevMenu");
             prayerId = getArguments().getInt("largeText");
-            if(getArguments().get("textSize")!=null){
+            /*if(getArguments().get("textSize")!=null){
                 textSize = getArguments().getFloat("textSize");
+            } else{
+                textSize = getResources().getDimension(R.dimen.text_prayer);
+            }*/
+            if(appPref.contains("app_pref_text_size")){
+                textSize = appPref.getFloat("app_pref_text_size", getResources().getDimension(R.dimen.text_prayer));
             } else{
                 textSize = getResources().getDimension(R.dimen.text_prayer);
             }
@@ -124,6 +134,7 @@ public class PrayerFragment extends Fragment {
             switch (item.getItemId()){
                 case R.id.zoom_out:
                     textSize--;
+                    saveTextSize(textSize);
                     binding.textPrayer.setTextSize(convertToPx());
                     Log.i("PRAYER", Float.toString(textSize));
                     return true;
@@ -134,6 +145,7 @@ public class PrayerFragment extends Fragment {
                     return true;
                 case R.id.zoom_in:
                     textSize++;
+                    saveTextSize(textSize);
                     binding.textPrayer.setTextSize(convertToPx());
                     Log.i("PRAYER", Float.toString(textSize));
                     return true;
@@ -147,7 +159,6 @@ public class PrayerFragment extends Fragment {
                         Bundle bundle4 = new Bundle();
                         bundle4.putString("prevMenu", prevMenu);
                         bundle4.putInt("prayerId", prayerViewModel.getPrayersModel().getNext());
-                        bundle4.putFloat("textSize", textSize);
                         FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_self, bundle4);
                         return true;
                     }
@@ -161,7 +172,6 @@ public class PrayerFragment extends Fragment {
                         Bundle bundle2 = new Bundle();
                         bundle2.putString("prevMenu", prevMenu);
                         bundle2.putInt("prayerId", prayerViewModel.getPrayersModel().getPrev());
-                        bundle2.putFloat("textSize", textSize);
                         FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_self, bundle2);
                         return true;
                     }
@@ -178,5 +188,11 @@ public class PrayerFragment extends Fragment {
      */
     private float convertToPx(){
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, textSize, getContext().getResources().getDisplayMetrics());
+    }
+
+    public void saveTextSize(float textSize){
+        SharedPreferences.Editor editor = appPref.edit();
+        editor.putFloat("app_pref_text_size", textSize);
+        editor.apply();
     }
 }
