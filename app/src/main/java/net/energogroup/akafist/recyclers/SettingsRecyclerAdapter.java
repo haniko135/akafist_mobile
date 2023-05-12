@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
+import net.energogroup.akafist.dialogs.DialogTextSize;
 import net.energogroup.akafist.fragments.SettingsFragment;
 
 import java.util.List;
@@ -45,6 +46,11 @@ public class SettingsRecyclerAdapter extends RecyclerView.Adapter<SettingsRecycl
                 preferences = fragment.getActivity().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
                 preferences.edit().remove("app_pref_username").remove("app_pref_email").apply();
                 FragmentKt.findNavController(fragment).navigate(R.id.action_settingsFragment_to_loginFragment);
+            });
+        } else if (position == 1){
+            holder.getTextMenu().setOnClickListener(v -> {
+                DialogTextSize textSize = new DialogTextSize();
+                textSize.show(fragment.requireActivity().getSupportFragmentManager(), "userTextSizeDialog");
             });
         }
     }

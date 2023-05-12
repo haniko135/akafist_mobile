@@ -36,6 +36,7 @@ public class SettingsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         settingsNames.add("Изменить аккаунт");
+        settingsNames.add("Размер шрифта");
     }
 
     @Override
