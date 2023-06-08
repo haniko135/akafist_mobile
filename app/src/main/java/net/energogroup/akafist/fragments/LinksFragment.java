@@ -74,23 +74,8 @@ public class LinksFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null){
-            date = getArguments().getString("date");
-            if(getArguments().getString("dateTxt")!=null){
-                dateTxt = getArguments().getString("dateTxt");
-            }
-        }
-        ViewModelProvider provider = new ViewModelProvider(this);
-        linksViewModel = provider.get(LinksViewModel.class);
-        if((AppCompatActivity)getActivity() != null) {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(dateTxt);
-            linksViewModel.getJson(date, getLayoutInflater());
-        }
-
-        appPref = getActivity().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
-        if(appPref.contains("app_pref_checked")){
-            isChecked = appPref.getBoolean("app_pref_checked", false);
-        }
+        initializeLinks();
+        sharedPrefInit();
     }
 
     /**
@@ -127,7 +112,7 @@ public class LinksFragment extends Fragment {
 
         if (!isChecked) {
             SharedPreferences.Editor editor = appPref.edit();
-            DialogLinks dialogLinks = new DialogLinks(editor);
+            DialogLinks dialogLinks = new DialogLinks(editor, this);
             dialogLinks.show(requireActivity().getSupportFragmentManager(), "userAlertLinks");
         }
 
@@ -212,5 +197,27 @@ public class LinksFragment extends Fragment {
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(binding.getRoot().getContext());
         int NOTIFICATION_ID = 101;
         managerCompat.notify(NOTIFICATION_ID, builder.build());
+    }
+
+    public void initializeLinks(){
+        if (getArguments() != null){
+            date = getArguments().getString("date");
+            if(getArguments().getString("dateTxt")!=null){
+                dateTxt = getArguments().getString("dateTxt");
+            }
+        }
+        ViewModelProvider provider = new ViewModelProvider(this);
+        linksViewModel = provider.get(LinksViewModel.class);
+        if((AppCompatActivity)getActivity() != null) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(dateTxt);
+            linksViewModel.getJson(date, getLayoutInflater());
+        }
+    }
+
+    public void sharedPrefInit(){
+        appPref = getActivity().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
+        if(appPref.contains("app_pref_checked")){
+            isChecked = appPref.getBoolean("app_pref_checked", false);
+        }
     }
 }

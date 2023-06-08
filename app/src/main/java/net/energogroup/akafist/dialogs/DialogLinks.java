@@ -8,18 +8,22 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.FragmentKt;
 
 import net.energogroup.akafist.R;
 import net.energogroup.akafist.fragments.LinksFragment;
 
 public class DialogLinks extends DialogFragment {
 
-    SharedPreferences.Editor editor;
+    private SharedPreferences.Editor editor;
+    private Fragment fr;
 
     public DialogLinks() { }
 
-    public DialogLinks(SharedPreferences.Editor editor){
+    public DialogLinks(SharedPreferences.Editor editor, LinksFragment frag){
         this.editor = editor;
+        this.fr = frag;
     }
 
     @NonNull
@@ -39,6 +43,7 @@ public class DialogLinks extends DialogFragment {
                     editor.putBoolean("app_pref_checked", false);
                     editor.apply();
                     dialog.cancel();
+                    FragmentKt.findNavController(fr).navigate(R.id.action_linksFragment_to_home2);
                 });
 
         return builder.create();

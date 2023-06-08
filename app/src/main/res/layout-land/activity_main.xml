@@ -25,8 +25,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="parent"
-            app:defaultNavHost="true"
-            app:navGraph="@navigation/routes" />
+            app:defaultNavHost="true" />
 
         <FrameLayout
             android:id="@+id/fl_layout"

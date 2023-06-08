@@ -70,33 +70,10 @@ public class Home extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e("Home", "OnCreate");
         if(getActivity() != null) {
-            if (((AppCompatActivity)getActivity()).getSupportActionBar() != null){
-                fragActivity = (AppCompatActivity)getActivity();
-                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getResources().getString(R.string.home_title));
-            }
-
-            ViewModelProvider provider = new ViewModelProvider(this);
-            menuViewModel = provider.get(MenuViewModel.class);
-
-            appPref = getActivity().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
-            userName = appPref.getString("app_pref_username", "guest");
-            Log.e("YOU_ARE_LOH", userName);
-            if(userName.startsWith("Guest_")){
-                menuViewModel.firstSet("guest");
-            }else {
-                menuViewModel.firstSet("energogroup");
-            }
-
-            menuViewModel.getJson("home");
-
-            requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-                @Override
-                public void handleOnBackPressed() {
-                    requireActivity().finish();
-                    System.exit(0);
-                }
-            });
+            initializeHome();
+            onBackPressed();
         }
 
     }
@@ -118,8 +95,6 @@ public class Home extends Fragment {
         }
 
         homeBinding = FragmentHomeBinding.inflate(getLayoutInflater());
-
-        Log.e("YOU_ARE_LOH", String.valueOf(appPref.getBoolean("app_pref_firstlogin", true)));
 
         Home fr = this;
         homeBinding.homeRv.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -149,5 +124,36 @@ public class Home extends Fragment {
         }
 
         return homeBinding.getRoot();
+    }
+
+    private void initializeHome(){
+        if (((AppCompatActivity)getActivity()).getSupportActionBar() != null){
+            fragActivity = (AppCompatActivity)getActivity();
+            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getResources().getString(R.string.home_title));
+        }
+
+        ViewModelProvider provider = new ViewModelProvider(this);
+        menuViewModel = provider.get(MenuViewModel.class);
+
+        appPref = getActivity().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
+        userName = appPref.getString("app_pref_username", "guest");
+        Log.e("YOU_ARE_LOH", userName);
+        if(userName.startsWith("Guest_")){
+            menuViewModel.firstSet("guest");
+        }else {
+            menuViewModel.firstSet("energogroup");
+        }
+
+        menuViewModel.getJson("home");
+    }
+
+    private void onBackPressed(){
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                requireActivity().finish();
+                System.exit(0);
+            }
+        });
     }
 }

@@ -47,6 +47,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e("Login", "OnCreate");
         if(getActivity() != null) {
             appPref = getActivity().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
 
@@ -73,6 +74,7 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.e("Login", "OnCreateView");
         loginBinding = FragmentLoginBinding.inflate(inflater, container, false);
 
         if (!appPref.getBoolean("app_pref_firstlogin", true) && !appPref.contains("app_pref_username") && !appPref.contains("app_pref_email")) {
