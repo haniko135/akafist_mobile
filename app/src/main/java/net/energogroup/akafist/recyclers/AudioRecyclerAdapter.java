@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -113,6 +114,8 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
 
         //обработка нажатия на элемент списка
         holder.audiosListItem.setOnClickListener(view -> {
+            holder.audioProgressBar.setVisibility(View.VISIBLE);
+            Log.i("PROGRESS", String.valueOf(holder.audioProgressBar.getVisibility()));
             checkPlaying();
             urlForLink = audios.get(position).getUrl();
             fragment.urlForLink = urlForLink;
@@ -130,10 +133,13 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
                 if (playAudios != null) {
                     playAudios.destroyPlayAudios();
                 }
+
                 playAudios = new PlayAudios(urlPattern + urlForLink + "?alt=media", fragment.getContext(),
                         fragment.getView(), audios.get(position));
                 mediaPlayer = playAudios.getMediaPlayer();
                 playAudios.playAndStop();
+                holder.audioProgressBar.setVisibility(View.INVISIBLE);
+                Log.i("PROGRESS", String.valueOf(holder.audioProgressBar.getVisibility()));
             }else {
                 if (playAudios != null) {
                     playAudios.destroyPlayAudios();
@@ -142,6 +148,8 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
                         fragment.getView(), audios.get(position));
                 mediaPlayer = playAudios.getMediaPlayer();
                 playAudios.playAndStop();
+                holder.audioProgressBar.setVisibility(View.INVISIBLE);
+                Log.i("PROGRESS", String.valueOf(holder.audioProgressBar.getVisibility()));
             }
         });
     }
@@ -158,12 +166,14 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
         public TextView audiosListItem;
         public ImageView audioListItemDown;
         public ImageButton audioListItemDel;
+        public ProgressBar audioProgressBar;
 
         public AudioViewHolder(@NonNull View itemView) {
             super(itemView);
             this.audiosListItem = itemView.findViewById(R.id.audio_list_item);
             this.audioListItemDown = itemView.findViewById(R.id.audio_list_item_down);
             this.audioListItemDel = itemView.findViewById(R.id.audio_list_item_del);
+            this.audioProgressBar = itemView.findViewById(R.id.audio_progress_bar);
         }
     }
 

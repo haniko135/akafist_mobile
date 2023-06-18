@@ -21,6 +21,10 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    
+    <style name="ProgressBarLinks" parent="Theme.AppCompat.DayNight">
+        <item name="colorAccent">@android:color/holo_orange_light</item>
+    </style>
 
     <style name="Theme.Akafist.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 

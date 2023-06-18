@@ -23,6 +23,7 @@ public class LoginViewModel extends ViewModel {
     private MutableLiveData<String> refreshToken = new MutableLiveData<>();
     private MutableLiveData<String> nameMLD = new MutableLiveData<>();
     private MutableLiveData<String> emailMLD = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isHostUnavailable = new MutableLiveData<>();
     private String codeVerifier;
 
 
@@ -30,6 +31,7 @@ public class LoginViewModel extends ViewModel {
         return authorizationURL;
     }
 
+    public MutableLiveData<Boolean> getIsHostUnavailable() { return isHostUnavailable; }
 
     public MutableLiveData<String> getNameMLD() { return nameMLD; }
 
@@ -45,11 +47,18 @@ public class LoginViewModel extends ViewModel {
                 authURL = response.getString("authorizationUrl");
                 codeVerifier = codeVerif;
                 authorizationURL.setValue(authURL);
+                isHostUnavailable.setValue(false);
+                Log.e("LVM", "in request");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-        }, Throwable::printStackTrace){
+        }, error -> {
+            if (error.networkResponse == null){
+                isHostUnavailable.setValue(true);
+                Log.e("LVM", "inerror");
+            }
+        }){
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
