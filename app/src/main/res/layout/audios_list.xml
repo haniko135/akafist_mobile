@@ -8,6 +8,7 @@
     style="@style/block_main_home"
     android:layout_margin="20dp">
 
+
     <TextView
         android:id="@+id/audio_list_item"
         android:layout_height="wrap_content"
@@ -43,10 +44,5 @@
         android:layout_marginStart="5dp"
         android:visibility="gone"/>
 
-    <ProgressBar
-        android:id="@+id/audio_progress_bar"
-        android:visibility="invisible"
-        android:theme="@style/ProgressBarLinks"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+
 </LinearLayout>

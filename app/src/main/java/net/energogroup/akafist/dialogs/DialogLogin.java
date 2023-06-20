@@ -79,8 +79,8 @@ public class DialogLogin extends DialogFragment {
                             editor.putString("app_pref_email", rand1+"_"+rand2+"_"+rand3+"@guest");
                             editor.apply();
 
-                            FragmentKt.findNavController(fragment).navigate(R.id.action_loginFragment_to_home2);
                             dialog.cancel();
+                            FragmentKt.findNavController(fragment).navigate(R.id.action_loginFragment_to_home2);
                         }
                     });
 

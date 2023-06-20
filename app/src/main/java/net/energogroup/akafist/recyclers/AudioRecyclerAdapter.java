@@ -1,6 +1,7 @@
 package net.energogroup.akafist.recyclers;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.util.Log;
@@ -43,6 +44,7 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
     private LinksFragment fragment;
     private List<LinksModel> audios;
     private List<String> audiosDown;
+    private ProgressDialog progressDialog;
     boolean recIsChecked;
 
     /**
@@ -114,8 +116,7 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
 
         //обработка нажатия на элемент списка
         holder.audiosListItem.setOnClickListener(view -> {
-            holder.audioProgressBar.setVisibility(View.VISIBLE);
-            Log.i("PROGRESS", String.valueOf(holder.audioProgressBar.getVisibility()));
+            progressDialog = new ProgressDialog(fragment.getContext());
             checkPlaying();
             urlForLink = audios.get(position).getUrl();
             fragment.urlForLink = urlForLink;
@@ -123,6 +124,8 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
             MainActivity.networkConnection.observe(fragment.getViewLifecycleOwner(), isChecked->{
                 recIsChecked = isChecked;
                 if (isChecked){
+                    progressDialog.setMessage("Загружается...");
+                    progressDialog.show();
                     fragment.binding.downloadLinkButton.setVisibility(View.VISIBLE);
                 }else {
                     fragment.binding.downloadLinkButton.setVisibility(View.GONE);
@@ -138,8 +141,7 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
                         fragment.getView(), audios.get(position));
                 mediaPlayer = playAudios.getMediaPlayer();
                 playAudios.playAndStop();
-                holder.audioProgressBar.setVisibility(View.INVISIBLE);
-                Log.i("PROGRESS", String.valueOf(holder.audioProgressBar.getVisibility()));
+                progressDialog.cancel();
             }else {
                 if (playAudios != null) {
                     playAudios.destroyPlayAudios();
@@ -148,8 +150,7 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
                         fragment.getView(), audios.get(position));
                 mediaPlayer = playAudios.getMediaPlayer();
                 playAudios.playAndStop();
-                holder.audioProgressBar.setVisibility(View.INVISIBLE);
-                Log.i("PROGRESS", String.valueOf(holder.audioProgressBar.getVisibility()));
+                progressDialog.cancel();
             }
         });
     }
@@ -166,14 +167,12 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
         public TextView audiosListItem;
         public ImageView audioListItemDown;
         public ImageButton audioListItemDel;
-        public ProgressBar audioProgressBar;
 
         public AudioViewHolder(@NonNull View itemView) {
             super(itemView);
             this.audiosListItem = itemView.findViewById(R.id.audio_list_item);
             this.audioListItemDown = itemView.findViewById(R.id.audio_list_item_down);
             this.audioListItemDel = itemView.findViewById(R.id.audio_list_item_del);
-            this.audioProgressBar = itemView.findViewById(R.id.audio_progress_bar);
         }
     }
 
