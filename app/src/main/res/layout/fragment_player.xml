@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    app:behavior_hideable="true"
+    tools:context=".fragments.PlayerFragment">
+
+    <LinearLayout
+        android:id="@+id/molitvy_player"
+        style="@style/molitvyPlayer"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:layout_gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/text_player"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/cyrillic_old"
+            android:text=""
+            android:textAlignment="center"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:id="@+id/durationPlayer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/seekBarDurTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="0:0" />
+
+            <SeekBar
+                android:id="@+id/durationBarMolitvy"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp" />
+
+            <TextView
+                android:id="@+id/seekBarMaxTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="0:0" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/playBarPlayer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/imageButtonPlay"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/playbuttonforlinks"
+                android:paddingVertical="15dp"
+                android:src="@android:drawable/ic_media_play"
+                tools:ignore="NestedWeights" />
+
+            <ImageButton
+                android:id="@+id/downloadLinkButton"
+                android:layout_width="40dp"
+                android:layout_height="34dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/downloadbuttonfrolinks"
+                android:elevation="2dp"
+                android:src="@drawable/ic_baseline_download_24" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

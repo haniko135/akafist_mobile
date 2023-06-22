@@ -24,12 +24,16 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import net.energogroup.akafist.databinding.ActivityMainBinding;
+import net.energogroup.akafist.fragments.PlayerFragment;
 import net.energogroup.akafist.service.NetworkConnection;
 import net.energogroup.akafist.service.NotificationForPlay;
 import net.energogroup.akafist.viewmodel.OnlineTempleViewModel;
@@ -62,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
     NavController navController;
     public Toolbar supToolBar;
 
+    public static BottomSheetBehavior playerBehavior;
+
     /**
      * Этот метод инициализирует главную активность приложения
      * @param savedInstanceState Bundle - текцщее состояние приложения
@@ -77,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         enableSupToolBar();
         enableNavigation();
         enableNetwork();
+        enablePlayer();
         globals();
         enablePermissions();
         enableNotifications();
@@ -136,6 +143,33 @@ public class MainActivity extends AppCompatActivity {
         if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.R){
             verifyStoragePerm();
         }
+    }
+
+    public void enablePlayer(){
+        playerBehavior = BottomSheetBehavior.from(binding.player.getRoot());
+        playerBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        Log.e("MAIN_ACTIVITY_STATE", playerBehavior.toString());
+        playerBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState){
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        bottomSheet.setClickable(false);
+                        break;
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                        bottomSheet.setClickable(false);
+                        binding.player.molitvyPlayer.setVisibility(View.VISIBLE);
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+
+        PlayerFragment.newInstance();
     }
 
     /**

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.media.MediaPlayer;
 import android.os.Build;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +15,20 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentResultListener;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
 import net.energogroup.akafist.fragments.LinksFragment;
+import net.energogroup.akafist.fragments.PlayerFragment;
 import net.energogroup.akafist.models.LinksModel;
 import net.energogroup.akafist.service.PlayAudios;
+import net.energogroup.akafist.viewmodel.PlayerViewModel;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,9 +50,12 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
     private final String urlPattern = "https://getfile.dokpub.com/yandex/get/";
 
     private LinksFragment fragment;
+
+    private PlayerViewModel playerViewModel;
     private List<LinksModel> audios;
     private List<String> audiosDown;
     private ProgressDialog progressDialog;
+
     boolean recIsChecked;
 
     /**
@@ -61,6 +72,7 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
         this.fragment = fragment;
         this.audios = audios;
         this.audiosDown = audiosDownNames;
+        playerViewModel = new ViewModelProvider(fragment).get(PlayerViewModel.class);
     }
 
     public AudioRecyclerAdapter(List<LinksModel> audios, LinksFragment fragment){
@@ -137,19 +149,26 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
                     playAudios.destroyPlayAudios();
                 }
 
-                playAudios = new PlayAudios(urlPattern + urlForLink + "?alt=media", fragment.getContext(),
+                /*playAudios = new PlayAudios(urlPattern + urlForLink + "?alt=media", fragment.getContext(),
                         fragment.getView(), audios.get(position));
                 mediaPlayer = playAudios.getMediaPlayer();
-                playAudios.playAndStop();
+                playAudios.playAndStop();*/
+
+                if(MainActivity.playerBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN){
+                    MainActivity.playerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+                playerViewModel.setWorkMode("audioPrayers");
+                playerViewModel.setUrlForAudio(urlForLink);
+
                 progressDialog.cancel();
             }else {
                 if (playAudios != null) {
                     playAudios.destroyPlayAudios();
                 }
-                playAudios = new PlayAudios(urlForLink, fragment.getContext(),
+                /*playAudios = new PlayAudios(urlForLink, fragment.getContext(),
                         fragment.getView(), audios.get(position));
                 mediaPlayer = playAudios.getMediaPlayer();
-                playAudios.playAndStop();
+                playAudios.playAndStop();*/
                 progressDialog.cancel();
             }
         });

@@ -16,8 +16,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.FragmentKt;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import net.energogroup.akafist.R;
 import net.energogroup.akafist.databinding.FragmentLoginBinding;
 import net.energogroup.akafist.fragments.LoginFragment;
@@ -47,6 +45,7 @@ public class DialogLogin extends DialogFragment {
         builder.setMessage(requireActivity().getResources().getString(R.string.login_quest))
                 .setPositiveButton("Да", (dialog, which) -> {
                     authService.getFirst();
+
                     authService.getIsHostUnavailable().observe(fragment, aBoolean -> {
                         if(!aBoolean){
                             loginBinding.webViewLog.getSettings().setJavaScriptEnabled(true);

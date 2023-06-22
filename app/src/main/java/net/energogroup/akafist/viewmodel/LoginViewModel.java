@@ -31,7 +31,9 @@ public class LoginViewModel extends ViewModel {
         return authorizationURL;
     }
 
-    public MutableLiveData<Boolean> getIsHostUnavailable() { return isHostUnavailable; }
+    public MutableLiveData<Boolean> getIsHostUnavailable() {
+        return isHostUnavailable;
+    }
 
     public MutableLiveData<String> getNameMLD() { return nameMLD; }
 
@@ -48,7 +50,6 @@ public class LoginViewModel extends ViewModel {
                 codeVerifier = codeVerif;
                 authorizationURL.setValue(authURL);
                 isHostUnavailable.setValue(false);
-                Log.e("LVM", "in request");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -56,7 +57,6 @@ public class LoginViewModel extends ViewModel {
         }, error -> {
             if (error.networkResponse == null){
                 isHostUnavailable.setValue(true);
-                Log.e("LVM", "inerror");
             }
         }){
             @Override
