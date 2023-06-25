@@ -68,6 +68,10 @@ public class MainActivity extends AppCompatActivity {
 
     public static BottomSheetBehavior playerBehavior;
 
+    public ActivityMainBinding getBinding() {
+        return binding;
+    }
+
     /**
      * Этот метод инициализирует главную активность приложения
      * @param savedInstanceState Bundle - текцщее состояние приложения
@@ -146,15 +150,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void enablePlayer(){
-        playerBehavior = BottomSheetBehavior.from(binding.player.getRoot());
-        playerBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        Log.e("MAIN_ACTIVITY_STATE", playerBehavior.toString());
-        playerBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+
+        binding.mainLayout.playerContainer.setVisibility(View.GONE);
+
+        //playerBehavior = BottomSheetBehavior.from(binding.player.getRoot());
+
+        /*getSupportFragmentManager().beginTransaction()
+                .replace(R.id.player, new PlayerFragment())
+                .commit();*/
+        //playerBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        //Log.e("MAIN_ACTIVITY_STATE", playerBehavior.toString());
+        /*playerBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 switch (newState){
                     case BottomSheetBehavior.STATE_HIDDEN:
                         bottomSheet.setClickable(false);
+                        binding.player.molitvyPlayer.setVisibility(View.GONE);
                         break;
                     case BottomSheetBehavior.STATE_COLLAPSED:
                         bottomSheet.setClickable(false);
@@ -167,9 +179,10 @@ public class MainActivity extends AppCompatActivity {
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
 
             }
-        });
+        });*/
 
-        PlayerFragment.newInstance();
+        //PlayerFragment.newInstance();
+
     }
 
     /**

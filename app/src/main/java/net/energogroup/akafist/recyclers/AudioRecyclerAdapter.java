@@ -56,6 +56,8 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
     private List<String> audiosDown;
     private ProgressDialog progressDialog;
 
+    MainActivity mainActivity;
+
     boolean recIsChecked;
 
     /**
@@ -72,7 +74,7 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
         this.fragment = fragment;
         this.audios = audios;
         this.audiosDown = audiosDownNames;
-        playerViewModel = new ViewModelProvider(fragment).get(PlayerViewModel.class);
+        playerViewModel = new ViewModelProvider(fragment.getActivity()).get(PlayerViewModel.class);
     }
 
     public AudioRecyclerAdapter(List<LinksModel> audios, LinksFragment fragment){
@@ -86,6 +88,7 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.audios_list, parent, false);
         return new AudioViewHolder(itemView);
     }
+
 
     /**
      * Этот метод отвечает за логику, происходящую в каждом элементе RecyclerView
@@ -154,11 +157,20 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
                 mediaPlayer = playAudios.getMediaPlayer();
                 playAudios.playAndStop();*/
 
-                if(MainActivity.playerBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN){
-                    MainActivity.playerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                }
                 playerViewModel.setWorkMode("audioPrayers");
-                playerViewModel.setUrlForAudio(urlForLink);
+                playerViewModel.setUrlForAudio(urlPattern + urlForLink + "?alt=media");
+                playerViewModel.setLinksModel(audios.get(position));
+
+                Log.e("ARA", "after viewmodel");
+
+                mainActivity = (MainActivity) fragment.getActivity();
+
+                mainActivity.binding.mainLayout.playerContainer.setVisibility(View.VISIBLE);
+
+               /* if(MainActivity.playerBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN){
+                    MainActivity.playerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }*/
+                //fragment.getParentFragmentManager().beginTransaction().add(R.id.nav_fragment, new PlayerFragment()).commit();
 
                 progressDialog.cancel();
             }else {

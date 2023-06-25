@@ -58,7 +58,8 @@ public class PlayerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.e("PLAYER_FRAGMENT", "ON_CREATE");
-        playerViewModel = new ViewModelProvider(this).get(PlayerViewModel.class);
+        playerViewModel = new ViewModelProvider(getActivity()).get(PlayerViewModel.class);
+        playerViewModel.setWorkMode("background");
     }
 
     @Override
@@ -67,22 +68,28 @@ public class PlayerFragment extends Fragment {
         playerBinding = FragmentPlayerBinding.inflate(inflater, container, false);
         fragActivity = new AppCompatActivity();
         mainActivity = new MainActivity();
+        Log.e("PLAYER_FRAGMENT", "ON_CREATE_VIEW");
 
-        playerViewModel.getWorkMode().observeForever(s -> {
+        playerViewModel.getWorkMode().observe(getViewLifecycleOwner(), s -> {
+            Log.e("PLAYER_FRAGMENT", "in observer");
+            playerViewModel.setIsInitialized(false);
             try {
-                if (mediaPlayer == null && s != null) {
+                if (mediaPlayer == null || s != null) {
                     Log.e("PLAYER_FRAGMENT", "after 1 check");
 
-                    if (mode.startsWith("audioPrayers")) {
-                        String name = playerViewModel.getUrlForAudio().getValue();
-                        this.mediaPlayer = MediaPlayer.create(fragActivity, Uri.parse(name));
-                        mediaPlayer.setVolume(0.5f, 0.5f);
-                        mediaPlayer.setLooping(false);
-                        Log.e("PLAYER_FRAGMENT", "after 2 check");
-                        isPrepared = true;
+                    if (s.startsWith("audioPrayers")) {
+                        playerViewModel.getUrlForAudio().observe(getViewLifecycleOwner(), s1 -> {
+                            String name = playerViewModel.getUrlForAudio().getValue();
+                            Log.e("PLAYER_FRAGMENT", name);
+                            this.mediaPlayer = MediaPlayer.create(getActivity(), Uri.parse(name));
+                            mediaPlayer.setVolume(0.5f, 0.5f);
+                            mediaPlayer.setLooping(false);
+                            Log.e("PLAYER_FRAGMENT", "after 2 check");
+                            isPrepared = true;
+                        });
                     }
 
-                } else if (mediaPlayer != null && s != null) {
+                } else if (mediaPlayer != null || s != null) {
                     if (!mediaPlayer.isPlaying()) {
                         if (isPrepared) {
                             //NotificationForPlay.createNotification(fragActivity, linksModelPlay, android.R.drawable.ic_media_pause);
@@ -90,45 +97,56 @@ public class PlayerFragment extends Fragment {
                         }
                         //NotificationForPlay.createNotification(fragActivity, linksModelPlay, android.R.drawable.ic_media_pause);
                         playerBinding.imageButtonPlay.setImageResource(android.R.drawable.ic_media_pause);
-                        mainActivity.binding.player.imageButtonPlay.setImageResource(android.R.drawable.ic_media_pause);
+                        //mainActivity.binding.player.imageButtonPlay.setImageResource(android.R.drawable.ic_media_pause);
                         mediaPlayer.start();
                         Log.d("AUDIO_RECYCLER", "Started in");
                     } else {
                         //NotificationForPlay.createNotification(fragActivity, linksModelPlay, android.R.drawable.ic_media_play);
                         playerBinding.imageButtonPlay.setImageResource(android.R.drawable.ic_media_play);
-                        mainActivity.binding.player.imageButtonPlay.setImageResource(android.R.drawable.ic_media_play);
+                        //mainActivity.binding.player.imageButtonPlay.setImageResource(android.R.drawable.ic_media_play);
                         mediaPlayer.pause();
                         Log.d("AUDIO_RECYCLER", "Paused in");
                     }
                 }
 
-                initSeekBar();
-                initButtonClicks();
-                playerBinding.textPlayer.setText(getArguments().getString("prayerName"));
-                mainActivity.binding.player.textPlayer.setText(getArguments().getString("prayerName"));
+                Log.e("PLAYER_FRAGMENT", "after all");
+
+                playerViewModel.getUrlForAudio().observe(getViewLifecycleOwner(), s1 -> {
+                    if(!s.startsWith("background") && mediaPlayer != null) {
+                        initSeekBar();
+                        initButtonClicks();
+                        playerViewModel.getLinksModel().observe(getViewLifecycleOwner(), linksModel -> {
+                            playerBinding.textPlayer.setText(linksModel.getName());
+                        });
+                        //mainActivity.binding.player.textPlayer.setText(getArguments().getString("prayerName"));
 
 
-                playerBinding.durationBarMolitvy.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                        if (i > 0 && !mediaPlayer.isPlaying()) {
-                            mediaPlayer.seekTo(seekBar.getProgress());
-                        }
-                    }
+                        playerBinding.durationBarMolitvy.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                                if (i > 0 && !mediaPlayer.isPlaying()) {
+                                    mediaPlayer.seekTo(seekBar.getProgress());
+                                }
+                            }
 
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-                    }
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+                            }
 
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-                        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-                            mediaPlayer.seekTo(seekBar.getProgress());
-                        }
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+                                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                                    mediaPlayer.seekTo(seekBar.getProgress());
+                                }
+                            }
+                        });
+
+                        playerViewModel.setIsInitialized(true);
                     }
                 });
-            } catch (Exception e){
 
+            } catch (Exception e){
+                Log.e("PLAYER_FRAGMENT", "ERROR_E:"+e.getLocalizedMessage());
             }
         });
         return playerBinding.getRoot();
@@ -138,7 +156,8 @@ public class PlayerFragment extends Fragment {
     private void initSeekBar(){
         Log.e("PLAYER_FRAGMENT", "seekbar");
         playerBinding.durationBarMolitvy.setMax(mediaPlayer.getDuration());
-        playerBinding.seekBarMaxTime.setText(playerBinding.durationBarMolitvy.getMax());
+        String max = String.valueOf(playerBinding.durationBarMolitvy.getMax());
+        playerBinding.seekBarMaxTime.setText(max);
 
         playerBinding.durationBarMolitvy.setProgress(0);
         playerBinding.seekBarDurTime.setText(formatDur(mediaPlayer.getCurrentPosition()));
@@ -205,6 +224,7 @@ public class PlayerFragment extends Fragment {
     }
 
     private void playAndStop(){
+        Log.e("PLAYER_FRAGMENT", String.valueOf(mediaPlayer.isPlaying()));
         if (!mediaPlayer.isPlaying()) {
             if(isPrepared){
                 //NotificationForPlay.createNotification(view.getContext(), linksModelPlay, android.R.drawable.ic_media_pause);

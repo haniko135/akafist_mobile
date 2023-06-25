@@ -24,8 +24,4 @@
         android:id="@+id/main_layout"
         layout="@layout/main_activity_layout" />
 
-    <include
-        android:id="@+id/player"
-        layout="@layout/fragment_player"/>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
