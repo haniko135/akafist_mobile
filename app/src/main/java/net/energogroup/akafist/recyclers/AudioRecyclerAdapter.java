@@ -92,6 +92,7 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
             if (audiosDown.contains(audios.get(position).getName())) {
                 Log.e("Download", "here");
                 Log.e("Name", audios.get(position).getName());
+                holder.isDownload = true;
                 holder.audioListItemDown.setVisibility(View.VISIBLE);
                 holder.audioListItemDel.setVisibility(View.VISIBLE);
                 //удаление файла
@@ -138,8 +139,17 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
                 }
 
                 playerViewModel.setWorkMode("audioPrayers");
-                playerViewModel.setUrlForAudio(urlPattern + urlForLink + "?alt=media");
                 playerViewModel.setLinksModel(audios.get(position));
+
+                //запуск аудио из памяти телефона если оно скачано
+                if(!holder.isDownload) {
+                    playerViewModel.setUrlForAudio(urlPattern + urlForLink + "?alt=media");
+                    playerViewModel.setDownload(false);
+                }
+                else{
+                    playerViewModel.setUrlForAudio(filePath+"/"+audios.get(position).getName()+".mp3");
+                    playerViewModel.setDownload(holder.isDownload);
+                }
 
                 mainActivity = (MainActivity) fragment.getActivity();
                 mainActivity.binding.mainLayout.playerContainer.setVisibility(View.VISIBLE);
@@ -152,6 +162,9 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
                 playerViewModel.setWorkMode("audioPrayers");
                 playerViewModel.setUrlForAudio(urlForLink);
                 playerViewModel.setLinksModel(audios.get(position));
+
+                mainActivity = (MainActivity) fragment.getActivity();
+                mainActivity.binding.mainLayout.playerContainer.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -168,6 +181,8 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
         public TextView audiosListItem;
         public ImageView audioListItemDown;
         public ImageButton audioListItemDel;
+
+        public Boolean isDownload = false;
 
         public AudioViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -1,4 +1,4 @@
-package net.energogroup.akafist.service;
+package net.energogroup.akafist.service.background;
 
 import android.content.Context;
 import android.util.Log;

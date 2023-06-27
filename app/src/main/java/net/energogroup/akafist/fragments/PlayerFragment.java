@@ -9,9 +9,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -21,15 +18,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import net.energogroup.akafist.MainActivity;
-import net.energogroup.akafist.R;
 import net.energogroup.akafist.databinding.FragmentPlayerBinding;
-import net.energogroup.akafist.service.NotificationForPlay;
-import net.energogroup.akafist.service.OnClearFromRecentService;
+import net.energogroup.akafist.service.notification.NotificationForPlay;
+import net.energogroup.akafist.service.notification.OnClearFromRecentService;
 import net.energogroup.akafist.viewmodel.PlayerViewModel;
 
 import java.util.Objects;
@@ -136,6 +130,14 @@ public class PlayerFragment extends Fragment {
                         initButtonClicks(container);
                         playerViewModel.getLinksModel().observe(getViewLifecycleOwner(), linksModel -> {
                             playerBinding.textPlayer.setText(linksModel.getName());
+                        });
+
+                        playerViewModel.getIsDownload().observe(getViewLifecycleOwner(), aBoolean -> {
+                            if (aBoolean){
+                                playerBinding.downloadLinkButton.setVisibility(View.INVISIBLE);
+                            }else {
+                                playerBinding.downloadLinkButton.setVisibility(View.VISIBLE);
+                            }
                         });
 
 

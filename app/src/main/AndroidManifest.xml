@@ -49,8 +49,8 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <receiver android:name=".service.NotificationActionService"/>
-        <service android:name=".service.OnClearFromRecentService"/>
+        <receiver android:name=".service.notification.NotificationActionService"/>
+        <service android:name=".service.notification.OnClearFromRecentService"/>
     </application>
 
 </manifest>

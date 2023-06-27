@@ -8,20 +8,14 @@ import android.view.ViewGroup;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewTreeLifecycleOwner;
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkInfo;
-import androidx.work.WorkManager;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
+
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
 import net.energogroup.akafist.fragments.LinksFragment;
 import net.energogroup.akafist.models.LinksModel;
-import net.energogroup.akafist.service.DownloadFromYandexTask;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.json.JSONException;
@@ -33,7 +27,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Класс, содержащий логику обработки данных

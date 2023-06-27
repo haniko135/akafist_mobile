@@ -1,4 +1,4 @@
-package net.energogroup.akafist.service;
+package net.energogroup.akafist.service.notification;
 
 import android.app.Notification;
 import android.app.PendingIntent;

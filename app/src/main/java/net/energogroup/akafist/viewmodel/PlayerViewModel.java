@@ -24,7 +24,7 @@ import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
 import net.energogroup.akafist.fragments.LinksFragment;
 import net.energogroup.akafist.models.LinksModel;
-import net.energogroup.akafist.service.DownloadFromYandexTask;
+import net.energogroup.akafist.service.background.DownloadFromYandexTask;
 
 import org.json.JSONException;
 
@@ -40,8 +40,10 @@ public class PlayerViewModel extends ViewModel {
     private MutableLiveData<Boolean> isInitialized = new MutableLiveData<>();
     private MutableLiveData<LinksModel> linksModel = new MutableLiveData<>();
     private MutableLiveData<MediaPlayer> currMediaPlayer = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isDownload = new MutableLiveData<>();
     private OneTimeWorkRequest workRequest;
     private String urlForLink, fileName, filePath;
+
 
 
     public MutableLiveData<String> getWorkMode() {
@@ -90,8 +92,11 @@ public class PlayerViewModel extends ViewModel {
         this.filePath = filePath;
     }
 
+    public MutableLiveData<Boolean> getIsDownload() {
+        return isDownload;
+    }
 
-
+    public void setDownload(Boolean download) { isDownload.setValue(download); }
 
     /**
      * Этот метод запрашивает ссылку на скачивание аудиофайла через Яндекс.Диск API.

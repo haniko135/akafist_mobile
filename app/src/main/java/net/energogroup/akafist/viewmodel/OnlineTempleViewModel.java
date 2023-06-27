@@ -17,7 +17,7 @@ import androidx.work.WorkManager;
 
 import net.energogroup.akafist.R;
 import net.energogroup.akafist.fragments.OnlineTempleFragment;
-import net.energogroup.akafist.service.OnlineTemplePlayer;
+import net.energogroup.akafist.service.background.OnlineTemplePlayer;
 
 /**
  * Класс, содержащий логику обработки данных

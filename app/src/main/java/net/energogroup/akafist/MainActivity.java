@@ -25,7 +25,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 
 
 import com.android.volley.RequestQueue;
@@ -33,9 +32,8 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import net.energogroup.akafist.databinding.ActivityMainBinding;
-import net.energogroup.akafist.fragments.PlayerFragment;
 import net.energogroup.akafist.service.NetworkConnection;
-import net.energogroup.akafist.service.NotificationForPlay;
+import net.energogroup.akafist.service.notification.NotificationForPlay;
 import net.energogroup.akafist.viewmodel.OnlineTempleViewModel;
 
 /**
