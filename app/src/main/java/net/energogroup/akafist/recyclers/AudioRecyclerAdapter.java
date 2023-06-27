@@ -2,32 +2,24 @@ package net.energogroup.akafist.recyclers;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.media.MediaPlayer;
 import android.os.Build;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentResultListener;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
 import net.energogroup.akafist.fragments.LinksFragment;
 import net.energogroup.akafist.fragments.PlayerFragment;
 import net.energogroup.akafist.models.LinksModel;
-import net.energogroup.akafist.service.PlayAudios;
 import net.energogroup.akafist.viewmodel.PlayerViewModel;
 
 import java.io.File;
@@ -50,10 +42,7 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
     private PlayerViewModel playerViewModel;
     private List<LinksModel> audios;
     private List<String> audiosDown;
-    private ProgressDialog progressDialog;
-
-    MainActivity mainActivity;
-
+    private MainActivity mainActivity;
     boolean recIsChecked;
 
     /**
@@ -129,7 +118,6 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
 
         //обработка нажатия на элемент списка
         holder.audiosListItem.setOnClickListener(view -> {
-            progressDialog = new ProgressDialog(fragment.getContext());
             checkPlaying();
             urlForLink = audios.get(position).getUrl();
             playerViewModel.setUrlForLink(urlForLink);
@@ -137,17 +125,15 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
             playerViewModel.setFilePath(filePath);
             MainActivity.networkConnection.observe(fragment.getViewLifecycleOwner(), isChecked->{
                 recIsChecked = isChecked;
-                if (isChecked){
-                    progressDialog.setMessage("Загружается...");
-                    progressDialog.show();
+                /*if (isChecked){
+
                 }else {
                     //fragment.binding.downloadLinkButton.setVisibility(View.GONE);
-                }
+                }*/
             });
 
             if(recIsChecked){
                 if(playerViewModel.getCurrMediaPlayer().getValue()!=null){
-                    Log.e("ARA", "in mediaplayer checking");
                     playerViewModel.getCurrMediaPlayer().getValue().stop();
                 }
 
@@ -155,22 +141,17 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
                 playerViewModel.setUrlForAudio(urlPattern + urlForLink + "?alt=media");
                 playerViewModel.setLinksModel(audios.get(position));
 
-                Log.e("ARA", "after viewmodel");
-
                 mainActivity = (MainActivity) fragment.getActivity();
                 mainActivity.binding.mainLayout.playerContainer.setVisibility(View.VISIBLE);
 
-                progressDialog.cancel();
             }else {
                 if(playerViewModel.getCurrMediaPlayer().getValue()!=null){
-                    Log.e("ARA", "in mediaplayer checking");
                     playerViewModel.getCurrMediaPlayer().getValue().stop();
                 }
 
                 playerViewModel.setWorkMode("audioPrayers");
                 playerViewModel.setUrlForAudio(urlForLink);
                 playerViewModel.setLinksModel(audios.get(position));
-                progressDialog.cancel();
             }
         });
     }
