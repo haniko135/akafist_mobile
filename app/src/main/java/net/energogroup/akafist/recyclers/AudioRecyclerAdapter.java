@@ -44,13 +44,9 @@ import java.util.List;
  */
 public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdapter.AudioViewHolder> implements Serializable {
 
-    private MediaPlayer mediaPlayer;
-    public PlayAudios playAudios;
-    private String urlForLink;
+    private String urlForLink, filePath;
     private final String urlPattern = "https://getfile.dokpub.com/yandex/get/";
-
     private LinksFragment fragment;
-
     private PlayerViewModel playerViewModel;
     private List<LinksModel> audios;
     private List<String> audiosDown;
@@ -70,16 +66,18 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
         this.audiosDown = audiosDownNames;
     }
 
-    public AudioRecyclerAdapter(List<LinksModel> audios, List<String> audiosDownNames, LinksFragment fragment){
+    public AudioRecyclerAdapter(List<LinksModel> audios, List<String> audiosDownNames, LinksFragment fragment, String filePath){
         this.fragment = fragment;
         this.audios = audios;
         this.audiosDown = audiosDownNames;
+        this.filePath = filePath;
         playerViewModel = new ViewModelProvider(fragment.getActivity()).get(PlayerViewModel.class);
     }
 
     public AudioRecyclerAdapter(List<LinksModel> audios, LinksFragment fragment){
         this.fragment = fragment;
         this.audios = audios;
+        playerViewModel = new ViewModelProvider(fragment.getActivity()).get(PlayerViewModel.class);
     }
 
     @NonNull
@@ -109,17 +107,17 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
                 holder.audioListItemDel.setVisibility(View.VISIBLE);
                 //удаление файла
                 holder.audioListItemDel.setOnClickListener(v -> {
-                    String finalPath = fragment.getFinalPath()+"/";
+                    String finalPath = filePath+"/";
                     String fileName = audios.get(position).getName() + ".mp3";
                     Log.e("FINAL_PATH", finalPath+fileName);
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             Files.delete(Paths.get(finalPath+fileName));
-                            fragment.preNotification("Файл удален. Обновите страницу");
+                            playerViewModel.preNotification("Файл удален. Обновите страницу", fragment.getContext());
                         }else {
                             File file = new File(finalPath+fileName);
-                            if (file.delete()) fragment.preNotification("Файл удален");
-                            else fragment.preNotification("Произошла ошибка при удалении файла. Попробуйте ещё раз");
+                            if (file.delete()) playerViewModel.preNotification("Файл удален", fragment.getContext());
+                            else playerViewModel.preNotification("Произошла ошибка при удалении файла. Попробуйте ещё раз", fragment.getContext());
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -134,28 +132,24 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
             progressDialog = new ProgressDialog(fragment.getContext());
             checkPlaying();
             urlForLink = audios.get(position).getUrl();
-            fragment.urlForLink = urlForLink;
-            fragment.fileName = audios.get(position).getName();
+            playerViewModel.setUrlForLink(urlForLink);
+            playerViewModel.setFileName(audios.get(position).getName());
+            playerViewModel.setFilePath(filePath);
             MainActivity.networkConnection.observe(fragment.getViewLifecycleOwner(), isChecked->{
                 recIsChecked = isChecked;
                 if (isChecked){
                     progressDialog.setMessage("Загружается...");
                     progressDialog.show();
-                    fragment.binding.downloadLinkButton.setVisibility(View.VISIBLE);
                 }else {
-                    fragment.binding.downloadLinkButton.setVisibility(View.GONE);
+                    //fragment.binding.downloadLinkButton.setVisibility(View.GONE);
                 }
             });
 
             if(recIsChecked){
-                if (playAudios != null) {
-                    playAudios.destroyPlayAudios();
+                if(playerViewModel.getCurrMediaPlayer().getValue()!=null){
+                    Log.e("ARA", "in mediaplayer checking");
+                    playerViewModel.getCurrMediaPlayer().getValue().stop();
                 }
-
-                /*playAudios = new PlayAudios(urlPattern + urlForLink + "?alt=media", fragment.getContext(),
-                        fragment.getView(), audios.get(position));
-                mediaPlayer = playAudios.getMediaPlayer();
-                playAudios.playAndStop();*/
 
                 playerViewModel.setWorkMode("audioPrayers");
                 playerViewModel.setUrlForAudio(urlPattern + urlForLink + "?alt=media");
@@ -164,23 +158,18 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
                 Log.e("ARA", "after viewmodel");
 
                 mainActivity = (MainActivity) fragment.getActivity();
-
                 mainActivity.binding.mainLayout.playerContainer.setVisibility(View.VISIBLE);
-
-               /* if(MainActivity.playerBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN){
-                    MainActivity.playerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                }*/
-                //fragment.getParentFragmentManager().beginTransaction().add(R.id.nav_fragment, new PlayerFragment()).commit();
 
                 progressDialog.cancel();
             }else {
-                if (playAudios != null) {
-                    playAudios.destroyPlayAudios();
+                if(playerViewModel.getCurrMediaPlayer().getValue()!=null){
+                    Log.e("ARA", "in mediaplayer checking");
+                    playerViewModel.getCurrMediaPlayer().getValue().stop();
                 }
-                /*playAudios = new PlayAudios(urlForLink, fragment.getContext(),
-                        fragment.getView(), audios.get(position));
-                mediaPlayer = playAudios.getMediaPlayer();
-                playAudios.playAndStop();*/
+
+                playerViewModel.setWorkMode("audioPrayers");
+                playerViewModel.setUrlForAudio(urlForLink);
+                playerViewModel.setLinksModel(audios.get(position));
                 progressDialog.cancel();
             }
         });
@@ -211,10 +200,14 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
      * Этот метод проверяет, играет ли предыдущий аудиофайл
      */
     private void checkPlaying(){
-        if (mediaPlayer != null)
-            if(mediaPlayer.isPlaying()) {
-                PlayAudios.runnable = null;
-                mediaPlayer.stop();
-            }
+        playerViewModel.getCurrMediaPlayer().observe(fragment.getViewLifecycleOwner(), mediaPlayer1 -> {
+            if (mediaPlayer1 != null)
+                if(mediaPlayer1.isPlaying()) {
+                    PlayerFragment.runnable = null;
+                    mediaPlayer1.stop();
+                    playerViewModel.setCurrMediaPlayer(mediaPlayer1);
+                }
+        });
+
     }
 }

@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -40,10 +42,6 @@ public class PlayerFragment extends Fragment {
     private MediaPlayer mediaPlayer;
     private final Handler handler = new Handler();
     private boolean isPrepared = false;
-    private String mode;
-    private AppCompatActivity fragActivity;
-    private MainActivity mainActivity;
-
     private PlayerViewModel playerViewModel;
     public static Runnable runnable;
     private FragmentPlayerBinding playerBinding;
@@ -66,15 +64,13 @@ public class PlayerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         playerBinding = FragmentPlayerBinding.inflate(inflater, container, false);
-        fragActivity = new AppCompatActivity();
-        mainActivity = new MainActivity();
         Log.e("PLAYER_FRAGMENT", "ON_CREATE_VIEW");
 
         playerViewModel.getWorkMode().observe(getViewLifecycleOwner(), s -> {
             Log.e("PLAYER_FRAGMENT", "in observer");
             playerViewModel.setIsInitialized(false);
             try {
-                if (mediaPlayer == null || s != null) {
+                if (mediaPlayer == null && s != null) {
                     Log.e("PLAYER_FRAGMENT", "after 1 check");
 
                     if (s.startsWith("audioPrayers")) {
@@ -86,27 +82,28 @@ public class PlayerFragment extends Fragment {
                             mediaPlayer.setLooping(false);
                             Log.e("PLAYER_FRAGMENT", "after 2 check");
                             isPrepared = true;
+                            playerViewModel.setCurrMediaPlayer(mediaPlayer);
                         });
                     }
 
                 } else if (mediaPlayer != null || s != null) {
-                    if (!mediaPlayer.isPlaying()) {
-                        if (isPrepared) {
-                            //NotificationForPlay.createNotification(fragActivity, linksModelPlay, android.R.drawable.ic_media_pause);
-                            isPrepared = false;
+                    playerViewModel.getLinksModel().observe(getViewLifecycleOwner(), linksModel -> {
+                        if (!mediaPlayer.isPlaying()) {
+                            if (isPrepared) {
+                                NotificationForPlay.createNotification(getActivity(), playerViewModel.getLinksModel().getValue(), android.R.drawable.ic_media_pause);
+                                isPrepared = false;
+                            }
+                            NotificationForPlay.createNotification(getActivity(), playerViewModel.getLinksModel().getValue(), android.R.drawable.ic_media_pause);
+                            playerBinding.imageButtonPlay.setImageResource(android.R.drawable.ic_media_pause);
+                            mediaPlayer.start();
+                            Log.d("AUDIO_RECYCLER", "Started in");
+                        } else {
+                            NotificationForPlay.createNotification(getActivity(), playerViewModel.getLinksModel().getValue(), android.R.drawable.ic_media_play);
+                            playerBinding.imageButtonPlay.setImageResource(android.R.drawable.ic_media_play);
+                            mediaPlayer.pause();
+                            Log.d("AUDIO_RECYCLER", "Paused in");
                         }
-                        //NotificationForPlay.createNotification(fragActivity, linksModelPlay, android.R.drawable.ic_media_pause);
-                        playerBinding.imageButtonPlay.setImageResource(android.R.drawable.ic_media_pause);
-                        //mainActivity.binding.player.imageButtonPlay.setImageResource(android.R.drawable.ic_media_pause);
-                        mediaPlayer.start();
-                        Log.d("AUDIO_RECYCLER", "Started in");
-                    } else {
-                        //NotificationForPlay.createNotification(fragActivity, linksModelPlay, android.R.drawable.ic_media_play);
-                        playerBinding.imageButtonPlay.setImageResource(android.R.drawable.ic_media_play);
-                        //mainActivity.binding.player.imageButtonPlay.setImageResource(android.R.drawable.ic_media_play);
-                        mediaPlayer.pause();
-                        Log.d("AUDIO_RECYCLER", "Paused in");
-                    }
+                    });
                 }
 
                 Log.e("PLAYER_FRAGMENT", "after all");
@@ -114,11 +111,10 @@ public class PlayerFragment extends Fragment {
                 playerViewModel.getUrlForAudio().observe(getViewLifecycleOwner(), s1 -> {
                     if(!s.startsWith("background") && mediaPlayer != null) {
                         initSeekBar();
-                        initButtonClicks();
+                        initButtonClicks(container);
                         playerViewModel.getLinksModel().observe(getViewLifecycleOwner(), linksModel -> {
                             playerBinding.textPlayer.setText(linksModel.getName());
                         });
-                        //mainActivity.binding.player.textPlayer.setText(getArguments().getString("prayerName"));
 
 
                         playerBinding.durationBarMolitvy.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -156,8 +152,7 @@ public class PlayerFragment extends Fragment {
     private void initSeekBar(){
         Log.e("PLAYER_FRAGMENT", "seekbar");
         playerBinding.durationBarMolitvy.setMax(mediaPlayer.getDuration());
-        String max = String.valueOf(playerBinding.durationBarMolitvy.getMax());
-        playerBinding.seekBarMaxTime.setText(max);
+        playerBinding.seekBarMaxTime.setText(formatDur(playerBinding.durationBarMolitvy.getMax()));
 
         playerBinding.durationBarMolitvy.setProgress(0);
         playerBinding.seekBarDurTime.setText(formatDur(mediaPlayer.getCurrentPosition()));
@@ -182,13 +177,14 @@ public class PlayerFragment extends Fragment {
     }
 
 
-    private void initButtonClicks(){
+    private void initButtonClicks(ViewGroup container){
         Log.e("PLAYER_FRAGMENT", "init buttons");
         playerBinding.imageButtonPlay.setOnClickListener(view -> {
             playAndStop();
         });
         playerBinding.downloadLinkButton.setOnClickListener(view -> {
-
+            playerViewModel.preNotification("Загрузка начата", getContext());
+            playerViewModel.getLinkDownload(getLayoutInflater(), container);
         });
     }
 
@@ -225,21 +221,23 @@ public class PlayerFragment extends Fragment {
 
     private void playAndStop(){
         Log.e("PLAYER_FRAGMENT", String.valueOf(mediaPlayer.isPlaying()));
-        if (!mediaPlayer.isPlaying()) {
-            if(isPrepared){
-                //NotificationForPlay.createNotification(view.getContext(), linksModelPlay, android.R.drawable.ic_media_pause);
-                isPrepared = false;
+        playerViewModel.getLinksModel().observe(getViewLifecycleOwner(), linksModel -> {
+            if (!mediaPlayer.isPlaying()) {
+                if(isPrepared){
+                    NotificationForPlay.createNotification(getActivity(), playerViewModel.getLinksModel().getValue(), android.R.drawable.ic_media_pause);
+                    isPrepared = false;
+                }
+                NotificationForPlay.createNotification(getActivity(), playerViewModel.getLinksModel().getValue(), android.R.drawable.ic_media_pause);
+                playerBinding.imageButtonPlay.setImageResource(android.R.drawable.ic_media_pause);
+                mediaPlayer.start();
+                Log.d("AUDIO_RECYCLER", "Started in");
+            }else {
+                NotificationForPlay.createNotification(getActivity(), playerViewModel.getLinksModel().getValue(), android.R.drawable.ic_media_play);
+                playerBinding.imageButtonPlay.setImageResource(android.R.drawable.ic_media_play);
+                mediaPlayer.pause();
+                Log.d("AUDIO_RECYCLER", "Paused in");
             }
-            //NotificationForPlay.createNotification(view.getContext(), linksModelPlay, android.R.drawable.ic_media_pause);
-            playerBinding.imageButtonPlay.setImageResource(android.R.drawable.ic_media_pause);
-            mediaPlayer.start();
-            Log.d("AUDIO_RECYCLER", "Started in");
-        }else {
-            //NotificationForPlay.createNotification(view.getContext(), linksModelPlay, android.R.drawable.ic_media_play);
-            playerBinding.imageButtonPlay.setImageResource(android.R.drawable.ic_media_play);
-            mediaPlayer.pause();
-            Log.d("AUDIO_RECYCLER", "Paused in");
-        }
+        });
     }
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -250,10 +248,10 @@ public class PlayerFragment extends Fragment {
             if (Objects.equals(action, NotificationForPlay.ACTION_PLAY)){
                 if (mediaPlayer.isPlaying()){
                     playAndStop();
-                    //NotificationForPlay.createNotification(view.getContext(), linksModelPlay, android.R.drawable.ic_media_play);
+                    NotificationForPlay.createNotification(getActivity(), playerViewModel.getLinksModel().getValue(), android.R.drawable.ic_media_play);
                 }else {
                     playAndStop();
-                    //NotificationForPlay.createNotification(view.getContext(), linksModelPlay, android.R.drawable.ic_media_pause);
+                    NotificationForPlay.createNotification(getActivity(), playerViewModel.getLinksModel().getValue(), android.R.drawable.ic_media_pause);
                 }
             }
         }
@@ -263,6 +261,6 @@ public class PlayerFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         mediaPlayer.stop();
-        //view.getContext().unregisterReceiver(broadcastReceiver);
+        getActivity().unregisterReceiver(broadcastReceiver);
     }
 }

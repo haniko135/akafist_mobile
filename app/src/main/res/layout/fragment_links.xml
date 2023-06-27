@@ -12,12 +12,11 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/linksRoot"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/molitvy_player"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        >
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scView"
@@ -37,94 +36,6 @@
                 tools:listitem="@layout/audios_list" />
         </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-
-    <LinearLayout
-        android:id="@+id/molitvy_player"
-        style="@style/molitvyPlayer"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
-            android:id="@+id/text_player"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/cyrillic_old"
-            android:text=""
-            android:textAlignment="center"
-            android:textSize="18sp"
-            android:visibility="gone"/>
-
-        <LinearLayout
-            android:id="@+id/durationPlayer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/seekBarDurTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:text="0:0"
-                android:visibility="invisible" />
-
-            <SeekBar
-                android:id="@+id/durationBarMolitvy"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_weight="1"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp" />
-
-            <TextView
-                android:id="@+id/seekBarMaxTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:text="0:0"
-                android:visibility="invisible" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/playBarPlayer"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <ImageButton
-                android:id="@+id/imageButtonPlay"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/playbuttonforlinks"
-                android:paddingVertical="15dp"
-                android:src="@android:drawable/ic_media_play"
-                tools:ignore="NestedWeights" />
-
-            <ImageButton
-                android:id="@+id/downloadLinkButton"
-                android:layout_width="40dp"
-                android:layout_height="34dp"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/downloadbuttonfrolinks"
-                android:elevation="2dp"
-                android:src="@drawable/ic_baseline_download_24"
-                android:visibility="gone" />
-
-        </LinearLayout>
-    </LinearLayout>
 
     <TextView
         android:id="@+id/nothing_dowload"

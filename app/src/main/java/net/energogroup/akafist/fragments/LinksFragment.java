@@ -44,8 +44,6 @@ public class LinksFragment extends Fragment {
     private AudioRecyclerAdapter recyclerAdapter;
     private List<LinksModel> downloadAudio = new ArrayList<>();
     private ArrayList<String> downloadAudioNames = new ArrayList<>();
-    public String urlForLink;
-    public String fileName;
     private SharedPreferences appPref;
     public static boolean isChecked = false; //для пользовательского соглашения
     public FragmentLinksBinding binding;
@@ -55,9 +53,6 @@ public class LinksFragment extends Fragment {
      */
     public LinksFragment() { }
 
-    public String getFinalPath() {
-        return finalPath;
-    }
 
     /**
      * Этот метод вызывает конструктор класса фрагмента записей просветительских бесед
@@ -110,6 +105,7 @@ public class LinksFragment extends Fragment {
             downloadAudioNames.add(it.getName());
         });
 
+        //согласие на скачивание аудио файлов
         if (!isChecked) {
             SharedPreferences.Editor editor = appPref.edit();
             DialogLinks dialogLinks = new DialogLinks(editor, this);
@@ -121,29 +117,17 @@ public class LinksFragment extends Fragment {
             //проверка на наличие интернет-соединения
             MainActivity.networkConnection.observe(getViewLifecycleOwner(), isCheckeds -> {
                 if (isCheckeds) {
-                    //прослушивание кнопки загрузки
-                    binding.downloadLinkButton.setOnClickListener(view -> {
-                        preNotification("Загрузка начата");
-                        linksViewModel.getLinkDownload(urlForLink, inflater, container, finalPath, fileName);
-                    });
-
                     //создание RecyclerView
                     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                     binding.linksRv.setLayoutManager(linearLayoutManager);
                     linksViewModel.getMutableLinksDate().observe(getViewLifecycleOwner(), linksModels -> {
                         if (recyclerAdapter == null) {
-                            recyclerAdapter = new AudioRecyclerAdapter(linksModels, downloadAudioNames, this);
+                            recyclerAdapter = new AudioRecyclerAdapter(linksModels, downloadAudioNames, this, finalPath);
                         }
                         recyclerAdapter.setList(linksModels, downloadAudioNames);
                         binding.linksRv.setAdapter(recyclerAdapter);
                     });
 
-                    //прослушивание нажатия на унтральную кнопку плеера
-                    binding.imageButtonPlay.setOnClickListener(view -> {
-                        if (recyclerAdapter.playAudios != null) {
-                            recyclerAdapter.playAudios.playAndStop();
-                        }
-                    });
                 } else {
                     //создание RecyclerView
                     binding.linksRv.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -176,28 +160,8 @@ public class LinksFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if(recyclerAdapter != null) {
-            if (recyclerAdapter.playAudios != null) {
-                recyclerAdapter.playAudios.destroyPlayAudios();
-            }
-        }
     }
 
-    /**
-     * Этот метод создаёт уведомление о начале загрузки аудио-файла
-     */
-    public void preNotification(String s){
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(binding.getRoot().getContext(), MainActivity.CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher_round)
-                .setContentTitle("Помощник чтеца")
-                .setContentText(s)
-                .setAutoCancel(true)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(binding.getRoot().getContext());
-        int NOTIFICATION_ID = 101;
-        managerCompat.notify(NOTIFICATION_ID, builder.build());
-    }
 
     public void initializeLinks(){
         if (getArguments() != null){

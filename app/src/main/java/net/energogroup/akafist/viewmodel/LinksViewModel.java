@@ -45,7 +45,6 @@ public class LinksViewModel extends ViewModel {
     private List<LinksModel> linksModelList = new ArrayList<>();
     private MutableLiveData<List<LinksModel>> mutableLinksDate = new MutableLiveData<>();
     private List<LinksModel> downloadAudio = new ArrayList<>();
-    private OneTimeWorkRequest workRequest;
     private int image;
 
     /**
@@ -129,71 +128,7 @@ public class LinksViewModel extends ViewModel {
         }
     }
 
-    /**
-     * Этот метод запрашивает ссылку на скачивание аудиофайла через Яндекс.Диск API.
-     * Есть в методе {@link LinksFragment#onCreateView(LayoutInflater, ViewGroup, Bundle)}
-     * @param url String - ссылка аудиофайла
-     * @param inflater LayoutInflater
-     * @param container ViewGroup
-     * @param audioFilesDir String - директория загрузки файла
-     * @param fileName String - имя файла
-     * @exception JSONException
-     */
-    public void getLinkDownload(String url, LayoutInflater inflater, ViewGroup container, String audioFilesDir, String fileName) {
-        String urlToGet = "https://cloud-api.yandex.net/v1/disk/public/resources?public_key=" + url;
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, //получение данных
-                urlToGet, null, response -> {
-            String resName, resLink;
-            try {
-                resName = response.getString("name");
-                Log.i("YANDEX",resName);
-
-                //имя файла
-                File newFile = new File(audioFilesDir  + "/"+ fileName + ".mp3");
-
-                //скачивание файла в фоновом режиме
-                if(!newFile.exists()) {
-                    resLink = response.getString("file");
-                    Data data = new Data.Builder().putString("URL", resLink)
-                            .putString("FILENAME", fileName + ".mp3")
-                            //.putString("FILENAME", resName)
-                            .putString("FILE_DIR", audioFilesDir).build();
-                    workRequest = new OneTimeWorkRequest.Builder(DownloadFromYandexTask.class)
-                            .setInputData(data).build();
-                    WorkManager.getInstance(inflater.getContext()).enqueue(workRequest);
-
-                    WorkManager.getInstance(inflater.getContext()).getWorkInfoByIdLiveData(workRequest.getId())
-                            .observe(Objects.requireNonNull(ViewTreeLifecycleOwner.get(container.getRootView().getRootView())), workInfo -> {
-                                if(workInfo != null && workInfo.getState() == WorkInfo.State.SUCCEEDED){
-                                    String audioName = workInfo.getOutputData().getString("AUDIO_NAME");
-                                    String audioLink = workInfo.getOutputData().getString("AUDIO_LINK");
-                                    //downloadAudio.add(new LinksModel(audioName, audioLink));
-                                    Log.i("YANDEX", "Download file: " + audioName + ", " + audioLink);
-                                }else{
-                                    Log.i("YANDEX", "Is not yet");
-                                }
-                            });
-
-                    Log.i("YANDEX",audioFilesDir);
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }, Throwable::printStackTrace) {
-            @Override
-            public Map<String, String> getHeaders() {
-                Map<String, String> headers = new HashMap<>();
-                headers.put("Authorization: Bearer ", MainActivity.secToken);
-                headers.put("User-Agent", "akafist_app_1.0.0");
-                headers.put("Connection", "keep-alive");
-                return headers;
-            }
-
-        };
-        MainActivity.mRequestQueue.add(request);
-    }
 
     /**
      * Этот метод формирует список скачанных аудио-файлов
