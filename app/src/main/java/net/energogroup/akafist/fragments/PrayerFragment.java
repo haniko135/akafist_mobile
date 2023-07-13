@@ -99,11 +99,6 @@ public class PrayerFragment extends Fragment {
         if(getArguments() != null){
             prevMenu = getArguments().getString("prevMenu");
             prayerId = getArguments().getInt("largeText");
-            /*if(getArguments().get("textSize")!=null){
-                textSize = getArguments().getFloat("textSize");
-            } else{
-                textSize = getResources().getDimension(R.dimen.text_prayer);
-            }*/
             if(appPref.contains("app_pref_text_size")){
                 textSize = appPref.getFloat("app_pref_text_size", getResources().getDimension(R.dimen.text_prayer));
             } else{
@@ -117,7 +112,7 @@ public class PrayerFragment extends Fragment {
         //Первоначальные настройки фрагмента
         binding = FragmentPrayerBinding.inflate(getLayoutInflater());
         binding.textPrayer.setTextSize(convertToPx());
-        binding.textPrayer.setMovementMethod(new ScrollingMovementMethod());
+        //binding.textPrayer.setMovementMethod(new ScrollingMovementMethod());
         prayerViewModel.getPrayersModelsMutableLiveData().observe(getViewLifecycleOwner(), prayersModels -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 binding.textPrayer.setText(Html.fromHtml(prayersModels.getTextPrayer(), Html.FROM_HTML_MODE_COMPACT));
