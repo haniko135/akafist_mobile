@@ -227,16 +227,6 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode ==   KeyEvent.KEYCODE_VOLUME_UP){
-            if(OnlineTempleViewModel.getAudioManager() != null && OnlineTempleViewModel.getVolumeBar() != null) {
-                OnlineTempleViewModel.getVolumeBar().setProgress(OnlineTempleViewModel.getAudioManager().getStreamVolume(AudioManager.STREAM_MUSIC));
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
     private void verifyNotificationPerm(){
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
