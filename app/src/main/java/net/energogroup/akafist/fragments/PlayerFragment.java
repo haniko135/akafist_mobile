@@ -281,7 +281,9 @@ public class PlayerFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mediaPlayer.stop();
-        getActivity().unregisterReceiver(broadcastReceiver);
+        if (mediaPlayer != null && broadcastReceiver != null) {
+            mediaPlayer.stop();
+            getActivity().unregisterReceiver(broadcastReceiver);
+        }
     }
 }

@@ -48,6 +48,8 @@
     <androidx.media3.ui.PlayerView
         android:id="@+id/exoPlayer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:default_artwork="@drawable/temple"
+        app:use_artwork="true"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

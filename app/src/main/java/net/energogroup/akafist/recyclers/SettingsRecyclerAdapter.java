@@ -53,6 +53,13 @@ public class SettingsRecyclerAdapter extends RecyclerView.Adapter<SettingsRecycl
                 textSize.show(fragment.requireActivity().getSupportFragmentManager(), "userTextSizeDialog");
             });
         }
+
+        /*if(position == 0){
+            holder.getTextMenu().setOnClickListener(v -> {
+                DialogTextSize textSize = new DialogTextSize();
+                textSize.show(fragment.requireActivity().getSupportFragmentManager(), "userTextSizeDialog");
+            });
+        }*/
     }
 
     @Override

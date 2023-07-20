@@ -188,19 +188,18 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.homeFragment:
-                navController.navigate(R.id.action_global_home2);
-                return true;
-            case R.id.menuFragment:
-                navController.navigate(R.id.action_global_menu);
-                return true;
-            case R.id.settingsFrag:
-                navController.navigate(R.id.action_global_settingsFragment);
-                return true;
-            case R.id.quitApp:
-                MainActivity.this.finish();
-                System.exit(0);
+        if(item.getItemId() == R.id.homeFragment){
+            navController.navigate(R.id.action_global_home2);
+            return true;
+        } else if (item.getItemId() == R.id.menuFragment) {
+            navController.navigate(R.id.action_global_menu);
+            return true;
+        } else if (item.getItemId() == R.id.settingsFrag) {
+            navController.navigate(R.id.action_global_settingsFragment);
+            return true;
+        } else if (item.getItemId() == R.id.quitApp) {
+            MainActivity.this.finish();
+            System.exit(0);
         }
         return true;
     }

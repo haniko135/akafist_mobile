@@ -126,50 +126,49 @@ public class PrayerFragment extends Fragment {
 
         //нижнее меню
         binding.prayerOptions.setOnItemSelectedListener(item -> {
-            switch (item.getItemId()){
-                case R.id.zoom_out:
-                    textSize--;
-                    saveTextSize(textSize);
-                    binding.textPrayer.setTextSize(convertToPx());
-                    Log.i("PRAYER", Float.toString(textSize));
+            if (item.getItemId() == R.id.zoom_out){
+                textSize--;
+                saveTextSize(textSize);
+                binding.textPrayer.setTextSize(convertToPx());
+                Log.i("PRAYER", Float.toString(textSize));
+                return true;
+            } else if (item.getItemId() == R.id.to_menu) {
+                Bundle bundle1 = new Bundle();
+                bundle1.putString("date",prevMenu);
+                FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_to_churchFragment, bundle1);
+                return true;
+            } else if (item.getItemId() == R.id.zoom_in) {
+                textSize++;
+                saveTextSize(textSize);
+                binding.textPrayer.setTextSize(convertToPx());
+                Log.i("PRAYER", Float.toString(textSize));
+                return true;
+            } else if (item.getItemId() == R.id.next_prayer) {
+                if(prayerViewModel.getPrayersModel().getNext() == 0){
+                    Bundle bundle3 = new Bundle();
+                    bundle3.putString("date",prevMenu);
+                    FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_to_churchFragment, bundle3);
                     return true;
-                case R.id.to_menu:
-                    Bundle bundle1 = new Bundle();
-                    bundle1.putString("date",prevMenu);
-                    FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_to_churchFragment, bundle1);
+                } else {
+                    Bundle bundle4 = new Bundle();
+                    bundle4.putString("prevMenu", prevMenu);
+                    bundle4.putInt("prayerId", prayerViewModel.getPrayersModel().getNext());
+                    FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_self, bundle4);
                     return true;
-                case R.id.zoom_in:
-                    textSize++;
-                    saveTextSize(textSize);
-                    binding.textPrayer.setTextSize(convertToPx());
-                    Log.i("PRAYER", Float.toString(textSize));
+                }
+            } else if (item.getItemId() == R.id.prev_prayer) {
+                if(prayerViewModel.getPrayersModel().getPrev() == 0){
+                    Bundle bundle5 = new Bundle();
+                    bundle5.putString("date",prevMenu);
+                    FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_to_churchFragment, bundle5);
                     return true;
-                case R.id.next_prayer:
-                    if(prayerViewModel.getPrayersModel().getNext() == 0){
-                        Bundle bundle3 = new Bundle();
-                        bundle3.putString("date",prevMenu);
-                        FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_to_churchFragment, bundle3);
-                        return true;
-                    } else {
-                        Bundle bundle4 = new Bundle();
-                        bundle4.putString("prevMenu", prevMenu);
-                        bundle4.putInt("prayerId", prayerViewModel.getPrayersModel().getNext());
-                        FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_self, bundle4);
-                        return true;
-                    }
-                case R.id.prev_prayer:
-                    if(prayerViewModel.getPrayersModel().getPrev() == 0){
-                        Bundle bundle5 = new Bundle();
-                        bundle5.putString("date",prevMenu);
-                        FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_to_churchFragment, bundle5);
-                        return true;
-                    }else {
-                        Bundle bundle2 = new Bundle();
-                        bundle2.putString("prevMenu", prevMenu);
-                        bundle2.putInt("prayerId", prayerViewModel.getPrayersModel().getPrev());
-                        FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_self, bundle2);
-                        return true;
-                    }
+                }else {
+                    Bundle bundle2 = new Bundle();
+                    bundle2.putString("prevMenu", prevMenu);
+                    bundle2.putInt("prayerId", prayerViewModel.getPrayersModel().getPrev());
+                    FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_self, bundle2);
+                    return true;
+                }
             }
             return false;
         });

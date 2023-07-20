@@ -90,10 +90,6 @@ public class OnlineTempleFragment extends Fragment {
                     Log.d("ONLINE_TEMPLE_ERROR", urlSound);
                     String soundTitle = getArguments().getString("soundTitle");
                     ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(soundTitle);
-                    /*String transName = soundTitle.substring(0, 10);
-                    transName += " богослужения общины ";
-                    transName += soundTitle.substring(11, soundTitle.length());
-                    onlineTempleBinding.transName.setText(transName);*/
 
                     if (player == null) {
                         initializePlayer(urlSound, getContext());
