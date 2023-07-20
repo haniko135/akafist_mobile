@@ -114,11 +114,7 @@ public class PrayerFragment extends Fragment {
         binding.textPrayer.setTextSize(convertToPx());
         //binding.textPrayer.setMovementMethod(new ScrollingMovementMethod());
         prayerViewModel.getPrayersModelsMutableLiveData().observe(getViewLifecycleOwner(), prayersModels -> {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                binding.textPrayer.setText(Html.fromHtml(prayersModels.getTextPrayer(), Html.FROM_HTML_MODE_COMPACT));
-            } else{
-                binding.textPrayer.setText(Html.fromHtml(prayersModels.getTextPrayer()));
-            }
+            binding.textPrayer.setText(Html.fromHtml(prayersModels.getTextPrayer(), Html.FROM_HTML_MODE_COMPACT));
         });
 
         //то, что не совсем хорошо сработало

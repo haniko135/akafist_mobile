@@ -1,12 +1,15 @@
 package net.energogroup.akafist.viewmodel;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.MutableLiveData;
@@ -45,7 +48,6 @@ public class PlayerViewModel extends ViewModel {
     private String urlForLink, fileName, filePath;
 
 
-
     public MutableLiveData<String> getWorkMode() {
         return workMode;
     }
@@ -62,15 +64,21 @@ public class PlayerViewModel extends ViewModel {
         this.urlForAudio.setValue(urlForAudio);
     }
 
-    public MutableLiveData<Boolean> getIsInitialized() { return isInitialized; }
+    public MutableLiveData<Boolean> getIsInitialized() {
+        return isInitialized;
+    }
 
-    public void setIsInitialized(Boolean isInitialized) { this.isInitialized.setValue(isInitialized); }
+    public void setIsInitialized(Boolean isInitialized) {
+        this.isInitialized.setValue(isInitialized);
+    }
 
     public MutableLiveData<LinksModel> getLinksModel() {
         return linksModel;
     }
 
-    public void setLinksModel(LinksModel linksModel) { this.linksModel.setValue(linksModel); }
+    public void setLinksModel(LinksModel linksModel) {
+        this.linksModel.setValue(linksModel);
+    }
 
     public MutableLiveData<MediaPlayer> getCurrMediaPlayer() {
         return currMediaPlayer;
@@ -96,7 +104,9 @@ public class PlayerViewModel extends ViewModel {
         return isDownload;
     }
 
-    public void setDownload(Boolean download) { isDownload.setValue(download); }
+    public void setDownload(Boolean download) {
+        isDownload.setValue(download);
+    }
 
     /**
      * Этот метод запрашивает ссылку на скачивание аудиофайла через Яндекс.Диск API.
@@ -113,13 +123,13 @@ public class PlayerViewModel extends ViewModel {
             String resName, resLink;
             try {
                 resName = response.getString("name");
-                Log.i("YANDEX",resName);
+                Log.i("YANDEX", resName);
 
                 //имя файла
-                File newFile = new File(filePath  + "/"+ fileName + ".mp3");
+                File newFile = new File(filePath + "/" + fileName + ".mp3");
 
                 //скачивание файла в фоновом режиме
-                if(!newFile.exists()) {
+                if (!newFile.exists()) {
                     resLink = response.getString("file");
                     Data data = new Data.Builder().putString("URL", resLink)
                             .putString("FILENAME", fileName + ".mp3")
@@ -131,17 +141,17 @@ public class PlayerViewModel extends ViewModel {
 
                     WorkManager.getInstance(inflater.getContext()).getWorkInfoByIdLiveData(workRequest.getId())
                             .observe(Objects.requireNonNull(ViewTreeLifecycleOwner.get(container.getRootView().getRootView())), workInfo -> {
-                                if(workInfo != null && workInfo.getState() == WorkInfo.State.SUCCEEDED){
+                                if (workInfo != null && workInfo.getState() == WorkInfo.State.SUCCEEDED) {
                                     String audioName = workInfo.getOutputData().getString("AUDIO_NAME");
                                     String audioLink = workInfo.getOutputData().getString("AUDIO_LINK");
                                     //downloadAudio.add(new LinksModel(audioName, audioLink));
                                     Log.i("YANDEX", "Download file: " + audioName + ", " + audioLink);
-                                }else{
+                                } else {
                                     Log.i("YANDEX", "Is not yet");
                                 }
                             });
 
-                    Log.i("YANDEX",filePath);
+                    Log.i("YANDEX", filePath);
                 }
 
             } catch (JSONException e) {
@@ -159,21 +169,5 @@ public class PlayerViewModel extends ViewModel {
 
         };
         MainActivity.mRequestQueue.add(request);
-    }
-
-    /**
-     * Этот метод создаёт уведомление о начале загрузки аудио-файла
-     */
-    public void preNotification(String s, Context context){
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, MainActivity.CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher_round)
-                .setContentTitle("Помощник чтеца")
-                .setContentText(s)
-                .setAutoCancel(true)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(context);
-        int NOTIFICATION_ID = 101;
-        managerCompat.notify(NOTIFICATION_ID, builder.build());
     }
 }

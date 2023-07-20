@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -53,6 +54,10 @@ public class NotificationForPlay {
                 .setOngoing(true)
                 .build();
 
-        notificationManagerCompat.notify(1, notification);
+        try{
+            notificationManagerCompat.notify(1, notification);
+        } catch (SecurityException e){
+            Log.e("NOTIFICATION ERROR", e.getLocalizedMessage());
+        }
     }
 }

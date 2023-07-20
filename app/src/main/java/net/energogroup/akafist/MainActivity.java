@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -14,6 +16,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.media.AudioManager;
@@ -64,8 +67,6 @@ public class MainActivity extends AppCompatActivity {
     NavController navController;
     public Toolbar supToolBar;
 
-    public static BottomSheetBehavior playerBehavior;
-
     public ActivityMainBinding getBinding() {
         return binding;
     }
@@ -94,14 +95,14 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Этот метод отключает ночную тему
      */
-    public void unableNightTheme(){
+    public void unableNightTheme() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
     }
 
     /**
      * Этот метод создаёт верхнюю панель
      */
-    public void enableSupToolBar(){
+    public void enableSupToolBar() {
         supToolBar = findViewById(R.id.supToolBar);
         setSupportActionBar(supToolBar);
         supToolBar.inflateMenu(R.menu.nav_menu);
@@ -111,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Этот метод создаёт навигацию между фрагментами
      */
-    public void enableNavigation(){
+    public void enableNavigation() {
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_fragment);
         navController = navHostFragment.getNavController();
         navController.setGraph(R.navigation.routes);
@@ -120,8 +121,8 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Этот метод создаёт отслеживание состояния сети
      */
-    public void enableNetwork(){
-        if(getApplicationContext() != null) {
+    public void enableNetwork() {
+        if (getApplicationContext() != null) {
             networkConnection = new NetworkConnection(getApplicationContext());
         }
     }
@@ -129,8 +130,8 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Этот метод инициализирует глобальные переменные
      */
-    public void globals(){
-        AkafistApplication akafistApplication = (AkafistApplication)getApplication();
+    public void globals() {
+        AkafistApplication akafistApplication = (AkafistApplication) getApplication();
         akafistApplication.globalIsChecked = isChecked;
         secToken = akafistApplication.secToken;
     }
@@ -138,23 +139,23 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Этот метод спрашивает разрешения у пользователя
      */
-    public void enablePermissions(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+    public void enablePermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             verifyNotificationPerm();
         }
-        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.R){
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
             verifyStoragePerm();
         }
     }
 
-    public void enablePlayer(){
+    public void enablePlayer() {
         binding.mainLayout.playerContainer.setVisibility(View.GONE);
     }
 
     /**
      * Этот метод создаёт каналы уведомлений в приложении
      */
-    public void enableNotifications(){
+    public void enableNotifications() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String description = "Для загрузки уведомления пользователя";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
@@ -188,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == R.id.homeFragment){
+        if (item.getItemId() == R.id.homeFragment) {
             navController.navigate(R.id.action_global_home2);
             return true;
         } else if (item.getItemId() == R.id.menuFragment) {
@@ -211,9 +212,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             Log.i("ORIENTATION", "Landscape");
-        }else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             Log.i("ORIENTATION", "Portrait");
         }
     }
@@ -226,16 +227,34 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    private void verifyNotificationPerm(){
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED){
+    private void verifyNotificationPerm() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 ActivityCompat.requestPermissions(this, PERMISSION_NOTIFICATION, 2);
             }
         }
     }
+
     private void verifyStoragePerm() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, PERMISSION_STORAGE, 1);
+        }
+    }
+
+    public static void generateNotification(String text, Context context) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, MainActivity.CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher_round)
+                .setContentTitle("Помощник чтеца")
+                .setContentText(text)
+                .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(context);
+        int NOTIFICATION_ID = 101;
+        try {
+            managerCompat.notify(NOTIFICATION_ID, builder.build());
+        } catch (SecurityException e){
+            Log.e("NOTIFICATION ERROR", e.getLocalizedMessage());
         }
     }
 }

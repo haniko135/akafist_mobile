@@ -95,13 +95,11 @@ public class ChurchFragment extends Fragment {
 
                     //фильтр по текущему нажатому Id
                     churchViewModel.getCurId().observe(getViewLifecycleOwner(), integer -> churchViewModel.getMutableServicesList().observe(getViewLifecycleOwner(), servicesModels -> {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            servicesRecyclerAdapter = new ServicesRecyclerAdapter(servicesModels.stream().filter(servicesModel ->
-                                    servicesModel.getType() == integer
-                            ).collect(Collectors.toList()));
-                            churchBinding.downRvChurch.setAdapter(servicesRecyclerAdapter);
-                            servicesRecyclerAdapter.setFragment(this);
-                        }
+                        servicesRecyclerAdapter = new ServicesRecyclerAdapter(servicesModels.stream().filter(servicesModel ->
+                                servicesModel.getType() == integer
+                        ).collect(Collectors.toList()));
+                        churchBinding.downRvChurch.setAdapter(servicesRecyclerAdapter);
+                        servicesRecyclerAdapter.setFragment(this);
                     }));
                 }else {
                     churchBinding.noInternet.setVisibility(View.VISIBLE);

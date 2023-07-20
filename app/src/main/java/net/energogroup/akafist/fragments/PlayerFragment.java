@@ -209,7 +209,8 @@ public class PlayerFragment extends Fragment {
             playAndStop();
         });
         playerBinding.downloadLinkButton.setOnClickListener(view -> {
-            playerViewModel.preNotification("Загрузка начата", getContext());
+            //playerViewModel.preNotification("Загрузка начата", getContext());
+            MainActivity.generateNotification("Загрузка начата", getContext());
             playerViewModel.getLinkDownload(getLayoutInflater(), container);
         });
         playerBinding.exitAudioPlay.setOnClickListener(view -> {

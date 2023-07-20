@@ -103,11 +103,15 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             Files.delete(Paths.get(finalPath+fileName));
-                            playerViewModel.preNotification("Файл удален. Обновите страницу", fragment.getContext());
+                            MainActivity.generateNotification("Файл удален. Обновите страницу", fragment.getContext());
                         }else {
                             File file = new File(finalPath+fileName);
-                            if (file.delete()) playerViewModel.preNotification("Файл удален", fragment.getContext());
-                            else playerViewModel.preNotification("Произошла ошибка при удалении файла. Попробуйте ещё раз", fragment.getContext());
+                            if (file.delete()) {
+                                MainActivity.generateNotification("Файл удален", fragment.getContext());
+                            }
+                            else {
+                                MainActivity.generateNotification("Файл удален. Обновите страницу", fragment.getContext());
+                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();

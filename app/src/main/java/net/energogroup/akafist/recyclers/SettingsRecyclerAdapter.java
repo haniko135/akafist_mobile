@@ -67,7 +67,7 @@ public class SettingsRecyclerAdapter extends RecyclerView.Adapter<SettingsRecycl
         return textMenu.size();
     }
 
-    class SettingsViewHolder extends RecyclerView.ViewHolder{
+    static class SettingsViewHolder extends RecyclerView.ViewHolder{
 
         private final TextView textMenu;
 

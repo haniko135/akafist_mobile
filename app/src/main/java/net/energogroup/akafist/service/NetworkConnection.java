@@ -40,9 +40,7 @@ public class NetworkConnection extends LiveData<Boolean> {
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null ) {
             postValue(networkInfo.isConnected());
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                Log.d("NETWORK_CHECK", String.valueOf(connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork()).getLinkDownstreamBandwidthKbps()));
-            }
+            Log.d("NETWORK_CHECK", String.valueOf(connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork()).getLinkDownstreamBandwidthKbps()));
         }
         else postValue(false);
     }
@@ -62,11 +60,7 @@ public class NetworkConnection extends LiveData<Boolean> {
     protected void onActive() {
         super.onActive();
         updateNetworkConnection();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-            connectivityManager.registerDefaultNetworkCallback(connectivityManagerCallback());
-        }else {
-            context.registerReceiver(new NetworkReciever(), new IntentFilter(connectivityManager.CONNECTIVITY_ACTION));
-        }
+        connectivityManager.registerDefaultNetworkCallback(connectivityManagerCallback());
 
     }
 

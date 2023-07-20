@@ -53,7 +53,7 @@ public class DownloadFromYandexTask extends Worker {
 
     /**
      * Этот метод производит закачку аудиофайла в фоновом потоке. Данный метод используется в
-     * {@link LinksViewModel#getLinkDownload(String, LayoutInflater, ViewGroup, String, String)}
+     *
      * @return
      */
     @NonNull
@@ -178,27 +178,10 @@ public class DownloadFromYandexTask extends Worker {
         //binding.getRoot().getContext().registerReceiver(onDownloadComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         try {
             if (outFile == null) {
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(context, MainActivity.CHANNEL_ID)
-                        .setSmallIcon(R.mipmap.ic_launcher_round)
-                        .setContentTitle("Помощник чтеца")
-                        .setContentText("Ошибка при скачивании")
-                        .setAutoCancel(true)
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-                NotificationManagerCompat managerCompat = NotificationManagerCompat.from(context);
-                managerCompat.notify(NOTIFICATION_ID, builder.build());
+                MainActivity.generateNotification("Ошибка при скачивании", context);
 
                 new Handler().postDelayed(() -> {
-                    NotificationCompat.Builder builder1 = new NotificationCompat.Builder(context, MainActivity.CHANNEL_ID)
-                            .setSmallIcon(R.mipmap.ic_launcher_round)
-                            .setContentTitle("Помощник чтеца")
-                            .setContentText("Попробуйте скачать заново")
-                            .setAutoCancel(true)
-                            .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-                    NotificationManagerCompat managerCompat1 = NotificationManagerCompat.from(context);
-                    managerCompat1.notify(NOTIFICATION_ID, builder1.build());
-
+                    MainActivity.generateNotification("Попробуйте скачать заново", context);
                     Log.i(tag,"Download Again");
                 }, 2000);
 
@@ -206,41 +189,15 @@ public class DownloadFromYandexTask extends Worker {
 
             }
             else{
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(context, MainActivity.CHANNEL_ID)
-                        .setSmallIcon(R.mipmap.ic_launcher_round)
-                        .setContentTitle("Помощник чтеца")
-                        .setContentText("Файл скачан")
-                        .setAutoCancel(true)
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-                NotificationManagerCompat managerCompat = NotificationManagerCompat.from(context);
-                managerCompat.notify(NOTIFICATION_ID, builder.build());
-
+                MainActivity.generateNotification("Файл скачан",context);
                 Log.i(tag, "Download Success");
             }
         } catch (Exception e) {
             e.printStackTrace();
-
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, MainActivity.CHANNEL_ID)
-                    .setSmallIcon(R.mipmap.ic_launcher_round)
-                    .setContentTitle("Помощник чтеца")
-                    .setContentText("Ошибка при скачивании")
-                    .setAutoCancel(true)
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-            NotificationManagerCompat managerCompat = NotificationManagerCompat.from(context);
-            managerCompat.notify(NOTIFICATION_ID, builder.build());
+            MainActivity.generateNotification("Ошибка при скачивании", context);
 
             new Handler().postDelayed(() -> {
-                NotificationCompat.Builder builder12 = new NotificationCompat.Builder(context, MainActivity.CHANNEL_ID)
-                        .setSmallIcon(R.mipmap.ic_launcher_round)
-                        .setContentTitle("Помощник чтеца")
-                        .setContentText("Попробуйте скачать заново")
-                        .setAutoCancel(true)
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-                NotificationManagerCompat managerCompat12 = NotificationManagerCompat.from(context);
-                managerCompat12.notify(NOTIFICATION_ID, builder12.build());
+                MainActivity.generateNotification("Попробуйте скачать заново", context);
             }, 3000);
             Log.e(tag, "Download Failed with Exception - " + e.getLocalizedMessage());
         }
