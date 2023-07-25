@@ -2,7 +2,6 @@ package net.energogroup.akafist.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.FragmentKt;
 
 import android.text.Html;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -27,7 +25,7 @@ import net.energogroup.akafist.databinding.FragmentPrayerBinding;
 import net.energogroup.akafist.viewmodel.PrayerViewModel;
 
 /**
- * Класс фрагмента молитв
+ * Prayer Fragment Class
  * @author Nastya
  * @version 1.0.0
  */
@@ -41,12 +39,12 @@ public class PrayerFragment extends Fragment {
     FragmentPrayerBinding binding;
 
     /**
-     * Обязательный конструктор класса
+     * Required class constructor
      */
     public PrayerFragment() { }
 
     /**
-     * Этот метод отвечает за создание класса фрагмента молитв
+     * This method is responsible for creating the prayer fragment class
      * @return PrayerFragment
      */
     public static PrayerFragment newInstance() {
@@ -54,7 +52,7 @@ public class PrayerFragment extends Fragment {
     }
 
     /**
-     * Этот метод подготавливает активность к работе фрагмента
+     * This method prepares the activity for the fragment operation
      * @param savedInstanceState Bundle
      */
     @Override
@@ -71,7 +69,7 @@ public class PrayerFragment extends Fragment {
     }
 
     /**
-     * Этот метод определяет поля класса фрагмента, после завершения его создания
+     * This method defines the fields of the fragment class, after its creation is completed
      * @param view View
      * @param savedInstanceState Bundle
      */
@@ -85,8 +83,8 @@ public class PrayerFragment extends Fragment {
     }
 
     /**
-     * Этот метод создаёт фрагмент с учетом определённых
-     * в {@link PrayerFragment#onCreate(Bundle)} полей
+     * This method creates a fragment taking into account certain
+     * fields in {@link PrayerFragment#onCreate(Bundle)}
      * @param inflater LayoutInflater
      * @param container ViewGroup
      * @param savedInstanceState Bundle
@@ -106,10 +104,10 @@ public class PrayerFragment extends Fragment {
             }
         }
 
-        //название молитвы в ToolBar
+        //the name of the prayer in the ToolBar
         prayerViewModel.getPrayersModelsMutableLiveData().observe(getViewLifecycleOwner(), prayersModels -> ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(prayersModels.getNamePrayer()));
 
-        //Первоначальные настройки фрагмента
+        //Initial Fragment settings
         binding = FragmentPrayerBinding.inflate(getLayoutInflater());
         binding.textPrayer.setTextSize(convertToPx());
         //binding.textPrayer.setMovementMethod(new ScrollingMovementMethod());
@@ -117,10 +115,10 @@ public class PrayerFragment extends Fragment {
             binding.textPrayer.setText(Html.fromHtml(prayersModels.getTextPrayer(), Html.FROM_HTML_MODE_COMPACT));
         });
 
-        //то, что не совсем хорошо сработало
+        //something that didn't work out very well
         binding.prayerOptions.getMenu().getItem(0).setChecked(false);
 
-        //нижнее меню
+        //bottom menu
         binding.prayerOptions.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.zoom_out){
                 textSize--;
@@ -173,13 +171,17 @@ public class PrayerFragment extends Fragment {
     }
 
     /**
-     * Этот метод конвертирует размер в пиксели
+     * This method converts the size to pixels
      * @return float
      */
     private float convertToPx(){
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, textSize, getContext().getResources().getDisplayMetrics());
     }
 
+    /**
+     * This method saves text size in SharedPreferences
+     * @param textSize actual text size
+     */
     public void saveTextSize(float textSize){
         SharedPreferences.Editor editor = appPref.edit();
         editor.putFloat("app_pref_text_size", textSize);

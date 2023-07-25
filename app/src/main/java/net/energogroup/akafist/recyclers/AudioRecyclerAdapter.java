@@ -1,7 +1,6 @@
 package net.energogroup.akafist.recyclers;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,14 +29,16 @@ import java.nio.file.Paths;
 import java.util.List;
 
 /**
- * Класс адаптера RecyclerView с аудиофайлами
+ * RecyclerView adapter class with audio files
  * @author Nastya Izotina
  * @version 1.0.0
  */
 public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdapter.AudioViewHolder> implements Serializable {
 
     private String urlForLink, filePath;
-    private final String urlPattern = "https://getfile.dokpub.com/yandex/get/";
+    private static final int URL_PATTERN_ID = R.string.listenPattern;
+    private static final int DELETE_REPEAT_ID = R.string.deleteRepeat;
+    private static final int DELETE_FILE_ID = R.string.deleteFile;
     private LinksFragment fragment;
     private PlayerViewModel playerViewModel;
     private List<LinksModel> audios;
@@ -46,7 +47,7 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
     boolean recIsChecked;
 
     /**
-     * Этот метод обновляет листы скачанных аудио и онлайн-аудио
+     * This method updates the lists of downloaded audio and online audio
      * @param audios Список онлайн-аудио
      * @param audiosDownNames Список скачанных аудио
      */
@@ -55,6 +56,13 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
         this.audiosDown = audiosDownNames;
     }
 
+    /**
+     * Constructor for list of audios that downloaded and online
+     * @param audios List of audios
+     * @param audiosDownNames List of names of audios
+     * @param fragment Current fragment
+     * @param filePath Path to downloaded file
+     */
     public AudioRecyclerAdapter(List<LinksModel> audios, List<String> audiosDownNames, LinksFragment fragment, String filePath){
         this.fragment = fragment;
         this.audios = audios;
@@ -63,12 +71,24 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
         playerViewModel = new ViewModelProvider(fragment.getActivity()).get(PlayerViewModel.class);
     }
 
+    /**
+     * Constuctor for list of downloaded audios
+     * @param audios List of audios
+     * @param fragment
+     */
     public AudioRecyclerAdapter(List<LinksModel> audios, LinksFragment fragment){
         this.fragment = fragment;
         this.audios = audios;
         playerViewModel = new ViewModelProvider(fragment.getActivity()).get(PlayerViewModel.class);
     }
 
+    /**
+     * Creates ViewHolder for audios
+     * @param parent   The ViewGroup into which the new View will be added after it is bound to
+     *                 an adapter position.
+     * @param viewType The view type of the new View.
+     * @return
+     */
     @NonNull
     @Override
     public AudioViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -78,16 +98,16 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
 
 
     /**
-     * Этот метод отвечает за логику, происходящую в каждом элементе RecyclerView
-     * @param holder Элемент списка
-     * @param position Позиция в списке
+     * This method is responsible for the logic occurring in each element of the Recycler View
+     * @param holder List item
+     * @param position Position in the list
      */
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull AudioViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.audiosListItem.setText(audios.get(position).getName());
 
-        //проверка на наличие в списках скачанных
+        //checking for the presence in tje list of downloaded files
         if (audiosDown !=null && audiosDown.size() != 0) {
             if (audiosDown.contains(audios.get(position).getName())) {
                 Log.e("Download", "here");
@@ -95,7 +115,8 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
                 holder.isDownload = true;
                 holder.audioListItemDown.setVisibility(View.VISIBLE);
                 holder.audioListItemDel.setVisibility(View.VISIBLE);
-                //удаление файла
+
+                //delete file
                 holder.audioListItemDel.setOnClickListener(v -> {
                     String finalPath = filePath+"/";
                     String fileName = audios.get(position).getName() + ".mp3";
@@ -103,14 +124,14 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             Files.delete(Paths.get(finalPath+fileName));
-                            MainActivity.generateNotification("Файл удален. Обновите страницу", fragment.getContext());
+                            MainActivity.generateNotification(DELETE_REPEAT_ID, fragment.getContext());
                         }else {
                             File file = new File(finalPath+fileName);
                             if (file.delete()) {
-                                MainActivity.generateNotification("Файл удален", fragment.getContext());
+                                MainActivity.generateNotification(DELETE_FILE_ID, fragment.getContext());
                             }
                             else {
-                                MainActivity.generateNotification("Файл удален. Обновите страницу", fragment.getContext());
+                                MainActivity.generateNotification(DELETE_REPEAT_ID, fragment.getContext());
                             }
                         }
                     } catch (IOException e) {
@@ -121,7 +142,7 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
             }
         }
 
-        //обработка нажатия на элемент списка
+        //processing of clicking on a list item
         holder.audiosListItem.setOnClickListener(view -> {
             checkPlaying();
             urlForLink = audios.get(position).getUrl();
@@ -145,7 +166,9 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
                 playerViewModel.setWorkMode("audioPrayers");
                 playerViewModel.setLinksModel(audios.get(position));
 
-                //запуск аудио из памяти телефона если оно скачано
+                String urlPattern = fragment.getResources().getString(URL_PATTERN_ID);
+
+                //start audio from the phone's memory if it is downloaded
                 if(!holder.isDownload) {
                     playerViewModel.setUrlForAudio(urlPattern + urlForLink + "?alt=media");
                     playerViewModel.setDownload(false);
@@ -179,7 +202,7 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
     }
 
     /**
-     * Внутренний класс, отвечающий за правильной отображение элемента RecyclerView
+     * The internal class responsible for the display of the RecyclerView element
      */
     static class AudioViewHolder extends RecyclerView.ViewHolder{
         public TextView audiosListItem;
@@ -197,7 +220,7 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
     }
 
     /**
-     * Этот метод проверяет, играет ли предыдущий аудиофайл
+     * This method checks if the previous audio file is playing
      */
     private void checkPlaying(){
         playerViewModel.getCurrMediaPlayer().observe(fragment.getViewLifecycleOwner(), mediaPlayer1 -> {

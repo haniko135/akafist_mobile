@@ -5,10 +5,9 @@ import net.energogroup.akafist.viewmodel.ChurchViewModel;
 
 
 /**
- * Класс-сущность, описывающий название блока молитвы.
- * Есть только в классах {@link ChurchFragment}
- * и {@link ChurchViewModel}
- *
+ * An entity class describing the name of the prayer block.
+ * There are only in classes {@link ChurchFragment}
+ * and {@link ChurchViewModel}
  * @author Nastya Izotina
  * @version 1.0.0
  */
@@ -19,11 +18,11 @@ public class ServicesModel {
     private final String date;
 
     /**
-     * Конструктор класса
-     * @param id int - индивидуальный номер
-     * @param name String - название молитвы
-     * @param type int - ссылка на id типа
-     * @param date String - тип
+     * Class constructor
+     * @param id int - individual number
+     * @param name String - name of the prayer
+     * @param type int - reference to the type id
+     * @param date String - type
      */
     public ServicesModel(int id, String name, int type, String date) {
         this.id = id;
@@ -33,28 +32,28 @@ public class ServicesModel {
     }
 
     /**
-     * @return int - возвращает поле id
+     * @return int - returns id field
      */
     public int getId() {
         return id;
     }
 
     /**
-     * @return String - возвращает поле name
+     * @return String - returns name field
      */
     public String getName() {
         return name;
     }
 
     /**
-     * @return int - возвращает поле type
+     * @return int - returns type field
      */
     public int getType() {
         return type;
     }
 
     /**
-     * @return String - возвращает поле date
+     * @return String - returns date field
      */
     public String getDate() {
         return date;

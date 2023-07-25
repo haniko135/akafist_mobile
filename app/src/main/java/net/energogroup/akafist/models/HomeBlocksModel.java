@@ -1,8 +1,8 @@
 package net.energogroup.akafist.models;
 
 /**
- * Класс-сущность, описывающий основные параметры блоков
- * во фрагментах "Главная" и "Меню"
+ * An entity class that describes the main parameters
+ * of the blocks in the "Home" and "Menu" fragments
  * @author Nastya Izotina
  * @version 1.0.0
  */
@@ -14,10 +14,10 @@ public class HomeBlocksModel {
     private int links;
 
     /**
-     * Конструктор класса с тремя параметрами
-     * @param date String - тип блока
-     * @param dateTxt String - верхнее название блока
-     * @param name String - нижнее название блока
+     * Constructor of a class with three parameters
+     * @param date String - block type
+     * @param dateTxt String - upper block name
+     * @param name String - lower block name
      */
     public HomeBlocksModel(String date, String dateTxt, String name) {
         this.date = date;
@@ -26,9 +26,9 @@ public class HomeBlocksModel {
     }
 
     /**
-     * Конструктор класса с двумя параметрами
-     * @param date String - тип блока
-     * @param dateTxt String - верхнее название блока
+     * Constructor of a class with two parameters
+     * @param date String - block type
+     * @param dateTxt String - upper block name
      */
     public HomeBlocksModel(String date, String dateTxt) {
         this.date = date;
@@ -36,51 +36,51 @@ public class HomeBlocksModel {
     }
 
     /**
-     * @return String - Возвращает поле date
+     * @return String - Returns the date field
      */
     public String getDate() {
         return date;
     }
 
     /**
-     * @return String - Возвращает поле dateTxt
+     * @return String - Returns the dateTxt field
      */
     public String getDateTxt() {
         return dateTxt;
     }
 
     /**
-     * @return String - Возвращает поле name
+     * @return String - Returns the name field
      */
     public String getName() {
         return name;
     }
 
     /**
-     * Этот метод присваивает ссылки
-     * @param links int - Ссылки на фрагменты
+     * This method assigns links
+     * @param links int - Links to fragments
      */
     public void setLinks(int links) {
         this.links = links;
     }
 
     /**
-     * @return int - Возвращает поле links
+     * @return int - Returns links field
      */
     public int getLinks() {
         return links;
     }
 
     /**
-     * Этот метод присваивает дополнительные атрибуты
-     * @param additions String - дополнительные атрибуты
+     * This method assigns additional attributes
+     * @param additions String - additional attributes
      */
     public void setAdditions(String additions) {
         this.additions = additions;
     }
 
     /**
-     * @return String - Возвращает поле additions
+     * @return String - Returns additions field
      */
     public String getAdditions() {
         return additions;

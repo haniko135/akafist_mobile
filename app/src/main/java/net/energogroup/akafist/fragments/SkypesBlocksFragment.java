@@ -17,7 +17,7 @@ import net.energogroup.akafist.recyclers.SkypesGridRecyclerAdapter;
 import net.energogroup.akafist.viewmodel.SkypeViewModel;
 
 /**
- * Класс, выводящий список ссылок на конференции
+ * A class that displays a list of links to conferences
  * @author Nastya Izotina
  * @version 1.0.0
  */
@@ -30,22 +30,22 @@ public class SkypesBlocksFragment extends Fragment {
     public FragmentSkypesBlocksBinding skypesBlocksBinding;
 
     /**
-     * Обязательный конструктор класса
+     * Required class constructor
      */
     public SkypesBlocksFragment() { }
 
     /**
-     * Этот метод создает класс фрагмента SkypesBlocksFragment
-     * @return Новый экземпляр класса SkypesBlocksFragment
+     * This method creates the SkypesBlocksFragment fragment class
+     * @return New instance of the SkypesBlocksFragment class
      */
     public static SkypesBlocksFragment newInstance() {
         return new SkypesBlocksFragment();
     }
 
     /**
-     * Этот метод подготавливает активность к работе фрагмента с учетом
-     * сохранённых данных
-     * @param savedInstanceState Bundle - Сохранённые данные фрагмента
+     * This method prepares the activity for the fragment operation taking into account
+     * saved data
+     * @param savedInstanceState Bundle - Saved fragment data
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,12 +63,12 @@ public class SkypesBlocksFragment extends Fragment {
     }
 
     /**
-     * Этот метод создаёт фрагмент с учетом определённых
-     * в {@link SkypesBlocksFragment#onCreate(Bundle)} полей
+     * This method creates a fragment taking into account certain
+     * fields in {@link SkypesBlocksFragment#onCreate(Bundle)}
      * @param inflater LayoutInflater
      * @param container ViewGroup
-     * @param savedInstanceState Bundle - Сохранённое состояние фрагмента
-     * @return View - Выводит фрагмент на экран
+     * @param savedInstanceState Bundle - Saved fragment state
+     * @return View - Displays a fragment on the screen
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -1,17 +1,10 @@
 package net.energogroup.akafist.viewmodel;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewTreeLifecycleOwner;
@@ -24,8 +17,7 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 import net.energogroup.akafist.MainActivity;
-import net.energogroup.akafist.R;
-import net.energogroup.akafist.fragments.LinksFragment;
+import net.energogroup.akafist.fragments.PlayerFragment;
 import net.energogroup.akafist.models.LinksModel;
 import net.energogroup.akafist.service.background.DownloadFromYandexTask;
 
@@ -36,6 +28,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * A class that provides music playback throughout the application
+ * @author Nastya Izotina
+ * @version 1.0.2
+ */
 public class PlayerViewModel extends ViewModel {
 
     private MutableLiveData<String> workMode = new MutableLiveData<>();
@@ -62,10 +59,6 @@ public class PlayerViewModel extends ViewModel {
 
     public void setUrlForAudio(String urlForAudio) {
         this.urlForAudio.setValue(urlForAudio);
-    }
-
-    public MutableLiveData<Boolean> getIsInitialized() {
-        return isInitialized;
     }
 
     public void setIsInitialized(Boolean isInitialized) {
@@ -109,9 +102,8 @@ public class PlayerViewModel extends ViewModel {
     }
 
     /**
-     * Этот метод запрашивает ссылку на скачивание аудиофайла через Яндекс.Диск API.
-     * Есть в методе {@link LinksFragment#onCreateView(LayoutInflater, ViewGroup, Bundle)}
-     * @param inflater LayoutInflater
+     * This method requests a link to download an audio file from Yandex.Disk API.
+     * It is using in method {@link PlayerFragment#initButtonClicks(ViewGroup)}
      * @param container ViewGroup
      * @exception JSONException
      */
@@ -133,7 +125,6 @@ public class PlayerViewModel extends ViewModel {
                     resLink = response.getString("file");
                     Data data = new Data.Builder().putString("URL", resLink)
                             .putString("FILENAME", fileName + ".mp3")
-                            //.putString("FILENAME", resName)
                             .putString("FILE_DIR", filePath).build();
                     workRequest = new OneTimeWorkRequest.Builder(DownloadFromYandexTask.class)
                             .setInputData(data).build();

@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import net.energogroup.akafist.MainActivity;
+import net.energogroup.akafist.R;
 import net.energogroup.akafist.fragments.ChurchFragment;
 import net.energogroup.akafist.models.ServicesModel;
 import net.energogroup.akafist.models.TypesModel;
@@ -40,6 +41,7 @@ public class ChurchViewModel extends ViewModel{
     private String dateTxt, nameTxt;
     private MutableLiveData <String> liveDataTxt = new MutableLiveData<>();
     private MutableLiveData <String> liveNameTxt = new MutableLiveData<>();
+    private static final int API_PATH = R.string.apiPath;
 
     /**
      * @param id Текущий id типа

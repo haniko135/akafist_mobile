@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Handler;
@@ -21,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 
 import net.energogroup.akafist.MainActivity;
+import net.energogroup.akafist.R;
 import net.energogroup.akafist.databinding.FragmentPlayerBinding;
 import net.energogroup.akafist.service.notification.NotificationForPlay;
 import net.energogroup.akafist.service.notification.OnClearFromRecentService;
@@ -39,6 +39,7 @@ public class PlayerFragment extends Fragment {
     private final Handler handler = new Handler();
     private boolean isPrepared = false;
     private PlayerViewModel playerViewModel;
+    private static final int START_DOWNLOAD_ID = R.string.startDownload;
     public static Runnable runnable;
     private FragmentPlayerBinding playerBinding;
 
@@ -203,14 +204,13 @@ public class PlayerFragment extends Fragment {
     }
 
 
-    private void initButtonClicks(ViewGroup container){
+    public void initButtonClicks(ViewGroup container){
         Log.e("PLAYER_FRAGMENT", "init buttons");
         playerBinding.imageButtonPlay.setOnClickListener(view -> {
             playAndStop();
         });
         playerBinding.downloadLinkButton.setOnClickListener(view -> {
-            //playerViewModel.preNotification("Загрузка начата", getContext());
-            MainActivity.generateNotification("Загрузка начата", getContext());
+            MainActivity.generateNotification(START_DOWNLOAD_ID, getContext());
             playerViewModel.getLinkDownload(getLayoutInflater(), container);
         });
         playerBinding.exitAudioPlay.setOnClickListener(view -> {

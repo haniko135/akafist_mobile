@@ -1,7 +1,7 @@
 package net.energogroup.akafist.models;
 
 /**
- * Класс-сущность, описывающий конференции
+ * Entity class describing conferences
  * @author Nastya Izotina
  * @version 1.0.0
  */
@@ -11,10 +11,10 @@ public class SkypesConfs {
     private final String url;
 
     /**
-     * Конструктор класса с тремя параметрами
-     * @param id int - индивидуальный номер
-     * @param name String - название конференции
-     * @param url String - ссылка на конференцию
+     * Constructor of a class with three parameters
+     * @param id int - individual number
+     * @param name String - name of the conference
+     * @param url String - link to the conference
      */
     public SkypesConfs(int id, String name, String url) {
         this.id = id;
@@ -23,9 +23,9 @@ public class SkypesConfs {
     }
 
     /**
-     * Конструктор класса с двумя параметрами
-     * @param id int - индивидуальный номер
-     * @param name String - название конференции
+     * Constructor of a class with two parameters
+     * @param id int - individual number
+     * @param name String - name of the conference
      */
     public SkypesConfs(int id, String name) {
         this.id = id;
@@ -34,28 +34,28 @@ public class SkypesConfs {
     }
 
     /**
-     * @return String - возвращает поле name
+     * @return String - returns name field
      */
     public String getName() {
         return name;
     }
 
     /**
-     * @return String - Возвращает поле url
+     * @return String - returns url field
      */
     public String getUrl() {
         return url;
     }
 
     /**
-     * @return int - возвращает поле id
+     * @return int - returns id field
      */
     public int getId() {
         return id;
     }
 
     /**
-     * Этот методо проверяет на наличие ссылки
+     * This method checks for a link
      * @return
      */
     public boolean isUrl(){

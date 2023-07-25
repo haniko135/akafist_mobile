@@ -1,9 +1,8 @@
 package net.energogroup.akafist.models;
 
 /**
- * Класс-сущность, описывающий тип, к которому
- * относится класс-сущность {@link ServicesModel}
- *
+ * Entity class describing the type to which
+ * the entity class {@link ServicesModel} belongs
  * @author Nastya Izotina
  * @version 1.0.0
  */
@@ -12,9 +11,9 @@ public class TypesModel {
     private final String name;
 
     /**
-     * Конструктор класса
-     * @param id int - индивидуальный номер
-     * @param name String - имя типа
+     * Class Constructor
+     * @param id int - individual number
+     * @param name String - type name
      */
     public TypesModel(int id, String name) {
         this.id = id;
@@ -22,14 +21,14 @@ public class TypesModel {
     }
 
     /**
-     * @return int - возвращает поле id
+     * @return int - returns id field
      */
     public int getId() {
         return id;
     }
 
     /**
-     * @return String - возвращает поле name
+     * @return String - returns name field
      */
     public String getName() {
         return name;

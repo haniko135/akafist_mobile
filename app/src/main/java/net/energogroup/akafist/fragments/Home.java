@@ -5,24 +5,17 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.FragmentKt;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import net.energogroup.akafist.MainActivity;
@@ -32,12 +25,8 @@ import net.energogroup.akafist.databinding.FragmentHomeBinding;
 import net.energogroup.akafist.recyclers.HomeRecyclerAdapter;
 import net.energogroup.akafist.viewmodel.MenuViewModel;
 
-import org.w3c.dom.Text;
-
-import java.util.Objects;
-
 /**
- * Класс фрагмента "Главная"
+ * Main Page class
  * @author Nastya Izotina
  * @version 1.0.0
  */
@@ -51,12 +40,12 @@ public class Home extends Fragment {
     AppCompatActivity fragActivity;
 
     /**
-     * Обязательный конструктор класса
+     * Required class constructor
      */
     public Home() { }
 
     /**
-     * Этот метод отвечает за создание класса фрагмента "Главная"
+     * This method is responsible for creating the "Home" fragment class
      * @return Home
      */
     public static Home newInstance() {
@@ -64,7 +53,7 @@ public class Home extends Fragment {
     }
 
     /**
-     * Этот метод подготавливает активность к работе фрагмента
+     * This method prepares the activity for the fragment operation
      * @param savedInstanceState Bundle
      */
     @Override
@@ -79,8 +68,8 @@ public class Home extends Fragment {
     }
 
     /**
-     * Этот метод создаёт фрагмент с учетом определённых
-     * в {@link Home#onCreate(Bundle)} полей
+     * This method creates a fragment taking into account certain
+     * fields in {@link Home#onCreate(Bundle)}
      * @param inflater LayoutInflater
      * @param container ViewGroup
      * @param savedInstanceState Bundle
@@ -126,6 +115,11 @@ public class Home extends Fragment {
         return homeBinding.getRoot();
     }
 
+    /**
+     * This method initializes the main parameters of the home page
+     * and is using {@link Home#onCreate(Bundle)}
+     * @return
+     */
     private void initializeHome(){
         if (((AppCompatActivity)getActivity()).getSupportActionBar() != null){
             fragActivity = (AppCompatActivity)getActivity();
@@ -147,6 +141,10 @@ public class Home extends Fragment {
         menuViewModel.getJson("home");
     }
 
+    /**
+     * Processing clicks on the "Back" button in the bottom panel
+     * @return
+     */
     private void onBackPressed(){
         requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override

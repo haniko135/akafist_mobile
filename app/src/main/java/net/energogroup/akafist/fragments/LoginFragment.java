@@ -8,14 +8,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.FragmentKt;
 
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
@@ -24,12 +20,11 @@ import net.energogroup.akafist.dialogs.DialogLogin;
 import net.energogroup.akafist.viewmodel.LoginViewModel;
 
 import java.util.Random;
-import java.util.UUID;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link LoginFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Authorization class
+ * @author Nastya Izotina
+ * @version 1.0.1
  */
 public class LoginFragment extends Fragment {
 
@@ -38,12 +33,24 @@ public class LoginFragment extends Fragment {
     private String name, email;
     private SharedPreferences appPref;
 
+    /**
+     * Required class constructor
+     */
     public LoginFragment() { }
 
+    /**
+     * This method is responsible for creating the "Login" fragment class
+     * @return LoginFragment
+     */
     public static LoginFragment newInstance() {
         return new LoginFragment();
     }
 
+    /**
+     * This method creates a fragment
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +78,18 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    /**
+     * This method creates the fragment itself
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -103,6 +122,10 @@ public class LoginFragment extends Fragment {
         return loginBinding.getRoot();
     }
 
+    /**
+     * This method assigns a name to a user with guest rights
+     * @param editor
+     */
     public void guestFunc(SharedPreferences.Editor editor){
         Random random = new Random();
         int rand1 = random.nextInt(100);

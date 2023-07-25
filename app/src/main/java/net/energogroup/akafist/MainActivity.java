@@ -19,12 +19,10 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,15 +30,14 @@ import android.view.View;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import net.energogroup.akafist.databinding.ActivityMainBinding;
+import net.energogroup.akafist.fragments.PlayerFragment;
 import net.energogroup.akafist.service.NetworkConnection;
 import net.energogroup.akafist.service.notification.NotificationForPlay;
-import net.energogroup.akafist.viewmodel.OnlineTempleViewModel;
 
 /**
- * Класс главной активности
+ * Main activity class
  * @author Nastya Izotina
  * @version 1.0.0
  */
@@ -72,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Этот метод инициализирует главную активность приложения
-     * @param savedInstanceState Bundle - текцщее состояние приложения
+     * This method initializes the main activity of the application
+     * @param savedInstanceState Bundle - current state of the application
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Этот метод отключает ночную тему
+     * This method disables the night theme
      */
     public void unableNightTheme() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
@@ -110,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Этот метод создаёт навигацию между фрагментами
+     * This method creates the top panel
      */
     public void enableNavigation() {
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_fragment);
@@ -119,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Этот метод создаёт отслеживание состояния сети
+     * This method creates network status tracking
      */
     public void enableNetwork() {
         if (getApplicationContext() != null) {
@@ -128,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Этот метод инициализирует глобальные переменные
+     * This method initializes global variables
      */
     public void globals() {
         AkafistApplication akafistApplication = (AkafistApplication) getApplication();
@@ -137,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Этот метод спрашивает разрешения у пользователя
+     * This method requests permissions from the user
      */
     public void enablePermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -148,12 +145,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method enables {@link PlayerFragment#PlayerFragment()}
+     */
     public void enablePlayer() {
         binding.mainLayout.playerContainer.setVisibility(View.GONE);
     }
 
     /**
-     * Этот метод создаёт каналы уведомлений в приложении
+     * This method creates notification channels in the application
      */
     public void enableNotifications() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -171,9 +171,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Этот метод создаёт меню в Toolbar
-     * @param menu Menu - главное меню
-     * @return Статус созданного меню
+     * This method creates a menu in the Toolbar
+     * @param menu Menu - main menu
+     * @return Status of the created menu
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -182,9 +182,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Этот метод присваивает действия к элементам меню
-     * @param item MenuItem - элемент меню
-     * @return Статус присвоенных дейстыий к меню
+     * This method assigns actions to menu items
+     * @param item MenuItem - menu item
+     * @return Status of assigned actions to the menu
      */
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Этот метод реагирует на смену конфигурации
+     * This method responds to a configuration change
      * @param newConfig
      */
     @Override
@@ -220,13 +220,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Этот метод уничтожает активность
+     * This method destroys the activity
      */
     @Override
     protected void onDestroy() {
         super.onDestroy();
     }
 
+    /**
+     * This method enables notification permissions if they are not enabled
+     */
     private void verifyNotificationPerm() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -235,13 +238,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method enables storage permissions if they are not enabled
+     */
     private void verifyStoragePerm() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, PERMISSION_STORAGE, 1);
         }
     }
 
-    public static void generateNotification(String text, Context context) {
+    /**
+     * This method generate notification
+     */
+    public static void generateNotification(int textId, Context context) {
+        String text = context.getResources().getString(textId);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, MainActivity.CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setContentTitle("Помощник чтеца")

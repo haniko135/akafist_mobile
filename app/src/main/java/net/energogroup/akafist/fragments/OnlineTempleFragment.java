@@ -1,35 +1,29 @@
 package net.energogroup.akafist.fragments;
 
 import android.content.Context;
-import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.media3.common.MediaItem;
-import androidx.media3.common.Player;
-import androidx.media3.common.Timeline;
-import androidx.media3.common.util.UnstableApi;
-import androidx.media3.datasource.DefaultHttpDataSource;
 import androidx.media3.exoplayer.ExoPlayer;
-import androidx.media3.exoplayer.hls.HlsDataSourceFactory;
-import androidx.media3.exoplayer.hls.HlsManifest;
-import androidx.media3.exoplayer.hls.HlsMediaSource;
-import androidx.media3.exoplayer.source.MediaSource;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import net.energogroup.akafist.databinding.FragmentOnlineTempleBinding;
 import net.energogroup.akafist.service.NetworkConnection;
 import net.energogroup.akafist.viewmodel.OnlineTempleViewModel;
 
+/**
+ * Class of online broadcasts of divine services
+ * @author Nastya Izotina
+ * @version 1.0.2
+ */
 public class OnlineTempleFragment extends Fragment {
 
     public FragmentOnlineTempleBinding onlineTempleBinding;
@@ -42,12 +36,12 @@ public class OnlineTempleFragment extends Fragment {
     private MediaItem mediaItem;
 
     /**
-     * Обязательный конструктор класса
+     * Required class constructor
      */
     public OnlineTempleFragment() { }
 
     /**
-     * Этот метод отвечает за создание класса фрагмента с прямым эфиром
+     * This method is responsible for creating a live broadcast fragment class
      * @return OnlineTempleFragment
      */
     public static OnlineTempleFragment newInstance() {
@@ -55,7 +49,7 @@ public class OnlineTempleFragment extends Fragment {
     }
 
     /**
-     * Этот метод подготавливает активность к работе фрагмента
+     * This method prepares the activity for the fragment operation
      * @param savedInstanceState Bundle
      */
     @Override
@@ -70,7 +64,7 @@ public class OnlineTempleFragment extends Fragment {
     }
 
     /**
-     * Этот метод создаёт фрагмент
+     * This method creates a fragment
      * @param inflater LayoutInflater
      * @param container ViewGroup
      * @param savedInstanceState Bundle
@@ -104,6 +98,12 @@ public class OnlineTempleFragment extends Fragment {
     }
 
 
+    /**
+     * This method initializes ExoPlayer for live streams
+     * @param s URL of liturgy
+     * @param context fragment context
+     * @return
+     */
     public void initializePlayer(String s, Context context){
         player = new ExoPlayer.Builder(context).build();
         onlineTempleBinding.exoPlayer.setPlayer(player);
@@ -118,6 +118,10 @@ public class OnlineTempleFragment extends Fragment {
         player.prepare();
     }
 
+    /**
+     * This method releases audio thread of liturgy
+     * @return
+     */
     public void releasePlayer(){
         Log.e("ONLINE_TEMPLE_ERROR", "RELEASE PLAYER");
         player.setPlayWhenReady(!playPauseState);
@@ -139,7 +143,7 @@ public class OnlineTempleFragment extends Fragment {
     }
 
     /**
-     * Этот метод уничтожает фрагмент
+     * This method destroys the fragment
      */
     @Override
     public void onDestroyView() {

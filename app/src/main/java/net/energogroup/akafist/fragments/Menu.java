@@ -20,7 +20,7 @@ import net.energogroup.akafist.recyclers.MenuRecyclerAdapter;
 import net.energogroup.akafist.viewmodel.MenuViewModel;
 
 /**
- * Класс фрагмента "Меню"
+ * The class of the "Menu" fragment
  * @author Nastya Izotina
  * @version 1.0.0
  */
@@ -29,12 +29,12 @@ public class Menu extends Fragment {
     public FragmentMenuBinding menuBinding;
 
     /**
-     * Обязательный конструктор класса
+     * Required class constructor
      */
     public Menu() { }
 
     /**
-     * Этот метод отвечает за создание класса фрагмента "Меню"
+     * This method is responsible for creating the "Menu" fragment class
      * @return Menu
      */
     public static Menu newInstance() {
@@ -42,7 +42,7 @@ public class Menu extends Fragment {
     }
 
     /**
-     * Этот метод подготавливает активность к работе фрагмента
+     * This method prepares the activity for the fragment operation
      * @param savedInstanceState Bundle
      */
     @Override
@@ -65,8 +65,8 @@ public class Menu extends Fragment {
     }
 
     /**
-     * Этот метод создаёт фрагмент с учетом определённых
-     * в {@link Menu#onCreate(Bundle)} полей
+     * This method creates a fragment taking into account certain
+     * fields in {@link Menu#onCreate(Bundle)}
      * @param inflater LayoutInflater
      * @param container ViewGroup
      * @param savedInstanceState bundle

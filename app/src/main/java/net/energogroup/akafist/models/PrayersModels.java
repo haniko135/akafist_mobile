@@ -1,7 +1,7 @@
 package net.energogroup.akafist.models;
 
 /**
- * Класс-сущность, описывающий молитву
+ * An entity class describing prayer
  * @author Nastya  Izotina
  * @version 1.0.0
  */
@@ -12,11 +12,11 @@ public class PrayersModels {
     private final int next;
 
     /**
-     * Конструктор класса
-     * @param namePrayer String - название молитвы
+     * Class constructor
+     * @param namePrayer String - name of the prayer
      * @param textPrayer String - текст молитвы
-     * @param prev int - ссылка на предыдущую молитву
-     * @param next int - ссылка на следующую молитву
+     * @param prev int - the text of the prayer
+     * @param next int - link to the following prayer
      */
     public PrayersModels(String namePrayer, String textPrayer, int prev, int next) {
         this.namePrayer = namePrayer;
@@ -26,28 +26,28 @@ public class PrayersModels {
     }
 
     /**
-     * @return String - возвращает название молитвы
+     * @return String - returns the name of the prayer
      */
     public String getNamePrayer() {
         return namePrayer;
     }
 
     /**
-     * @return String - возвращает текст молитвы
+     * @return String - returns the text of the prayer
      */
     public String getTextPrayer() {
         return textPrayer;
     }
 
     /**
-     * @return int - возвращает ссылку на предыдущуюю молитву
+     * @return int - returns a link to the previous prayer
      */
     public int getPrev() {
         return prev;
     }
 
     /**
-     * @return int - возвращает ссылку на предыдущуюю молитву
+     * @return int - returns a link to the previous prayer
      */
     public int getNext() {
         return next;

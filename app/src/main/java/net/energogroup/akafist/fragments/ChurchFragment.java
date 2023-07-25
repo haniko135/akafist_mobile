@@ -1,6 +1,5 @@
 package net.energogroup.akafist.fragments;
 
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,7 +21,7 @@ import net.energogroup.akafist.recyclers.TypesRecyclerAdapter;
 import java.util.stream.Collectors;
 
 /**
- * Класс фрагмента, выводящего список молитв
+ * The class of the fragment that displays the list of prayers
  * @author Nastya Izotina
  * @version 1.0.0
  */
@@ -35,20 +34,20 @@ public class ChurchFragment extends Fragment {
 
 
     /**
-     * Обязательный конструктор класса
+     * Required class constructor
      */
     public ChurchFragment() { }
 
     /**
-     * Этот метод отвечает за создание класса фрагмента, выводящего список молитв
-     * @return Новый экземпляр класса ChurchFragment
+     * This method is responsible for creating a fragment class that outputs a list of prayers
+     * @return A new instance of the Church Fragment class
      */
     public static ChurchFragment newInstance() {
         return new ChurchFragment();
     }
 
     /**
-     * Этот метод подготавливает активность к работе фрагмента
+     * This method prepares the activity for the fragment operation
      * @param savedInstanceState Bundle
      */
     @Override
@@ -66,8 +65,8 @@ public class ChurchFragment extends Fragment {
     }
 
     /**
-     * Этот метод создаёт фрагмент с учетом определённых
-     * в {@link ChurchFragment#onCreate(Bundle)} полей
+     * This method creates a fragment taking into account certain
+     * fields in {@link ChurchFragment#onCreate(Bundle)}
      * @param inflater LayoutInflater
      * @param container ViewGroup
      * @param savedInstanceState Bundle

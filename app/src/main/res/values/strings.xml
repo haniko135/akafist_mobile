@@ -6,9 +6,15 @@
     <string name="menu_title">Меню</string>
     <string name="quitApp">Выход</string>
 
+    <string name="apiPath">https://pr.energogroup.org/api/church/</string>
+
     <string name="sucessDownload">Скачивание завершено</string>
     <string name="failDownload">Ошибка при скачивании</string>
     <string name="againDownload">Попробуйте скачать заново</string>
+    <string name="startDownload">Загрузка начата</string>
+    <string name="deleteRepeat">Файл удален. Обновите страницу</string>
+    <string name="deleteFile">"Файл удален"</string>
+    <string name="listenPattern">https://getfile.dokpub.com/yandex/get/</string>
 
     <string name="skype_confs">Онлайн конференции</string>
     <string name="skype_confs_2">для групп</string>

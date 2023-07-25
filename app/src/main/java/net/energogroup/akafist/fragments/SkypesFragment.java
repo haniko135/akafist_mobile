@@ -17,7 +17,7 @@ import net.energogroup.akafist.recyclers.SkypesRecyclerAdapter;
 import net.energogroup.akafist.viewmodel.SkypeViewModel;
 
 /**
- * Класс фрагмента со списком онлайн-конфереций
+ * Fragment class with a list of online conferences
  * @author Nastya Izotina
  * @version 1.0.0
  */
@@ -27,21 +27,21 @@ public class SkypesFragment extends Fragment {
     public FragmentSkypesBinding skypesBinding;
 
     /**
-     * Обязательный конструктор класса
+     * Required class constructor
      */
     public SkypesFragment() { }
 
     /**
-     * Этот метод создает класс фрагмента SkypesFragment
-     * @return Новый экземпляр класса SkypesFragment
+     * This method creates the SkypesFragment fragment class
+     * @return A new instance of the SkypesFragment class
      */
     public static SkypesFragment newInstance() {
         return new SkypesFragment();
     }
 
     /**
-     * Этот метод подготавливает активность к работе фрагмента с учетом
-     * сохранённых данных
+     * This method prepares the activity for the fragment operation taking into account
+     * the stored data
      * @param savedInstanceState Bundle - Сохранённые данные фрагмента
      */
     @Override
@@ -56,12 +56,12 @@ public class SkypesFragment extends Fragment {
     }
 
     /**
-     * Этот метод создаёт фрагмент с учетом определённых
-     * в {@link SkypesFragment#onCreate(Bundle)} полей
+     * This method creates a fragment taking into account certain
+     * fields in {@link SkypesFragment#onCreate(Bundle)}
      * @param inflater LayoutInflater
      * @param container ViewGroup
-     * @param savedInstanceState Bundle - Сохранённое состояние фрагмента
-     * @return View - Выводит фрагмент на экран
+     * @param savedInstanceState Bundle - Saved fragment state
+     * @return View - Displays a fragment on the screen
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -5,21 +5,17 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import net.energogroup.akafist.dialogs.DialogLinks;
 import net.energogroup.akafist.MainActivity;
-import net.energogroup.akafist.R;
 
 import net.energogroup.akafist.databinding.FragmentLinksBinding;
 import net.energogroup.akafist.models.LinksModel;
@@ -49,13 +45,13 @@ public class LinksFragment extends Fragment {
     public FragmentLinksBinding binding;
 
     /**
-     * Обязательный конструктор класса
+     * Required class constructor
      */
     public LinksFragment() { }
 
 
     /**
-     * Этот метод вызывает конструктор класса фрагмента записей просветительских бесед
+     * This method calls the constructor of the fragment class of educational conversation recordings
      * @return LinksFragment
      */
     public static LinksFragment newInstance() {
@@ -63,7 +59,7 @@ public class LinksFragment extends Fragment {
     }
 
     /**
-     * Этот метод подготавливает активность к работе фрагмента
+     * This method prepares the activity for the fragment operation
      * @param savedInstanceState Bundle
      */
     @Override
@@ -74,8 +70,8 @@ public class LinksFragment extends Fragment {
     }
 
     /**
-     * Этот метод создаёт фрагмент с учетом определённых
-     * в {@link LinksFragment#onCreate(Bundle)} полей
+     * This method creates a fragment taking into account certain
+     * in {@link LinksFragment#onCreate(Bundle)} fields
      * @param inflater LayoutInflater
      * @param container ViewGroup
      * @param savedInstanceState Bundle
@@ -99,13 +95,13 @@ public class LinksFragment extends Fragment {
                 break;
         }
 
-        //список загруженных аудиофайлов
+        //list of downloaded audio files
         downloadAudio = linksViewModel.getDownload(finalPath);
         downloadAudio.forEach(it -> {
             downloadAudioNames.add(it.getName());
         });
 
-        //согласие на скачивание аудио файлов
+        //agreement to download audio files
         if (!isChecked) {
             SharedPreferences.Editor editor = appPref.edit();
             DialogLinks dialogLinks = new DialogLinks(editor, this);
@@ -114,10 +110,11 @@ public class LinksFragment extends Fragment {
 
 
         if(getActivity().getApplicationContext() != null) {
-            //проверка на наличие интернет-соединения
+            //checking for an internet connection
             MainActivity.networkConnection.observe(getViewLifecycleOwner(), isCheckeds -> {
                 if (isCheckeds) {
-                    //создание RecyclerView
+
+                    //creating RecyclerView
                     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                     binding.linksRv.setLayoutManager(linearLayoutManager);
                     linksViewModel.getMutableLinksDate().observe(getViewLifecycleOwner(), linksModels -> {
@@ -129,7 +126,8 @@ public class LinksFragment extends Fragment {
                     });
 
                 } else {
-                    //создание RecyclerView
+
+                    //creating RecyclerView
                     binding.linksRv.setLayoutManager(new LinearLayoutManager(getContext()));
                     if (recyclerAdapter == null)
                         recyclerAdapter = new AudioRecyclerAdapter(linksViewModel.getDownload(finalPath), this);
@@ -139,7 +137,7 @@ public class LinksFragment extends Fragment {
             });
         }
 
-        //обновление RecyclerView
+        //updating RecyclerView
         binding.linksRoot.setOnRefreshListener(() -> {
             binding.linksRoot.setRefreshing(true);
             downloadAudio = linksViewModel.getDownload(finalPath);
@@ -155,7 +153,7 @@ public class LinksFragment extends Fragment {
     }
 
     /**
-     * Этот метод вызывает уничтожение фрагмента
+     * This method causes the fragment to be destroyed
      */
     @Override
     public void onDestroyView() {
@@ -163,6 +161,9 @@ public class LinksFragment extends Fragment {
     }
 
 
+    /**
+     * This method initialize base parameters of fragment
+     */
     public void initializeLinks(){
         if (getArguments() != null){
             date = getArguments().getString("date");
@@ -178,6 +179,9 @@ public class LinksFragment extends Fragment {
         }
     }
 
+    /**
+     * This method initializes parameters of shared preferences
+     */
     public void sharedPrefInit(){
         appPref = getActivity().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
         if(appPref.contains("app_pref_checked")){
