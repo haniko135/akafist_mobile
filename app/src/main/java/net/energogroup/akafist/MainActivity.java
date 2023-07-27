@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     public ActivityMainBinding binding;
-    public static String secToken;
+    public static final int SEC_TOKEN = R.string.secToken;
     public static boolean isChecked = false;
     public static String APP_PREFERENCES = "app_pref";
     public static final String CHANNEL_ID = "downloadNote";
@@ -130,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
     public void globals() {
         AkafistApplication akafistApplication = (AkafistApplication) getApplication();
         akafistApplication.globalIsChecked = isChecked;
-        secToken = akafistApplication.secToken;
     }
 
     /**

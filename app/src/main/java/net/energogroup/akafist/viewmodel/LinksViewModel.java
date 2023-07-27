@@ -39,6 +39,7 @@ public class LinksViewModel extends ViewModel {
     private MutableLiveData<List<LinksModel>> mutableLinksDate = new MutableLiveData<>();
     private List<LinksModel> downloadAudio = new ArrayList<>();
     private int image;
+    private static final int appVersion = R.string.app_ver;
 
     /**
      * Этот метод возвращает текущее значение MutableLiveData<List<LinksModel>>
@@ -86,7 +87,7 @@ public class LinksViewModel extends ViewModel {
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> headers = new HashMap<>();
-                    headers.put("User-Agent", "akafist_app_1.0.0");
+                    headers.put("User-Agent", inflater.getContext().getResources().getString(appVersion));
                     headers.put("Connection", "keep-alive");
                     return headers;
                 }

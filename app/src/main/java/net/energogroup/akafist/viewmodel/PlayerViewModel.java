@@ -152,7 +152,7 @@ public class PlayerViewModel extends ViewModel {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("Authorization: Bearer ", MainActivity.secToken);
+                headers.put("Authorization: Bearer ", MainActivity.SEC_TOKEN);
                 headers.put("User-Agent", "akafist_app_1.0.0");
                 headers.put("Connection", "keep-alive");
                 return headers;

@@ -7,6 +7,8 @@
     <string name="quitApp">Выход</string>
 
     <string name="apiPath">https://pr.energogroup.org/api/church/</string>
+    <string name="secToken">y0_AgAAAABUVpeiAADLWwAAAADXqEoa0KX1_myOSvS6tU-k0yc2A_S4C7o</string>
+    <string name="app_ver">akafist_app/1.0.2</string>
 
     <string name="sucessDownload">Скачивание завершено</string>
     <string name="failDownload">Ошибка при скачивании</string>

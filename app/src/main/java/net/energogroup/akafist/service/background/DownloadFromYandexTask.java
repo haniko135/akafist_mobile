@@ -35,6 +35,7 @@ public class DownloadFromYandexTask extends Worker {
     private static final int successStringId = R.string.sucessDownload;
     private static final int failStringId = R.string.failDownload;
     private static final int againStringId = R.string.againDownload;
+    private static final int appVersion = R.string.app_ver;
 
     /**
      * Constructor of a class, extended from {@link Worker}
@@ -58,8 +59,8 @@ public class DownloadFromYandexTask extends Worker {
             URL urlDownload = new URL(getInputData().getString("URL"));
             HttpsURLConnection downConn = (HttpsURLConnection) urlDownload.openConnection();
             downConn.setRequestMethod("GET");
-            downConn.setRequestProperty("Authorization: OAuth ", MainActivity.secToken);
-            downConn.setRequestProperty("User-Agent","akafist_app/1.0.0");
+            downConn.setRequestProperty("Authorization: OAuth ", context.getResources().getString(MainActivity.SEC_TOKEN));
+            downConn.setRequestProperty("User-Agent",context.getResources().getString(appVersion));
             downConn.setRequestProperty("Connection", "keep-alive");
             downConn.setConnectTimeout(5000);
             //downConn.setReadTimeout(1000);
