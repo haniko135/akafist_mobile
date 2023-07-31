@@ -105,9 +105,9 @@ public class Home extends Fragment {
                     .setAction("Изменить", v -> {
                         appPref.edit().remove("app_pref_username").remove("app_pref_email").apply();
                         FragmentKt.findNavController(this).navigate(R.id.action_home2_to_loginFragment);
-                    }).setActionTextColor(getResources().getColor(R.color.block_main))
-                    .setBackgroundTint(getResources().getColor(R.color.white))
-                    .setTextColor(getResources().getColor(R.color.black)).show();
+                    }).setActionTextColor(getContext().getColor(R.color.block_main))
+                    .setBackgroundTint(getContext().getColor(R.color.white))
+                    .setTextColor(getContext().getColor(R.color.black)).show();
             editor.putBoolean("app_pref_first_login_snack", false);
             editor.apply();
         }

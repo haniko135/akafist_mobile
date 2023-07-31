@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
+import net.energogroup.akafist.dialogs.DialogContactDeveloper;
 import net.energogroup.akafist.dialogs.DialogTextSize;
 import net.energogroup.akafist.fragments.SettingsFragment;
 
@@ -51,6 +52,11 @@ public class SettingsRecyclerAdapter extends RecyclerView.Adapter<SettingsRecycl
             holder.getTextMenu().setOnClickListener(v -> {
                 DialogTextSize textSize = new DialogTextSize();
                 textSize.show(fragment.requireActivity().getSupportFragmentManager(), "userTextSizeDialog");
+            });
+        } else if (position == 2) {
+            holder.getTextMenu().setOnClickListener(v -> {
+                DialogContactDeveloper contactDeveloper = new DialogContactDeveloper();
+                contactDeveloper.show(fragment.requireActivity().getSupportFragmentManager(), "contactDeveloper");
             });
         }
 

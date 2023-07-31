@@ -48,6 +48,7 @@ public class SettingsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         settingsNames.add("Изменить аккаунт");
         settingsNames.add("Размер шрифта молитв");
+        settingsNames.add("Связь с разработчиком");
     }
 
     /**
