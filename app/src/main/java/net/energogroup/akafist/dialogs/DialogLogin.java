@@ -44,18 +44,20 @@ public class DialogLogin extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(requireActivity().getResources().getString(R.string.login_quest))
                 .setPositiveButton("Да", (dialog, which) -> {
-                    authService.getFirst();
+                    authService.getFirst(fragment.getContext());
 
                     authService.getIsHostUnavailable().observe(fragment, aBoolean -> {
                         if(!aBoolean){
+                            String urlPattern = fragment.getString(R.string.second_url);
                             loginBinding.webViewLog.getSettings().setJavaScriptEnabled(true);
                             loginBinding.webViewLog.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
                             loginBinding.webViewLog.setWebViewClient(new WebViewClient(){
                                 public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request){
-                                    if (request.getUrl().toString().startsWith("https://dev-knowledge-api.energogroup.org/auth/login#code"))
+                                    Log.e("AUTH", request.getUrl().toString());
+                                    if (request.getUrl().toString().startsWith(urlPattern))
                                     {
-                                        String code = request.getUrl().toString().substring(58);
-                                        authService.getSecond(code);
+                                        String code = request.getUrl().toString().substring(58, 101);
+                                        authService.getSecond(code, fragment.getContext());
                                         return true;
                                     } else {
                                         Log.e("URL_YES", "Clown");

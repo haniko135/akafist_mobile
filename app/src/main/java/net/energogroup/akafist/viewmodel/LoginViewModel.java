@@ -1,5 +1,6 @@
 package net.energogroup.akafist.viewmodel;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -10,6 +11,7 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 import net.energogroup.akafist.MainActivity;
+import net.energogroup.akafist.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,14 +41,15 @@ public class LoginViewModel extends ViewModel {
 
     public MutableLiveData<String> getEmailMLD() { return emailMLD; }
 
-    public void getFirst(){
-        String url = "https://dev-knowledge-api.energogroup.org/auth/login?processtype=StandaloneApplication";
+    public void getFirst(Context context){
+        String url = context.getString(R.string.first_url);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
             String codeVerif, authURL;
             try {
                 codeVerif = response.getString("codeVerifier");
                 authURL = response.getString("authorizationUrl");
+                Log.e("AUTH", codeVerif+"\n"+authURL);
                 codeVerifier = codeVerif;
                 authorizationURL.setValue(authURL);
                 isHostUnavailable.setValue(false);
@@ -62,7 +65,7 @@ public class LoginViewModel extends ViewModel {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("User-Agent", "akafist_app_1.0.0");
+                headers.put("User-Agent", context.getString(R.string.app_ver));
                 headers.put("Connection", "keep-alive");
                 return headers;
             }
@@ -71,9 +74,9 @@ public class LoginViewModel extends ViewModel {
         MainActivity.mRequestQueue.add(request);
     }
 
-    public void getSecond(String authCode){
+    public void getSecond(String authCode, Context context){
         try {
-            String url = "https://dev-knowledge-api.energogroup.org/auth/login?processtype=StandaloneApplication";
+            String url = context.getString(R.string.first_url);
             JSONObject object = new JSONObject();
             object.put("codeVerifier", codeVerifier);
             object.put("authCode", authCode);
@@ -89,7 +92,7 @@ public class LoginViewModel extends ViewModel {
                     Log.e("URL_RF", accessToken.getValue());
                     Log.e("URL_RF", "DONE!");
 
-                    getThird();
+                    getThird(context);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -98,7 +101,7 @@ public class LoginViewModel extends ViewModel {
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> headers = new HashMap<>();
-                    headers.put("User-Agent", "akafist_app_1.0.0");
+                    headers.put("User-Agent", context.getString(R.string.app_ver));
                     headers.put("Connection", "keep-alive");
                     return headers;
                 }
@@ -110,8 +113,8 @@ public class LoginViewModel extends ViewModel {
         }
     }
 
-    public void getThird(){
-        String url = "https://dev-knowledge-api.energogroup.org/api/v1/userinfo";
+    public void getThird(Context context){
+        String url = context.getString(R.string.user_info);
         Log.e("URL_RF", accessToken.getValue());
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
@@ -133,13 +136,13 @@ public class LoginViewModel extends ViewModel {
         }, error -> {
             if (error.networkResponse.statusCode == 401){
                 Log.e("URL_RF", "401 error");
-                getFourth();
+                getFourth(context);
             }
         }){
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("User-Agent", "akafist_app_1.0.0");
+                headers.put("User-Agent", context.getString(R.string.app_ver));
                 headers.put("Connection", "keep-alive");
                 headers.put("Authorization", "Bearer " + accessToken.getValue());
                 return headers;
@@ -149,9 +152,9 @@ public class LoginViewModel extends ViewModel {
         MainActivity.mRequestQueue.add(request);
     }
 
-    public void getFourth(){
+    public void getFourth(Context context){
         try {
-            String url = "https://dev-knowledge-api.energogroup.org/auth/login?processtype=StandaloneApplication&viaRefreshToken=true";
+            String url = context.getString(R.string.first_url)+"&"+context.getString(R.string.refresh_url);
             JSONObject object = new JSONObject();
             object.put("refreshToken", refreshToken.getValue());
 
@@ -166,7 +169,7 @@ public class LoginViewModel extends ViewModel {
                     Log.e("URL_RF", accessToken.getValue());
                     Log.e("URL_RF", "Ah shit here we go again");
 
-                    getThird();
+                    getThird(context);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -175,7 +178,7 @@ public class LoginViewModel extends ViewModel {
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> headers = new HashMap<>();
-                    headers.put("User-Agent", "akafist_app_1.0.0");
+                    headers.put("User-Agent", context.getString(R.string.app_ver));
                     headers.put("Connection", "keep-alive");
                     return headers;
                 }
