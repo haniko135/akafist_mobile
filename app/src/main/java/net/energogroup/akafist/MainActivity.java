@@ -56,7 +56,10 @@ public class MainActivity extends AppCompatActivity {
 
     public ActivityMainBinding binding;
     public static final int SEC_TOKEN = R.string.secToken;
-    public static boolean isChecked = false;
+    public static final int API_PATH = R.string.apiPath;
+    public static final int APP_VER = R.string.app_ver;
+
+
     public static String APP_PREFERENCES = "app_pref";
     public static final String CHANNEL_ID = "downloadNote";
     public static RequestQueue mRequestQueue;
@@ -84,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
         enableNavigation();
         enableNetwork();
         enablePlayer();
-        globals();
         enablePermissions();
         enableNotifications();
     }
@@ -122,14 +124,6 @@ public class MainActivity extends AppCompatActivity {
         if (getApplicationContext() != null) {
             networkConnection = new NetworkConnection(getApplicationContext());
         }
-    }
-
-    /**
-     * This method initializes global variables
-     */
-    public void globals() {
-        AkafistApplication akafistApplication = (AkafistApplication) getApplication();
-        akafistApplication.globalIsChecked = isChecked;
     }
 
     /**
@@ -253,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
         String text = context.getResources().getString(textId);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, MainActivity.CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher_round)
-                .setContentTitle("Помощник чтеца")
+                .setContentTitle(context.getString(R.string.app_name))
                 .setContentText(text)
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);

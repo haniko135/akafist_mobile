@@ -60,7 +60,7 @@ public class ChurchFragment extends Fragment {
         churchViewModel = provider.get(ChurchViewModel.class);
         if((AppCompatActivity)getActivity() != null){
             ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(dateTxt);
-            churchViewModel.getJson(date);
+            churchViewModel.getJson(date, getContext());
         }
     }
 

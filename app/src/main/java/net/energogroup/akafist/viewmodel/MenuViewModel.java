@@ -1,5 +1,6 @@
 package net.energogroup.akafist.viewmodel;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.lifecycle.ViewModel;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
 import net.energogroup.akafist.MainActivity;
+import net.energogroup.akafist.R;
 import net.energogroup.akafist.fragments.Home;
 import net.energogroup.akafist.fragments.Menu;
 import net.energogroup.akafist.models.HomeBlocksModel;
@@ -44,16 +46,23 @@ public class MenuViewModel extends ViewModel {
     /**
      * Этот метод производит первую инициализацию списка блоков страниц "Главная" и "Меню"
      */
-    public void firstSet(String mode){
+    public void firstSet(String mode, Context context){
         if (mode.equals("energogroup")) {
-            blocksModelList.add(new HomeBlocksModel("skypeConfs", "Онлайн конференции", "для групп"));
+            blocksModelList.add(new HomeBlocksModel("skypeConfs",
+                    context.getString(R.string.skype_confs), context.getString(R.string.skype_confs_2)));
         }
-        blocksModelList.add(new HomeBlocksModel("onlineMichael", "Онлайн-трансляция", "общины арх. Михаила"));
-        blocksModelList.add(new HomeBlocksModel("onlineVarvara", "Онлайн-трансляция", "общины вмц. Варвары"));
-        blocksModelList.add(new HomeBlocksModel("molitvyOfflain", "Молитвы", "оффлайн"));
-        blocksModelList.add(new HomeBlocksModel("links", "Записи", "просветительских бесед"));
-        blocksModelList.add(new HomeBlocksModel("notes", "Подать записку", "онлайн"));
-        blocksModelList.add(new HomeBlocksModel("talks", "Задать вопрос", "Священнику или в Духовный Блок"));
+        blocksModelList.add(new HomeBlocksModel("onlineMichael",
+                context.getString(R.string.online_Michael), context.getString(R.string.online_Michael_2)));
+        blocksModelList.add(new HomeBlocksModel("onlineVarvara",
+                context.getString(R.string.online_Varvara), context.getString(R.string.online_Varvara_2)));
+        blocksModelList.add(new HomeBlocksModel("molitvyOfflain",
+                context.getString(R.string.molitvy_offline), context.getString(R.string.molitvy_offline_2)));
+        blocksModelList.add(new HomeBlocksModel("links",
+                context.getString(R.string.links1), context.getString(R.string.links2)));
+        blocksModelList.add(new HomeBlocksModel("notes",
+                context.getString(R.string.notes1), context.getString(R.string.notes2)));
+        blocksModelList.add(new HomeBlocksModel("talks",
+                context.getString(R.string.talks1), context.getString(R.string.talks2)));
         mutableLiveData.setValue(blocksModelList);
     }
 
@@ -67,8 +76,8 @@ public class MenuViewModel extends ViewModel {
      *
      * @exception JSONException
      */
-    public void getJson(String cas){
-        String urlToGet = "https://pr.energogroup.org/api/church/";
+    public void getJson(String cas, Context context){
+        String urlToGet = context.getString(MainActivity.API_PATH);
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET,
                 urlToGet, null, response -> {
@@ -100,7 +109,7 @@ public class MenuViewModel extends ViewModel {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("User-Agent", "akafist_app_1.0.0");
+                headers.put("User-Agent", context.getString(MainActivity.APP_VER));
                 headers.put("Connection", "keep-alive");
                 return headers;
             }

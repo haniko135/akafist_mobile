@@ -9,5 +9,4 @@ import android.app.Application;
  */
 public class AkafistApplication extends Application {
     boolean globalIsChecked = false;
-    String secToken = ;
 }

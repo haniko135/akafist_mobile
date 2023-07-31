@@ -1,5 +1,6 @@
 package net.energogroup.akafist.viewmodel;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -53,8 +54,8 @@ public class PrayerViewModel extends ViewModel {
      * @param id - id молитвы
      * @exception JSONException
      */
-    public void getJson(String date, int id){
-        String urlToGet = "https://pr.energogroup.org/api/church/"+date+"/"+id;
+    public void getJson(String date, int id, Context context){
+        String urlToGet = context.getString(MainActivity.API_PATH)+date+"/"+id;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
                 urlToGet, null, response -> {
@@ -76,7 +77,7 @@ public class PrayerViewModel extends ViewModel {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("User-Agent", "akafist_app_1.0.0");
+                headers.put("User-Agent", context.getString(MainActivity.APP_VER));
                 headers.put("Connection", "keep-alive");
                 return headers;
             }

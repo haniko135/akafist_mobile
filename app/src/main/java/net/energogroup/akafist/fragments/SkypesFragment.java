@@ -51,7 +51,7 @@ public class SkypesFragment extends Fragment {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Конференции по группам");
             ViewModelProvider provider = new ViewModelProvider(this);
             skypeViewModel = provider.get(SkypeViewModel.class);
-            skypeViewModel.getJsonSkype();
+            skypeViewModel.getJsonSkype(getContext());
         }
     }
 

@@ -17,6 +17,7 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 import net.energogroup.akafist.MainActivity;
+import net.energogroup.akafist.R;
 import net.energogroup.akafist.fragments.PlayerFragment;
 import net.energogroup.akafist.models.LinksModel;
 import net.energogroup.akafist.service.background.DownloadFromYandexTask;
@@ -35,6 +36,7 @@ import java.util.Objects;
  */
 public class PlayerViewModel extends ViewModel {
 
+    private static final int DOWNLOAD_URL = R.string.downloadURL;
     private MutableLiveData<String> workMode = new MutableLiveData<>();
     private MutableLiveData<String> urlForAudio = new MutableLiveData<>();
     private MutableLiveData<Boolean> isInitialized = new MutableLiveData<>();
@@ -108,7 +110,7 @@ public class PlayerViewModel extends ViewModel {
      * @exception JSONException
      */
     public void getLinkDownload(LayoutInflater inflater, ViewGroup container) {
-        String urlToGet = "https://cloud-api.yandex.net/v1/disk/public/resources?public_key=" + urlForLink;
+        String urlToGet = inflater.getContext().getResources().getString(DOWNLOAD_URL) + urlForLink;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, //получение данных
                 urlToGet, null, response -> {
@@ -152,8 +154,8 @@ public class PlayerViewModel extends ViewModel {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("Authorization: Bearer ", MainActivity.SEC_TOKEN);
-                headers.put("User-Agent", "akafist_app_1.0.0");
+                headers.put("Authorization: Bearer ", inflater.getContext().getResources().getString(MainActivity.SEC_TOKEN));
+                headers.put("User-Agent", inflater.getContext().getResources().getString(MainActivity.APP_VER));
                 headers.put("Connection", "keep-alive");
                 return headers;
             }

@@ -1,5 +1,6 @@
 package net.energogroup.akafist.viewmodel;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,8 +58,8 @@ public class SkypeViewModel extends ViewModel {
      * Данный метод используется в {@link SkypesFragment#onCreate(Bundle)}
      * @exception JSONException
      */
-    public void getJsonSkype(){
-        String urlToGet2 = "https://pr.energogroup.org/api/church/skype";
+    public void getJsonSkype(Context context){
+        String urlToGet2 = context.getString(MainActivity.API_PATH)+"skype";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, //получение данных
                 urlToGet2, null, response -> {
@@ -98,7 +99,7 @@ public class SkypeViewModel extends ViewModel {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("User-Agent", "akafist_app_1.0.0");
+                headers.put("User-Agent", context.getString(MainActivity.APP_VER));
                 headers.put("Connection", "keep-alive");
                 return headers;
             }
@@ -114,8 +115,8 @@ public class SkypeViewModel extends ViewModel {
      * @param urlId ID конференции
      * @exception JSONException
      */
-    public void getJsonSkypeBlock(int urlId){
-        String urlToGet = "https://pr.energogroup.org/api/church/skype/"+urlId;
+    public void getJsonSkypeBlock(int urlId, Context context){
+        String urlToGet = context.getString(MainActivity.API_PATH)+"skype/"+urlId;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, //получение данных
                 urlToGet, null, response -> {
@@ -144,7 +145,7 @@ public class SkypeViewModel extends ViewModel {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("User-Agent", "akafist_app_1.0.0");
+                headers.put("User-Agent", context.getString(MainActivity.APP_VER));
                 headers.put("Connection", "keep-alive");
                 return headers;
             }

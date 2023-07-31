@@ -1,5 +1,6 @@
 package net.energogroup.akafist.viewmodel;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,7 +42,6 @@ public class ChurchViewModel extends ViewModel{
     private String dateTxt, nameTxt;
     private MutableLiveData <String> liveDataTxt = new MutableLiveData<>();
     private MutableLiveData <String> liveNameTxt = new MutableLiveData<>();
-    private static final int API_PATH = R.string.apiPath;
 
     /**
      * @param id Текущий id типа
@@ -92,10 +92,10 @@ public class ChurchViewModel extends ViewModel{
      * @param date Тип страницы
      * @exception JSONException
      */
-    public void getJson(String date){
-        String urlToGet = "https://pr.energogroup.org/api/church/"+date;
+    public void getJson(String date, Context context){
+        String urlToGet = context.getResources().getString(MainActivity.API_PATH)+date;
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, //получение данных
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
                 urlToGet, null, response -> {
             JSONArray types, services;
             JSONObject jsonObject;
@@ -137,7 +137,7 @@ public class ChurchViewModel extends ViewModel{
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("User-Agent", "akafist_app_1.0.0");
+                headers.put("User-Agent", context.getResources().getString(MainActivity.APP_VER));
                 headers.put("Connection", "keep-alive");
                 return headers;
             }

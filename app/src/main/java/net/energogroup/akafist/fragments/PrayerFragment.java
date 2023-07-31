@@ -65,7 +65,7 @@ public class PrayerFragment extends Fragment {
         }
         ViewModelProvider provider = new ViewModelProvider(this);
         prayerViewModel = provider.get(PrayerViewModel.class);
-        prayerViewModel.getJson(prevMenu, prayerId);
+        prayerViewModel.getJson(prevMenu, prayerId, getContext());
     }
 
     /**

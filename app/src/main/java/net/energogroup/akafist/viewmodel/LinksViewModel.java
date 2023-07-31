@@ -39,7 +39,6 @@ public class LinksViewModel extends ViewModel {
     private MutableLiveData<List<LinksModel>> mutableLinksDate = new MutableLiveData<>();
     private List<LinksModel> downloadAudio = new ArrayList<>();
     private int image;
-    private static final int appVersion = R.string.app_ver;
 
     /**
      * Этот метод возвращает текущее значение MutableLiveData<List<LinksModel>>
@@ -59,7 +58,7 @@ public class LinksViewModel extends ViewModel {
      */
     public void getJson(String cas, LayoutInflater inflater){
         if (cas.equals("links")) {
-            String urlToGet = "https://pr.energogroup.org/api/church/talks";
+            String urlToGet = inflater.getContext().getResources().getString(MainActivity.API_PATH)+"talks";
 
             JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, //получение данных
                     urlToGet, null, response -> {
@@ -87,7 +86,7 @@ public class LinksViewModel extends ViewModel {
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> headers = new HashMap<>();
-                    headers.put("User-Agent", inflater.getContext().getResources().getString(appVersion));
+                    headers.put("User-Agent", inflater.getContext().getResources().getString(MainActivity.APP_VER));
                     headers.put("Connection", "keep-alive");
                     return headers;
                 }

@@ -92,7 +92,7 @@ public class Home extends Fragment {
         homeBinding.homeSwipe.setOnRefreshListener(() -> {
             homeBinding.homeSwipe.setRefreshing(true);
             if(menuViewModel.getBlocksModelList().size() == 7) {
-                menuViewModel.getJson("home");
+                menuViewModel.getJson("home", getContext());
                 menuViewModel.getMutableLiveData().observe(getViewLifecycleOwner(), homeBlocksModels -> homeBinding.homeRv.setAdapter(new HomeRecyclerAdapter(homeBlocksModels, fr)));
             }
             homeBinding.homeSwipe.setRefreshing(false);
@@ -133,12 +133,12 @@ public class Home extends Fragment {
         userName = appPref.getString("app_pref_username", "guest");
         Log.e("YOU_ARE_LOH", userName);
         if(userName.startsWith("Guest_")){
-            menuViewModel.firstSet("guest");
+            menuViewModel.firstSet("guest", getContext());
         }else {
-            menuViewModel.firstSet("energogroup");
+            menuViewModel.firstSet("energogroup", getContext());
         }
 
-        menuViewModel.getJson("home");
+        menuViewModel.getJson("home", getContext());
     }
 
     /**

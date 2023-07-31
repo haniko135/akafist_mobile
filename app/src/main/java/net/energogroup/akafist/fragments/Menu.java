@@ -57,11 +57,11 @@ public class Menu extends Fragment {
         SharedPreferences appPref = getActivity().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
         String userName = appPref.getString("app_pref_username", "guest");
         if(userName.startsWith("Guest_")){
-            menuViewModel.firstSet("guest");
+            menuViewModel.firstSet("guest", getContext());
         }else {
-            menuViewModel.firstSet("energogroup");
+            menuViewModel.firstSet("energogroup", getContext());
         }
-        menuViewModel.getJson("menu");
+        menuViewModel.getJson("menu", getContext());
     }
 
     /**
@@ -84,7 +84,7 @@ public class Menu extends Fragment {
         menuBinding.menuSwipe.setOnRefreshListener(() -> {
             menuBinding.menuSwipe.setRefreshing(true);
             if(menuViewModel.getBlocksModelList().size() == 7) {
-                menuViewModel.getJson("menu");
+                menuViewModel.getJson("menu", getContext());
                 menuViewModel.getMutableLiveData().observe(getViewLifecycleOwner(), homeBlocksModels -> menuBinding.menuList.setAdapter(new MenuRecyclerAdapter(homeBlocksModels,fr)));
             }
             menuBinding.menuSwipe.setRefreshing(false);
