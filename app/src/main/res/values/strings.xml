@@ -1,14 +1,9 @@
 <resources>
     <string name="app_name">Помощник чтеца</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="home_title">Главная</string>
     <string name="menu_title">Меню</string>
     <string name="quitApp">Выход</string>
-
-    <string name="apiPath">https://pr.energogroup.org/api/church/</string>
-    <string name="secToken">y0_AgAAAABUVpeiAADLWwAAAADXqEoa0KX1_myOSvS6tU-k0yc2A_S4C7o</string>
-    <string name="app_ver">akafist_app/1.0.2</string>
 
     <string name="sucessDownload">Скачивание завершено</string>
     <string name="failDownload">Ошибка при скачивании</string>
@@ -16,7 +11,6 @@
     <string name="startDownload">Загрузка начата</string>
     <string name="deleteRepeat">Файл удален. Обновите страницу</string>
     <string name="deleteFile">"Файл удален"</string>
-    <string name="listenPattern">https://getfile.dokpub.com/yandex/get/</string>
 
     <string name="skype_confs">Онлайн конференции</string>
     <string name="skype_confs_2">для групп</string>
@@ -26,12 +20,10 @@
     <string name="online_Michael">Онлайн-трансляция</string>
     <string name="online_Michael_2">общины арх. Михаила</string>
     <string name="online_Michael_3">Онлайн-трансляция общины арх. Михаила</string>
-    <string name="link_Michael">http://radio.zakonbozhiy.ru:8000/live.mp3"</string>
 
     <string name="online_Varvara">Онлайн-трансляция</string>
     <string name="online_Varvara_2">общины вмц. Варвары</string>
     <string name="online_Varvara_3">Онлайн-трансляция общины вмц. Варвары</string>
-    <string name="link_Varvara">http://radio.zakonbozhiy.ru:8010/kem.mp3</string>
 
     <string name="molitvy_offline">Молитвы</string>
     <string name="molitvy_offline_2">оффлайн</string>
@@ -47,12 +39,10 @@
     <string name="notes">Подать записку онлайн</string>
     <string name="notes1">Подать записку</string>
     <string name="notes2">онлайн</string>
-    <string name="link_notes">https://pr.energogroup.org/notes/note/add</string>
 
     <string name="talks">Задать вопрос Священнику или в Духовный Блок</string>
     <string name="talks1">Задать вопрос</string>
     <string name="talks2">Священнику или в Духовный Блок</string>
-    <string name="link_talks">https://pr.energogroup.org/talks/talk</string>
 
     <string name="day_Michael">Служба в храме арх. Михаила сегодня</string>
 
@@ -192,12 +182,6 @@
         <item>Молитва по соглашению</item>
         <item>Молитва утренняя c помянником</item>
         <item>Молитва утренняя Полуношница</item>
-    </string-array>
-
-    <string-array name="molitvy_offline_audio_link">
-        <item>https://disk.yandex.ru/d/puqlhwxalELImg</item>
-        <item>https://disk.yandex.ru/d/GTvUIZ_e8xZiwA</item>
-        <item>https://disk.yandex.ru/d/IzWYm3ns9wlGuA</item>
     </string-array>
 
 </resources>
