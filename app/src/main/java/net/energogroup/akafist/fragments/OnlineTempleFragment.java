@@ -1,21 +1,30 @@
 package net.energogroup.akafist.fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.FragmentKt;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.media3.common.MediaItem;
 import androidx.media3.exoplayer.ExoPlayer;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.snackbar.Snackbar;
+
+import net.energogroup.akafist.MainActivity;
+import net.energogroup.akafist.R;
 import net.energogroup.akafist.databinding.FragmentOnlineTempleBinding;
+import net.energogroup.akafist.dialogs.DialogOnlineTemple;
 import net.energogroup.akafist.service.NetworkConnection;
 import net.energogroup.akafist.viewmodel.OnlineTempleViewModel;
 
@@ -30,6 +39,7 @@ public class OnlineTempleFragment extends Fragment {
     private String urlSound;
     private NetworkConnection networkConnection;
     private OnlineTempleViewModel onlineTempleViewModel;
+    private SharedPreferences appPref;
 
     private boolean playPauseState = true;
     private ExoPlayer player = null;
@@ -61,6 +71,7 @@ public class OnlineTempleFragment extends Fragment {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Трансляция общины");
             networkConnection = new NetworkConnection(getContext().getApplicationContext());
         }
+        appPref = getActivity().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
     }
 
     /**
@@ -75,23 +86,35 @@ public class OnlineTempleFragment extends Fragment {
                              Bundle savedInstanceState) {
         onlineTempleBinding = FragmentOnlineTempleBinding.inflate(getLayoutInflater());
 
-        if (getArguments() != null && getActivity().getApplicationContext() != null) {
-            networkConnection.observe(getViewLifecycleOwner(), isChecked -> {
-                if (isChecked) {
-                    onlineTempleBinding.noInternet2.setVisibility(View.INVISIBLE);
-                    urlSound = getArguments().getString("urlToSound");
-                    onlineTempleViewModel.setUrlSound(urlSound);
-                    Log.d("ONLINE_TEMPLE_ERROR", urlSound);
-                    String soundTitle = getArguments().getString("soundTitle");
-                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(soundTitle);
+        OnlineTempleFragment fr = this;
+        Log.e("ONLINE_TEMPLE_PREF", String.valueOf(appPref.getBoolean("app_pref_player", false)));
+        if (appPref.getBoolean("app_pref_player", false)){
+            DialogOnlineTemple dialogOnlineTemple = new DialogOnlineTemple();
+            dialogOnlineTemple.show(requireActivity().getSupportFragmentManager(), "userAttentionOnlineTemple");
+            new Handler().postDelayed(() -> {
+                dialogOnlineTemple.dismiss();
+                FragmentKt.findNavController(fr).navigate(R.id.action_onlineTempleFragment_to_home2);
+            }, 1000);
+        }
+        else {
+            if (getArguments() != null && getActivity().getApplicationContext() != null) {
+                networkConnection.observe(getViewLifecycleOwner(), isChecked -> {
+                    if (isChecked) {
+                        onlineTempleBinding.noInternet2.setVisibility(View.INVISIBLE);
+                        urlSound = getArguments().getString("urlToSound");
+                        onlineTempleViewModel.setUrlSound(urlSound);
+                        Log.d("ONLINE_TEMPLE_ERROR", urlSound);
+                        String soundTitle = getArguments().getString("soundTitle");
+                        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(soundTitle);
 
-                    if (player == null) {
-                        initializePlayer(urlSound, getContext());
+                        if (player == null) {
+                            initializePlayer(urlSound, getContext());
+                        }
+                    } else {
+                        onlineTempleBinding.noInternet2.setVisibility(View.VISIBLE);
                     }
-                } else {
-                    onlineTempleBinding.noInternet2.setVisibility(View.VISIBLE);
-                }
-            });
+                });
+            }
         }
 
         return onlineTempleBinding.getRoot();

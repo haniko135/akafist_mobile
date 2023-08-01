@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import java.util.Objects;
 public class PlayerFragment extends Fragment {
 
     private MediaPlayer mediaPlayer;
+    private SharedPreferences appPref;
     private final Handler handler = new Handler();
     private boolean isPrepared = false;
     private PlayerViewModel playerViewModel;
@@ -77,6 +79,7 @@ public class PlayerFragment extends Fragment {
         Log.e("PLAYER_FRAGMENT", "ON_CREATE");
         playerViewModel = new ViewModelProvider(getActivity()).get(PlayerViewModel.class);
         playerViewModel.setWorkMode("background");
+        appPref = getActivity().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -205,6 +208,8 @@ public class PlayerFragment extends Fragment {
 
 
     public void initButtonClicks(ViewGroup container){
+        appPref.edit().putBoolean("app_pref_player", true).apply();
+
         Log.e("PLAYER_FRAGMENT", "init buttons");
         playerBinding.imageButtonPlay.setOnClickListener(view -> {
             playAndStop();
@@ -277,6 +282,8 @@ public class PlayerFragment extends Fragment {
     public void destroy(){
         mediaPlayer.stop();
         getActivity().unregisterReceiver(broadcastReceiver);
+        appPref.edit().putBoolean("app_pref_player", false).apply();
+        Log.e("PLAYER_PREF", String.valueOf(appPref.getBoolean("app_pref_player", false)));
     }
 
     @Override
