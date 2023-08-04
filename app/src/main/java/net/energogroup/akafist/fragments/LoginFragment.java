@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
@@ -103,6 +104,7 @@ public class LoginFragment extends Fragment {
 
         authService.getAuthorizationURL().observe(getViewLifecycleOwner(), s -> {
             loginBinding.webViewLog.loadUrl(s);
+            loginBinding.webViewLog.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
             Log.e("URL_LOGIN", s);
         });
 

@@ -17,11 +17,15 @@ import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,6 +56,10 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.MANAGE_EXTERNAL_STORAGE
+    };
+
+    private final String [] PERMISSION_BATTERY = {
+            Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
     };
 
     public ActivityMainBinding binding;
@@ -136,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
             verifyStoragePerm();
         }
+        verifyBatteryPerm();
     }
 
     /**
@@ -237,6 +246,19 @@ public class MainActivity extends AppCompatActivity {
     private void verifyStoragePerm() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, PERMISSION_STORAGE, 1);
+        }
+    }
+
+    private void verifyBatteryPerm(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Intent intent = new Intent();
+            String packageName = getPackageName();
+            PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + packageName));
+                startActivity(intent);
+            }
         }
     }
 
