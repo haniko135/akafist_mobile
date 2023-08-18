@@ -40,7 +40,8 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
-                android:text="0:0" />
+                android:text="@string/default_time"
+                android:fontFamily="@font/cyrillic_old"/>
 
             <SeekBar
                 android:id="@+id/durationBarMolitvy"
@@ -48,7 +49,9 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:paddingStart="5dp"
-                android:paddingEnd="5dp" />
+                android:paddingEnd="5dp"
+                android:thumb="@drawable/custom_thumb"
+                android:progressDrawable="@drawable/custom_seekbar"/>
 
             <TextView
                 android:id="@+id/seekBarMaxTime"
@@ -56,7 +59,8 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
-                android:text="0:0" />
+                android:text="@string/default_time"
+                android:fontFamily="@font/cyrillic_old"/>
 
         </LinearLayout>
 
@@ -84,15 +88,14 @@
                 android:layout_weight="4"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/playbuttonforlinks"
-                android:paddingVertical="15dp"
-                android:src="@android:drawable/ic_media_play"
+                android:paddingVertical="7dp"
+                android:src="@drawable/baseline_play_arrow_24"
                 tools:ignore="NestedWeights" />
 
             <ImageButton
                 android:id="@+id/downloadLinkButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:paddingVertical="15dp"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/downloadbuttonfrolinks"
                 android:layout_weight="1"

@@ -102,27 +102,21 @@ public class PlayerFragment extends Fragment {
                         });
                     }
 
-                } else if (mediaPlayer != null || s != null) {
+                } else if (mediaPlayer != null) {
                     playerViewModel.getLinksModel().observe(getViewLifecycleOwner(), linksModel -> {
                         if (!mediaPlayer.isPlaying()) {
-                            if (isPrepared) {
-                                NotificationForPlay.createNotification(getActivity(),
-                                        playerViewModel.getLinksModel().getValue(),
-                                        android.R.drawable.ic_media_pause);
-                                isPrepared = false;
-                            }
                             NotificationForPlay.createNotification(getActivity(),
                                     playerViewModel.getLinksModel().getValue(),
                                     android.R.drawable.ic_media_pause);
                             playerBinding.imageButtonPlay.
-                                    setImageResource(android.R.drawable.ic_media_pause);
+                                    setImageResource(R.drawable.baseline_play_arrow_24);
                             mediaPlayer.start();
                         } else {
                             NotificationForPlay.createNotification(getActivity(),
                                     playerViewModel.getLinksModel().getValue(),
                                     android.R.drawable.ic_media_play);
                             playerBinding.imageButtonPlay.
-                                    setImageResource(android.R.drawable.ic_media_play);
+                                    setImageResource(R.drawable.baseline_pause_24);
                             mediaPlayer.pause();
                         }
                     });
@@ -268,13 +262,13 @@ public class PlayerFragment extends Fragment {
             NotificationForPlay.createNotification(getActivity(),
                     playerViewModel.getLinksModel().getValue(),
                     android.R.drawable.ic_media_pause);
-            playerBinding.imageButtonPlay.setImageResource(android.R.drawable.ic_media_pause);
+            playerBinding.imageButtonPlay.setImageResource(R.drawable.baseline_pause_24);
             mediaPlayer.start();
         }else {
             NotificationForPlay.createNotification(getActivity(),
                     playerViewModel.getLinksModel().getValue(),
                     android.R.drawable.ic_media_play);
-            playerBinding.imageButtonPlay.setImageResource(android.R.drawable.ic_media_play);
+            playerBinding.imageButtonPlay.setImageResource(R.drawable.baseline_play_arrow_24);
             mediaPlayer.pause();
         }
     }
