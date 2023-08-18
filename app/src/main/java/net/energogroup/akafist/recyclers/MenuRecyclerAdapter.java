@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Класс адаптера RecyclerView на страницах "Меню"
+ * The class of the RecyclerView adapter on the "Menu" pages
  * @author Nastya Izotina
  * @version 1.0.0
  */
@@ -45,13 +45,13 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
     }
 
     /**
-     * Этот метод отвечает за логику, происходящую в каждом элементе RecyclerView
+     * This method is responsible for the logic that occurs in each element of the Recycler View
      * @param holder Элемент списка
      * @param position Позиция в списке
      */
     @Override
     public void onBindViewHolder(@NonNull MenuViewHolder holder, int position) {
-        //получение завтрашней даты
+        //getting tomorrow's date
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, 1);
         Date tom = calendar.getTime();
@@ -105,7 +105,7 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
             modelList.get(position).setLinks(R.id.action_menu_to_churchFragment);
         }
 
-        //переход по ссылкам
+        //click on links
         if(modelList.get(position).getDate().equals("onlineMichael") || modelList.get(position).getDate().equals("onlineVarvara")){
             holder.getMenuListBlock().setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
@@ -134,7 +134,7 @@ public class MenuRecyclerAdapter extends RecyclerView.Adapter<MenuRecyclerAdapte
     }
 
     /**
-     * Внутренний класс, отвечающий за правильной отображение элемента RecyclerView
+     * The internal class responsible for the correct display of the RecyclerView element
      */
     static public class MenuViewHolder extends RecyclerView.ViewHolder{
         private final TextView menuListBlock;

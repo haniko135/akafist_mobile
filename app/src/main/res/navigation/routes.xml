@@ -13,34 +13,38 @@
         <action
             android:id="@+id/action_home2_to_skypesFragment"
             app:destination="@id/skypesFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
+            app:popEnterAnim="@anim/enter_right"
+            app:popExitAnim="@anim/exit_left" />
         <action
             android:id="@+id/action_home2_to_onlineTempleFragment"
             app:destination="@id/onlineTempleFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
+            app:popEnterAnim="@anim/enter_right"
+            app:popExitAnim="@anim/exit_left" />
         <action
             android:id="@+id/action_home2_to_linksFragment"
             app:destination="@id/linksFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
+            app:popEnterAnim="@anim/enter_right"
+            app:popExitAnim="@anim/exit_left" />
         <action
             android:id="@+id/action_home2_to_churchFragment"
             app:destination="@id/churchFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
+            app:popEnterAnim="@anim/enter_right"
+            app:popExitAnim="@anim/exit_left" />
         <action
             android:id="@+id/action_home2_to_loginFragment"
-            app:destination="@id/loginFragment" />
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
+            app:popEnterAnim="@anim/enter_right"
+            app:popExitAnim="@anim/exit_left" />
     </fragment>
     <fragment
         android:id="@+id/menu"
@@ -50,46 +54,46 @@
         <action
             android:id="@+id/action_menu_to_skypesFragment"
             app:destination="@id/skypesFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
+            app:popEnterAnim="@anim/enter_right"
+            app:popExitAnim="@anim/exit_left" />
         <action
             android:id="@+id/action_menu_to_onlineTempleFragment"
             app:destination="@id/onlineTempleFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
+            app:popEnterAnim="@anim/enter_right"
+            app:popExitAnim="@anim/exit_left" />
         <action
             android:id="@+id/action_menu_to_linksFragment"
             app:destination="@id/linksFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
+            app:popEnterAnim="@anim/enter_right"
+            app:popExitAnim="@anim/exit_left" />
         <action
             android:id="@+id/action_menu_to_churchFragment"
             app:destination="@id/churchFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right" />
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
+            app:popEnterAnim="@anim/enter_right"
+            app:popExitAnim="@anim/exit_left" />
     </fragment>
     <action
         android:id="@+id/action_global_home2"
         app:destination="@id/home2"
-        app:enterAnim="@android:anim/slide_in_left"
-        app:exitAnim="@android:anim/slide_out_right"
-        app:popEnterAnim="@android:anim/slide_in_left"
-        app:popExitAnim="@android:anim/slide_out_right" />
+        app:enterAnim="@anim/enter_left"
+        app:exitAnim="@anim/exit_right"
+        app:popEnterAnim="@anim/enter_right"
+        app:popExitAnim="@anim/exit_left" />
     <action
         android:id="@+id/action_global_menu"
         app:destination="@id/menu"
-        app:enterAnim="@android:anim/slide_in_left"
-        app:exitAnim="@android:anim/slide_out_right"
-        app:popEnterAnim="@android:anim/slide_in_left"
-        app:popExitAnim="@android:anim/slide_out_right" />
+        app:enterAnim="@anim/enter_left"
+        app:exitAnim="@anim/exit_right"
+        app:popEnterAnim="@anim/enter_right"
+        app:popExitAnim="@anim/exit_left" />
     <fragment
         android:id="@+id/skypesFragment"
         android:name="net.energogroup.akafist.fragments.SkypesFragment"
@@ -97,10 +101,18 @@
         tools:layout="@layout/fragment_skypes" >
         <action
             android:id="@+id/action_skypesFragment_to_home2"
-            app:destination="@id/home2" />
+            app:destination="@id/home2"
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
+            app:popEnterAnim="@anim/enter_right"
+            app:popExitAnim="@anim/exit_left" />
         <action
             android:id="@+id/action_skypesFragment_to_skypesBlocksFragment"
-            app:destination="@id/skypesBlocksFragment" />
+            app:destination="@id/skypesBlocksFragment"
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
+            app:popEnterAnim="@anim/enter_right"
+            app:popExitAnim="@anim/exit_left" />
     </fragment>
     <fragment
         android:id="@+id/onlineTempleFragment"
@@ -112,7 +124,11 @@
             android:defaultValue="https://radiozakonbozhiy.ru/"/>
         <action
             android:id="@+id/action_onlineTempleFragment_to_home2"
-            app:destination="@id/home2" />
+            app:destination="@id/home2"
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
+            app:popEnterAnim="@anim/enter_right"
+            app:popExitAnim="@anim/exit_left" />
     </fragment>
     <fragment
         android:id="@+id/linksFragment"
@@ -121,7 +137,11 @@
         tools:layout="@layout/fragment_links" >
         <action
             android:id="@+id/action_linksFragment_to_home2"
-            app:destination="@id/home2" />
+            app:destination="@id/home2"
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
+            app:popEnterAnim="@anim/enter_right"
+            app:popExitAnim="@anim/exit_left" />
     </fragment>
     <fragment
         android:id="@+id/prayerFragment"
@@ -134,7 +154,11 @@
             app:launchSingleTop="true" />
         <action
             android:id="@+id/action_prayerFragment_to_churchFragment"
-            app:destination="@id/churchFragment" />
+            app:destination="@id/churchFragment"
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
+            app:popEnterAnim="@anim/enter_right"
+            app:popExitAnim="@anim/exit_left" />
     </fragment>
     <fragment
         android:id="@+id/skypesBlocksFragment"
@@ -143,7 +167,11 @@
         tools:layout="@layout/fragment_skypes_blocks" >
         <action
             android:id="@+id/action_skypesBlocksFragment_to_skypesFragment"
-            app:destination="@id/skypesFragment" />
+            app:destination="@id/skypesFragment"
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
+            app:popEnterAnim="@anim/enter_right"
+            app:popExitAnim="@anim/exit_left" />
     </fragment>
     <fragment
         android:id="@+id/churchFragment"
@@ -152,13 +180,25 @@
         tools:layout="@layout/fragment_church" >
         <action
             android:id="@+id/action_churchFragment_to_home2"
-            app:destination="@id/home2" />
+            app:destination="@id/home2"
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
+            app:popEnterAnim="@anim/enter_right"
+            app:popExitAnim="@anim/exit_left" />
         <action
             android:id="@+id/action_churchFragment_to_menu"
-            app:destination="@id/menu" />
+            app:destination="@id/menu"
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
+            app:popEnterAnim="@anim/enter_right"
+            app:popExitAnim="@anim/exit_left" />
         <action
             android:id="@+id/action_churchFragment_to_prayerFragment"
-            app:destination="@id/prayerFragment" />
+            app:destination="@id/prayerFragment"
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
+            app:popEnterAnim="@anim/enter_right"
+            app:popExitAnim="@anim/exit_left" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -167,11 +207,19 @@
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_loginFragment_to_home2"
-            app:destination="@id/home2" />
+            app:destination="@id/home2"
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
+            app:popEnterAnim="@anim/enter_right"
+            app:popExitAnim="@anim/exit_left" />
     </fragment>
     <action
         android:id="@+id/action_global_loginFragment"
-        app:destination="@id/loginFragment" />
+        app:destination="@id/loginFragment"
+        app:enterAnim="@anim/enter_left"
+        app:exitAnim="@anim/exit_right"
+        app:popEnterAnim="@anim/enter_right"
+        app:popExitAnim="@anim/exit_left" />
     <fragment
         android:id="@+id/settingsFragment"
         android:name="net.energogroup.akafist.fragments.SettingsFragment"
@@ -179,9 +227,17 @@
         tools:layout="@layout/fragment_settings" >
         <action
             android:id="@+id/action_settingsFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
+            app:popEnterAnim="@anim/enter_right"
+            app:popExitAnim="@anim/exit_left" />
     </fragment>
     <action
         android:id="@+id/action_global_settingsFragment"
-        app:destination="@id/settingsFragment" />
+        app:destination="@id/settingsFragment"
+        app:enterAnim="@anim/enter_left"
+        app:exitAnim="@anim/exit_right"
+        app:popEnterAnim="@anim/enter_right"
+        app:popExitAnim="@anim/exit_left" />
 </navigation>

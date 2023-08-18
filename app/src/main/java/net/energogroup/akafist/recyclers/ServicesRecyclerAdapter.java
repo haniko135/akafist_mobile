@@ -20,7 +20,7 @@ import net.energogroup.akafist.fragments.ChurchFragment;
 import java.util.List;
 
 /**
- * Класс адаптера RecyclerView для класса {@link ChurchFragment}
+ * RecyclerView adapter class for the {@link ChurchFragment} class
  * @author Nastya Izotina
  * @version 1.0.0
  */
@@ -34,7 +34,7 @@ public class ServicesRecyclerAdapter extends RecyclerView.Adapter<ServicesRecycl
     }
 
     /**
-     * Этот метод присваивает текущий фрагмент
+     * This method assigns the current fragment
      * @param fragment
      */
     public void setFragment(Fragment fragment) {
@@ -50,8 +50,8 @@ public class ServicesRecyclerAdapter extends RecyclerView.Adapter<ServicesRecycl
 
     /**
      * Этот метод отвечает за логику, происходящую в каждом элементе RecyclerView
-     * @param holder Элемент списка
-     * @param position Позиция в списке
+     * @param holder list item
+     * @param position Position in the list
      */
     @SuppressLint("ResourceAsColor")
     @Override
@@ -72,7 +72,7 @@ public class ServicesRecyclerAdapter extends RecyclerView.Adapter<ServicesRecycl
     }
 
     /**
-     * Внутренний класс, отвечающий за правильной отображение элемента RecyclerView
+     * The internal class responsible for the correct display of the RecyclerView element
      */
     static class ServicesViewHolder extends RecyclerView.ViewHolder{
         private TextView serviceListItem;

@@ -58,10 +58,6 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.MANAGE_EXTERNAL_STORAGE
     };
 
-    private final String [] PERMISSION_BATTERY = {
-            Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-    };
-
     public ActivityMainBinding binding;
     public static final int SEC_TOKEN = R.string.secToken;
     public static final int API_PATH = R.string.apiPath;

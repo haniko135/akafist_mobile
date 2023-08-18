@@ -20,12 +20,20 @@ import net.energogroup.akafist.fragments.SettingsFragment;
 
 import java.util.List;
 
+/**
+ * RecyclerView adapter class for the {@link SettingsFragment} class
+ */
 public class SettingsRecyclerAdapter extends RecyclerView.Adapter<SettingsRecyclerAdapter.SettingsViewHolder> {
 
     private List<String> textMenu;
     private Fragment fragment;
     private SharedPreferences preferences;
 
+    /**
+     * Constructor method
+     * @param textMenu Strings of current menu
+     * @param fragment Settings fragment
+     */
     public SettingsRecyclerAdapter(List<String> textMenu, SettingsFragment fragment) {
         this.textMenu = textMenu;
         this.fragment = fragment;
