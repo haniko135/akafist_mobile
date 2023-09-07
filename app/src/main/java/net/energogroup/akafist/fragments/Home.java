@@ -115,6 +115,12 @@ public class Home extends Fragment {
         return homeBinding.getRoot();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        appPref.edit().putBoolean("app_pref_player", false).apply();
+    }
+
     /**
      * This method initializes the main parameters of the home page
      * and is using {@link Home#onCreate(Bundle)}

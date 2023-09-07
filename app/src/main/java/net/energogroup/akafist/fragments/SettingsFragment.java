@@ -1,7 +1,10 @@
 package net.energogroup.akafist.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -9,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import net.energogroup.akafist.MainActivity;
+import net.energogroup.akafist.R;
 import net.energogroup.akafist.databinding.FragmentSettingsBinding;
 import net.energogroup.akafist.recyclers.SettingsRecyclerAdapter;
 
@@ -46,6 +51,7 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getResources().getString(R.string.settings_name));
         settingsNames.add("Изменить аккаунт");
         settingsNames.add("Размер шрифта молитв");
         settingsNames.add("Связь с разработчиком");
@@ -67,6 +73,10 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         settingsBinding = FragmentSettingsBinding.inflate(inflater, container, false);
+
+        SharedPreferences appPref = getActivity().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
+        String userName = appPref.getString("app_pref_username", "guest");
+        settingsBinding.userName.setText(userName);
 
         settingsBinding.settingsRV.setLayoutManager(new LinearLayoutManager(getContext()));
         settingsBinding.settingsRV.setAdapter(new SettingsRecyclerAdapter(settingsNames, this));
