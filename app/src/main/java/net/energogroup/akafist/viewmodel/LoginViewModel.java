@@ -19,13 +19,19 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class, containing authorization logic
+ * @author Nastya Izotina
+ * @version 1.2.0
+ */
 public class LoginViewModel extends ViewModel {
+    private static final String DEV_TAG = "LoginViewModel";
     private MutableLiveData<String> authorizationURL = new MutableLiveData<>();
     private MutableLiveData<String> accessToken = new MutableLiveData<>();
     private MutableLiveData<String> refreshToken = new MutableLiveData<>();
     private MutableLiveData<String> nameMLD = new MutableLiveData<>();
     private MutableLiveData<String> emailMLD = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isHostUnavailable = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isHostUnavailable = new MutableLiveData<>(false);
     private String codeVerifier;
 
 
@@ -41,6 +47,10 @@ public class LoginViewModel extends ViewModel {
 
     public MutableLiveData<String> getEmailMLD() { return emailMLD; }
 
+    /**
+     * First method to authentication
+     * @param context Current fragment context
+     */
     public void getFirst(Context context){
         String url = context.getString(R.string.first_url);
 
@@ -53,13 +63,16 @@ public class LoginViewModel extends ViewModel {
                 codeVerifier = codeVerif;
                 authorizationURL.setValue(authURL);
                 isHostUnavailable.setValue(false);
+                Log.e(DEV_TAG, "isHostUnavailable = false");
             } catch (JSONException e) {
+                Log.e(DEV_TAG, e.getLocalizedMessage());
                 e.printStackTrace();
             }
 
         }, error -> {
             if (error.networkResponse == null){
                 isHostUnavailable.setValue(true);
+                Log.e(DEV_TAG, "isHostUnavailable = true");
             }
         }){
             @Override
@@ -74,6 +87,11 @@ public class LoginViewModel extends ViewModel {
         MainActivity.mRequestQueue.add(request);
     }
 
+    /**
+     * Second method for authentication
+     * @param authCode Authcode from previous step
+     * @param context Current fragment context
+     */
     public void getSecond(String authCode, Context context){
         try {
             String url = context.getString(R.string.first_url);
@@ -113,6 +131,10 @@ public class LoginViewModel extends ViewModel {
         }
     }
 
+    /**
+     * Third method for authentication
+     * @param context Current fragment context
+     */
     public void getThird(Context context){
         String url = context.getString(R.string.user_info);
         Log.e("URL_RF", accessToken.getValue());
@@ -152,6 +174,10 @@ public class LoginViewModel extends ViewModel {
         MainActivity.mRequestQueue.add(request);
     }
 
+    /**
+     * Fourth method for authentication
+     * @param context Current fragment context
+     */
     public void getFourth(Context context){
         try {
             String url = context.getString(R.string.first_url)+"&"+context.getString(R.string.refresh_url);

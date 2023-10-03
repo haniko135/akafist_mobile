@@ -29,8 +29,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Класс, содержащий логику обработки данных
- * {@link LinksFragment} и {@link LinksModel}
+ * A class containing data processing logic
+ * {@link LinksFragment} and {@link LinksModel}
  * @author Nastya Izotina
  * @version 1.0.0
  */
@@ -41,7 +41,7 @@ public class LinksViewModel extends ViewModel {
     private int image;
 
     /**
-     * Этот метод возвращает текущее значение MutableLiveData<List<LinksModel>>
+     * This method returns the current value of MutableLiveData<List<LinksModel>>
      * @return MutableLiveData<List<LinksModel>>
      */
     public MutableLiveData<List<LinksModel>> getMutableLinksDate() {
@@ -49,10 +49,10 @@ public class LinksViewModel extends ViewModel {
     }
 
     /**
-     * Этот метод делает запрос к удалённому серверу в зависимости от
-     * параметра cas и получает данные для вывода
-     * в методе {@link LinksFragment#onCreateView(LayoutInflater, ViewGroup, Bundle)}
-     * @param cas String
+     * This method makes a request to the remote server
+     * depending on the cas parameter and receives data
+     * for output in the method {@link LinksFragment#onCreateView(LayoutInflater, ViewGroup, Bundle)}
+     * @param cas String case
      * @param inflater LayoutInflater
      * @exception JSONException
      */
@@ -106,8 +106,8 @@ public class LinksViewModel extends ViewModel {
     }
 
     /**
-     * Этот метод используется при обновлении страницы
-     * в {@link LinksFragment#onCreateView(LayoutInflater, ViewGroup, Bundle)}
+     * This method is used when updating the page in
+     * {@link LinksFragment#onCreateView(LayoutInflater, ViewGroup, Bundle)}
      * @param cas String
      * @param inflater LayoutInflater
      */
@@ -124,9 +124,8 @@ public class LinksViewModel extends ViewModel {
 
 
     /**
-     * Этот метод формирует список скачанных аудио-файлов
-     * @param audioFilesDir String
-     * @return List<LinksModel>
+     * @param audioFilesDir Final lisy destination
+     * @return List<LinksModel> Downloaded audio files
      */
     @SuppressLint("SuspiciousIndentation")
     public List<LinksModel> getDownload(String audioFilesDir){

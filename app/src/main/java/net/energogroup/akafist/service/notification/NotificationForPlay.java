@@ -16,6 +16,11 @@ import androidx.core.app.NotificationManagerCompat;
 import net.energogroup.akafist.R;
 import net.energogroup.akafist.models.LinksModel;
 
+/**
+ * Notification class for music
+ * @author Nastya Izotina
+ * @version 1.1.0
+ */
 public class NotificationForPlay {
     public static final String CHANNEL_ID="playing_audios";
 
@@ -23,6 +28,12 @@ public class NotificationForPlay {
 
     public static Notification notification;
 
+    /**
+     * This method creates a music notification
+     * @param context Current fragment context
+     * @param linksModel Current song's data
+     * @param playButton Current state of play button
+     */
     public static void createNotification(Context context, LinksModel linksModel, int playButton) {
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
         MediaSessionCompat mediaSessionCompat = new MediaSessionCompat(context, "tag");

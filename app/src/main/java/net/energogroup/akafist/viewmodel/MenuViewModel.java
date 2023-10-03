@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Класс, содержащий логику обработки данных
- * {@link Menu}, {@link Home} и {@link HomeBlocksModel}
+ * A class containing data processing logic
+ * {@link Menu}, {@link Home} and {@link HomeBlocksModel}
  * @author Nastya Izotina
  * @version 1.0.0
  */
@@ -44,7 +44,7 @@ public class MenuViewModel extends ViewModel {
     }
 
     /**
-     * Этот метод производит первую инициализацию списка блоков страниц "Главная" и "Меню"
+     * This method initializes the list of blocks of the "Home" and "Menu" pages for the first time
      */
     public void firstSet(String mode, Context context){
         if (mode.equals("energogroup")) {
@@ -67,12 +67,11 @@ public class MenuViewModel extends ViewModel {
     }
 
     /**
-     * Этот метод отправляет запрос на удалённый сервер и получает ответ, который в последствии
-     * используется в методах {@link Home#onCreateView(LayoutInflater, ViewGroup, Bundle)} и
+     * This method sends a request to a remote server and receives a response,
+     * which is later used in the methods {@link Home#onCreateView(LayoutInflater, ViewGroup, Bundle)} and
      * {@link Menu#onCreateView(LayoutInflater, ViewGroup, Bundle)}.
-     *
-     * Данный метод используется в {@link Home#onCreate(Bundle)} и {@link Menu#onCreate(Bundle)}
-     * @param cas Какой фрагмент сейчас инициализируется
+     * This method is used in {@link Home#onCreate(Bundle)} and {@link Menu#onCreate(Bundle)}
+     * @param cas Which fragment is being initialized now
      *
      * @exception JSONException
      */

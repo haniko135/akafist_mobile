@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Класс, содержащий логику обработки данных
- * {@link ChurchFragment}, {@link TypesModel} и {@link ServicesModel}
+ * A class containing data processing logic of
+ * {@link ChurchFragment}, {@link TypesModel} and {@link ServicesModel}
  * @author Nastya Izotina
  * @version 1.0.0
  */
@@ -44,52 +44,52 @@ public class ChurchViewModel extends ViewModel{
     private MutableLiveData <String> liveNameTxt = new MutableLiveData<>();
 
     /**
-     * @param id Текущий id типа
+     * @param id Current type id
      */
     public void setCurId(int id){
         curId.setValue(id);
     }
 
     /**
-     * @return Текущий список типов
+     * @return Current list of types
      */
     public MutableLiveData<List<TypesModel>> getMutableTypesList() {
         return mutableTypesList;
     }
 
     /**
-     * @return Текущий id типа
+     * @return Current type id
      */
     public MutableLiveData<Integer> getCurId() {
         return curId;
     }
 
     /**
-     * @return Текущий список молитв
+     * @return Current Prayer List
      */
     public MutableLiveData<List<ServicesModel>> getMutableServicesList() {
         return mutableServicesList;
     }
 
     /**
-     * @return Текцщее верхнее название блока
+     * @return Current upper block name
      */
     public MutableLiveData<String> getLiveDataTxt() {
         return liveDataTxt;
     }
 
     /**
-     * @return Текцщее нижнее название блока
+     * @return Current lower block name
      */
     public MutableLiveData<String> getLiveNameTxt() {
         return liveNameTxt;
     }
 
     /**
-     * Этот метод отправляет запрос на удалённый сервер и получает ответ, который
-     * в последствии используется в методе {@link ChurchFragment#onCreateView(LayoutInflater, ViewGroup, Bundle)}.
-     * Данный метод используется в {@link ChurchFragment#onCreate(Bundle)}
-     * @param date Тип страницы
+     * This method sends a request to a remote server and receives a response,
+     * which is subsequently used in the method {@link ChurchFragment#onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * This method is used in {@link ChurchFragment#onCreate(Bundle)}
+     * @param date Page type
      * @exception JSONException
      */
     public void getJson(String date, Context context){

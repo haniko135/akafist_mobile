@@ -46,6 +46,7 @@ public class DialogLogin extends DialogFragment {
                 .setPositiveButton("Да", (dialog, which) -> {
                     authService.getFirst(fragment.getContext());
 
+                    Log.e("DialogLogin", String.valueOf(authService.getIsHostUnavailable().getValue()));
                     authService.getIsHostUnavailable().observe(fragment, aBoolean -> {
                         if(!aBoolean){
                             String urlPattern = fragment.getString(R.string.second_url);

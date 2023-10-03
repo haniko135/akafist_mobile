@@ -43,9 +43,19 @@ public class PlayerViewModel extends ViewModel {
     private MutableLiveData<LinksModel> linksModel = new MutableLiveData<>();
     private MutableLiveData<MediaPlayer> currMediaPlayer = new MutableLiveData<>();
     private MutableLiveData<Boolean> isDownload = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isProgressBarActive = new MutableLiveData<>();
     private OneTimeWorkRequest workRequest;
     private String urlForLink, fileName, filePath;
 
+
+
+    public MutableLiveData<Boolean> getIsProgressBarActive() {
+        return isProgressBarActive;
+    }
+
+    public void setIsProgressBarActive(Boolean isProgressBarActive) {
+        this.isProgressBarActive.setValue(isProgressBarActive);
+    }
 
     public MutableLiveData<String> getWorkMode() {
         return workMode;

@@ -6,6 +6,11 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
+/**
+ * Class-service of notification
+ * @author Nastya Izotina
+ * @version 1.1.0
+ */
 public class OnClearFromRecentService extends Service {
     @Nullable
     @Override

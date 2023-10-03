@@ -119,9 +119,6 @@
         android:name="net.energogroup.akafist.fragments.OnlineTempleFragment"
         android:label="fragment_online_temple"
         tools:layout="@layout/fragment_online_temple" >
-        <argument
-            android:name="urlToSound"
-            android:defaultValue="https://radiozakonbozhiy.ru/"/>
         <action
             android:id="@+id/action_onlineTempleFragment_to_home2"
             app:destination="@id/home2"

@@ -22,7 +22,7 @@ import net.energogroup.akafist.models.SkypesConfs;
 import java.util.List;
 
 /**
- * Класс адаптера RecyclerView для класса {@link SkypesFragment}
+ * The RecyclerView adapter class for the {@link SkypesFragment} class
  * @author Nastya Izotina
  * @version 1.0.0
  */
@@ -30,11 +30,23 @@ public class SkypesRecyclerAdapter extends RecyclerView.Adapter<SkypesRecyclerAd
     private List<SkypesConfs> skypesConfs;
     private Fragment fragment;
 
+    /**
+     * List's constructor
+     * @param skypesConfs - list of skype conferences
+     * @param fragment - SkypesFragment context
+     */
     public SkypesRecyclerAdapter(List<SkypesConfs> skypesConfs, SkypesFragment fragment) {
         this.skypesConfs = skypesConfs;
         this.fragment = fragment;
     }
 
+    /**
+     * Creates ViewHolder for skypes
+     * @param parent   The ViewGroup into which the new View will be added after it is bound to
+     *                 an adapter position.
+     * @param viewType The view type of the new View.
+     * @return
+     */
     @NonNull
     @Override
     public SkypesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -43,9 +55,9 @@ public class SkypesRecyclerAdapter extends RecyclerView.Adapter<SkypesRecyclerAd
     }
 
     /**
-     * Этот метод отвечает за логику, происходящую в каждом элементе RecyclerView
-     * @param holder Элемент списка
-     * @param position Позиция в списке
+     * This method is responsible for the logic that occurs in each element of the Recycler View
+     * @param holder List Item
+     * @param position Position in the list
      */
     @SuppressLint("ResourceAsColor")
     @Override
@@ -75,7 +87,7 @@ public class SkypesRecyclerAdapter extends RecyclerView.Adapter<SkypesRecyclerAd
 
 
     /**
-     * Внутренний класс, отвечающий за правильной отображение элемента RecyclerView
+     * The internal class responsible for the correct display of the RecyclerView element
      */
     static class SkypesViewHolder extends RecyclerView.ViewHolder{
 

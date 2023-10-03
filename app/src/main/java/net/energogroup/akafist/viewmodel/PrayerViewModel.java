@@ -22,8 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Класс, содержащий логику обработки данных
- * {@link PrayerFragment} и {@link PrayersModels}
+ * A class containing data processing logic
+ * {@link PrayerFragment} and {@link PrayersModels}
  * @author Nastya Izotina
  * @version 1.0.0
  */
@@ -33,25 +33,25 @@ public class PrayerViewModel extends ViewModel {
     private MutableLiveData<PrayersModels> prayersModelsMutableLiveData = new MutableLiveData<>();
 
     /**
-     * @return Возвращает текущую молитву
+     * @return Current prayer
      */
     public PrayersModels getPrayersModel() {
         return prayersModel;
     }
 
     /**
-     * @return Возвращает текущий массив молитв
+     * @return Current array of prayers
      */
     public MutableLiveData<PrayersModels> getPrayersModelsMutableLiveData() {
         return prayersModelsMutableLiveData;
     }
 
     /**
-     * Этот метод отправляет запрос на удалённый сервер и получает ответ, который в последствии
-     * используется в методах {@link PrayerFragment#onCreateView(LayoutInflater, ViewGroup, Bundle)}.
-     * Данный метод используется в {@link PrayerFragment#onCreate(Bundle)}
-     * @param date - тип предыдущей страницы
-     * @param id - id молитвы
+     * This method sends a request to a remote server and receives a response, which later
+     * used in methods {@link PrayerFragment#onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * This method is used in {@link PrayerFragment#onCreate(Bundle)}
+     * @param date - Previous page type
+     * @param id - Prayer id
      * @exception JSONException
      */
     public void getJson(String date, int id, Context context){

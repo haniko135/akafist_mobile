@@ -42,6 +42,7 @@ public class PlayerFragment extends Fragment {
     private boolean isPrepared = false;
     private PlayerViewModel playerViewModel;
     private static final int START_DOWNLOAD_ID = R.string.startDownload;
+    private static final String DEV_LOG = "PlayerFragment";
     public static Runnable runnable;
     private FragmentPlayerBinding playerBinding;
 
@@ -92,6 +93,7 @@ public class PlayerFragment extends Fragment {
             try {
                 if (mediaPlayer == null && s != null) {
                     if (s.startsWith("audioPrayers")) {
+                        Log.e(DEV_LOG, "inPlayer");
                         playerViewModel.getUrlForAudio().observe(getViewLifecycleOwner(), s1 -> {
                             String name = playerViewModel.getUrlForAudio().getValue();
                             this.mediaPlayer = MediaPlayer.create(getActivity(), Uri.parse(name));

@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 /**
- * Класс, проверяющий интренет-соединение
+ * Class for checcking internet connection
  * @author Nastya Izotina
  * @version 1.0.0
  */
@@ -21,7 +21,7 @@ public class NetworkConnection extends LiveData<Boolean> {
     private ConnectivityManager connectivityManager;
 
     /**
-     * Конструктор класса с учётом текущего контекста
+     * The constructor of the class taking into account the current context
      * @param context Context
      */
     public NetworkConnection(Context context){
@@ -32,7 +32,7 @@ public class NetworkConnection extends LiveData<Boolean> {
     private NetworkCallback networkCallback = new NetworkCallback();
 
     /**
-     * Этот метод провереяет интернет0сеодинение в режиме реального времени
+     * This method checks the internet connection in real time
      */
     private void updateNetworkConnection(){
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -44,7 +44,7 @@ public class NetworkConnection extends LiveData<Boolean> {
     }
 
     /**
-     * @return Проверка ответа сети
+     * @return Checking the network response
      */
     private NetworkCallback connectivityManagerCallback(){
         networkCallback = new NetworkCallback();
@@ -52,7 +52,7 @@ public class NetworkConnection extends LiveData<Boolean> {
     }
 
     /**
-     * Этот метод проверяет сеть при наличии хотя бы одного подписчика
+     * This method checks the network if there is at least one subscriber
      */
     @Override
     protected void onActive() {
@@ -63,7 +63,7 @@ public class NetworkConnection extends LiveData<Boolean> {
     }
 
     /**
-     * Этот метод отключает проверку сети при отсутствии подписчиков
+     * This method disables network verification if there are no subscribers
      */
     @Override
     protected void onInactive() {
@@ -72,7 +72,7 @@ public class NetworkConnection extends LiveData<Boolean> {
     }
 
     /**
-     * Внутренний класс, который переопределяет класс {@link ConnectivityManager.NetworkCallback}
+     * An internal class that overrides {@link ConnectivityManager.NetworkCallback}
      */
     class NetworkCallback extends ConnectivityManager.NetworkCallback{
         @Override
@@ -89,7 +89,7 @@ public class NetworkConnection extends LiveData<Boolean> {
     }
 
     /**
-     * Внутренний класс, который переопределяет класс {@link BroadcastReceiver}
+     * An internal class that overrides {@link BroadcastReceiver}
      */
     class NetworkReciever extends BroadcastReceiver{
         @Override

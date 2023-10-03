@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Класс, содержащий логику обработки данных
- * {@link SkypesBlocksFragment} и {@link SkypesFragment}
+ * A class containing data processing logic
+ * {@link SkypesBlocksFragment} and {@link SkypesFragment}
  * @author Nastya Izotina
  * @version 1.0.0
  */
@@ -39,23 +39,23 @@ public class SkypeViewModel extends ViewModel {
     private MutableLiveData<List<SkypesConfs>> confsMutableLiveData = new MutableLiveData<>();
 
     /**
-     * @return Возвращает текущие группы конференций
+     * @return Current conference groups
      */
     public MutableLiveData<List<SkypesConfs>> getSkypesMutableLiveData() {
         return skypesMutableLiveData;
     }
 
     /**
-     * @return Возвращает текущие конференции
+     * @return Current conferences
      */
     public MutableLiveData<List<SkypesConfs>> getConfsMutableLiveData() {
         return confsMutableLiveData;
     }
 
     /**
-     * Этот метод отправляет запрос на удалённый сервер и получает ответ, который в последствии
-     * используется в методе {@link SkypesFragment#onCreateView(LayoutInflater, ViewGroup, Bundle)}.
-     * Данный метод используется в {@link SkypesFragment#onCreate(Bundle)}
+     * This method sends a request to a remote server and receives a response, which later
+     * used in the method {@link SkypesFragment#onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * This method is used in {@link SkypesFragment#onCreate(Bundle)}
      * @exception JSONException
      */
     public void getJsonSkype(Context context){
@@ -109,10 +109,10 @@ public class SkypeViewModel extends ViewModel {
     }
 
     /**
-     * Этот метод отправляет запрос на удалённый сервер и получает ответ, который в последствии
-     * используется в методе {@link SkypesBlocksFragment#onCreateView(LayoutInflater, ViewGroup, Bundle)}.
-     * Данный метод используется в {@link SkypesBlocksFragment#onCreate(Bundle)}
-     * @param urlId ID конференции
+     * This method sends a request to a remote server and receives a response, which later
+     * used in the method {@link SkypesBlocksFragment#onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * This method is used in {@link SkypesBlocksFragment#onCreate(Bundle)}
+     * @param urlId Conference ID
      * @exception JSONException
      */
     public void getJsonSkypeBlock(int urlId, Context context){

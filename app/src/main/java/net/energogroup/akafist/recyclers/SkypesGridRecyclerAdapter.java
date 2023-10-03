@@ -19,7 +19,7 @@ import net.energogroup.akafist.fragments.SkypesBlocksFragment;
 import java.util.List;
 
 /**
- * Класс адаптера RecyclerView для класса {@link SkypesBlocksFragment}
+ * The RecyclerView adapter class for the {@link SkypesBlocksFragment} class
  * @author Nastya Izotina
  * @version 1.0.0
  */
@@ -39,9 +39,9 @@ public class SkypesGridRecyclerAdapter extends RecyclerView.Adapter<SkypesGridRe
     }
 
     /**
-     * Этот метод отвечает за логику, происходящую в каждом элементе RecyclerView
-     * @param holder Элемент списка
-     * @param position Позиция в списке
+     * This method is responsible for the logic that occurs in each element of the Recycler View
+     * @param holder List Item
+     * @param position Position in the list
      */
     @SuppressLint("ResourceAsColor")
     @Override
@@ -60,7 +60,7 @@ public class SkypesGridRecyclerAdapter extends RecyclerView.Adapter<SkypesGridRe
     }
 
     /**
-     * Внутренний класс, отвечающий за правильной отображение элемента RecyclerView
+     * The internal class responsible for the correct display of the RecyclerView element
      */
     static class SkypesGridViewHolder extends RecyclerView.ViewHolder{
         private TextView skypesListItem;
