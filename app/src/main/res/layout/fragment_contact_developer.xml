@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="15dp">
@@ -13,7 +12,7 @@
         android:layout_marginBottom="16dp"
         android:text="@string/text_for_user"
         android:fontFamily="@font/cyrillic_old"
-        android:textSize="18dp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/subjectET"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,7 +27,8 @@
         android:fontFamily="@font/cyrillic_old"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_for_user" />
+        app:layout_constraintTop_toBottomOf="@id/text_for_user"
+        android:inputType="text" />
 
 
     <EditText
@@ -55,7 +55,7 @@
         android:layout_marginTop="16dp"
         android:background="@color/pink_700"
         android:fontFamily="@font/cyrillic_old"
-        android:text="Отправить"
+        android:text="@string/submit_button"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

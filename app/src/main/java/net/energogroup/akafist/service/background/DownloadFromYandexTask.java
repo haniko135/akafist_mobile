@@ -151,9 +151,7 @@ public class DownloadFromYandexTask extends Worker {
             e.printStackTrace();
             MainActivity.generateNotification(failStringId, context);
 
-            new Handler().postDelayed(() -> {
-                MainActivity.generateNotification(againStringId, context);
-            }, 3000);
+            new Handler().postDelayed(() -> MainActivity.generateNotification(againStringId, context), 3000);
             Log.e(tag, "Download Failed with Exception - " + e.getLocalizedMessage());
         }
     }

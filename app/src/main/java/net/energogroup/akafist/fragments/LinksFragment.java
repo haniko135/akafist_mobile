@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -78,7 +79,7 @@ public class LinksFragment extends Fragment {
      * @return View
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentLinksBinding.inflate(inflater, container, false);
 
@@ -97,9 +98,7 @@ public class LinksFragment extends Fragment {
 
         //list of downloaded audio files
         downloadAudio = linksViewModel.getDownload(finalPath);
-        downloadAudio.forEach(it -> {
-            downloadAudioNames.add(it.getName());
-        });
+        downloadAudio.forEach(it -> downloadAudioNames.add(it.getName()));
 
         //agreement to download audio files
         if (!isChecked) {
@@ -142,24 +141,13 @@ public class LinksFragment extends Fragment {
             binding.linksRoot.setRefreshing(true);
             downloadAudio = linksViewModel.getDownload(finalPath);
             downloadAudioNames.clear();
-            downloadAudio.forEach(it -> {
-                downloadAudioNames.add(it.getName());
-            });
+            downloadAudio.forEach(it -> downloadAudioNames.add(it.getName()));
             linksViewModel.retryGetJson(date, getLayoutInflater());
             binding.linksRoot.setRefreshing(false);
         });
 
         return binding.getRoot();
     }
-
-    /**
-     * This method causes the fragment to be destroyed
-     */
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
 
     /**
      * This method initialize base parameters of fragment

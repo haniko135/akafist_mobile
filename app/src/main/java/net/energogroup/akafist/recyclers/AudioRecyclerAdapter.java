@@ -30,7 +30,6 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * RecyclerView adapter class with audio files
@@ -150,71 +149,62 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
 
         //processing of clicking on a list item
         holder.audiosListItem.setOnClickListener(view -> {
-            holder.progressBar.setVisibility(View.VISIBLE);
-            playerViewModel.setIsProgressBarActive(true);
-            Log.e(DEV_TAG, String.valueOf(view.getId()));
+            //holder.progressBar.setVisibility(View.VISIBLE);
             Log.e(DEV_TAG, String.valueOf(holder.audiosListItem.getId()));
 
-        });
+            Log.e("AUDIO_RECYCLER", audios.get(position).getName()+": "+audios.get(position).getUrl());
 
-        playerViewModel.getIsProgressBarActive().observe(fragment.getViewLifecycleOwner(), aBoolean -> {
-            if(aBoolean){
-                checkPlaying();
-                urlForLink = audios.get(position).getUrl();
-                playerViewModel.setUrlForLink(urlForLink);
-                playerViewModel.setFileName(audios.get(position).getName());
-                playerViewModel.setFilePath(filePath);
-                MainActivity.networkConnection.observe(fragment.getViewLifecycleOwner(), isChecked->{
-                    recIsChecked = isChecked;
-                /*if (isChecked){
+            checkPlaying();
+            urlForLink = audios.get(position).getUrl();
+            playerViewModel.setUrlForLink(urlForLink);
+            playerViewModel.setFileName(audios.get(position).getName());
+            playerViewModel.setFilePath(filePath);
+            MainActivity.networkConnection.observe(fragment.getViewLifecycleOwner(), isChecked->{
+                recIsChecked = isChecked;
+            /*if (isChecked){
 
-                }else {
-                    //fragment.binding.downloadLinkButton.setVisibility(View.GONE);
-                }*/
-                });
+            }else {
+                //fragment.binding.downloadLinkButton.setVisibility(View.GONE);
+            }*/
+            });
 
-                if(recIsChecked){
-                    if(playerViewModel.getCurrMediaPlayer().getValue()!=null){
-                        playerViewModel.getCurrMediaPlayer().getValue().stop();
-                    }
-
-                    playerViewModel.setWorkMode("audioPrayers");
-                    playerViewModel.setLinksModel(audios.get(position));
-
-                    String urlPattern = fragment.getResources().getString(URL_PATTERN_ID);
-
-                    //start audio from the phone's memory if it is downloaded
-                    if(!holder.isDownload) {
-                        playerViewModel.setUrlForAudio(urlPattern + urlForLink + "?alt=media");
-                        playerViewModel.setDownload(false);
-                    }
-                    else{
-                        playerViewModel.setUrlForAudio(filePath+"/"+audios.get(position).getName()+".mp3");
-                        playerViewModel.setDownload(holder.isDownload);
-                    }
-
-                    mainActivity = (MainActivity) fragment.getActivity();
-                    mainActivity.binding.mainLayout.playerContainer.setVisibility(View.VISIBLE);
-                    playerViewModel.setIsProgressBarActive(false);
-                    holder.progressBar.setVisibility(View.INVISIBLE);
-                }else {
-                    if(playerViewModel.getCurrMediaPlayer().getValue()!=null){
-                        playerViewModel.getCurrMediaPlayer().getValue().stop();
-                    }
-
-                    playerViewModel.setWorkMode("audioPrayers");
-                    playerViewModel.setUrlForAudio(urlForLink);
-                    playerViewModel.setLinksModel(audios.get(position));
-
-                    mainActivity = (MainActivity) fragment.getActivity();
-                    mainActivity.binding.mainLayout.playerContainer.setVisibility(View.VISIBLE);
-                    playerViewModel.setIsProgressBarActive(false);
-                    holder.progressBar.setVisibility(View.INVISIBLE);
+            if(recIsChecked){
+                if(playerViewModel.getCurrMediaPlayer().getValue()!=null){
+                    playerViewModel.getCurrMediaPlayer().getValue().stop();
                 }
+
+                playerViewModel.setWorkMode("audioPrayers");
+                playerViewModel.setLinksModel(audios.get(position));
+
+                String urlPattern = fragment.getResources().getString(URL_PATTERN_ID);
+
+                //start audio from the phone's memory if it is downloaded
+                if(!holder.isDownload) {
+                    playerViewModel.setUrlForAudio(urlPattern + urlForLink + "?alt=media");
+                    playerViewModel.setDownload(false);
+                }
+                else{
+                    playerViewModel.setUrlForAudio(filePath+"/"+audios.get(position).getName()+".mp3");
+                    playerViewModel.setDownload(holder.isDownload);
+                }
+
+                mainActivity = (MainActivity) fragment.getActivity();
+                mainActivity.binding.mainLayout.playerContainer.setVisibility(View.VISIBLE);
+                //holder.progressBar.setVisibility(View.INVISIBLE);
+            }else {
+                if(playerViewModel.getCurrMediaPlayer().getValue()!=null){
+                    playerViewModel.getCurrMediaPlayer().getValue().stop();
+                }
+
+                playerViewModel.setWorkMode("audioPrayers");
+                playerViewModel.setUrlForAudio(urlForLink);
+                playerViewModel.setLinksModel(audios.get(position));
+
+                mainActivity = (MainActivity) fragment.getActivity();
+                mainActivity.binding.mainLayout.playerContainer.setVisibility(View.VISIBLE);
+                //holder.progressBar.setVisibility(View.INVISIBLE);
             }
         });
-
-
     }
 
     @Override
@@ -230,7 +220,6 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
         public ImageView audioListItemDown;
         public ImageButton audioListItemDel;
         public ProgressBar progressBar;
-
         public Boolean isDownload = false;
 
         public AudioViewHolder(@NonNull View itemView) {
@@ -238,7 +227,7 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
             this.audiosListItem = itemView.findViewById(R.id.audio_list_item);
             this.audioListItemDown = itemView.findViewById(R.id.audio_list_item_down);
             this.audioListItemDel = itemView.findViewById(R.id.audio_list_item_del);
-            this.progressBar = itemView.findViewById(R.id.audio_progress_bar);
+            //this.progressBar = itemView.findViewById(R.id.audio_progress_bar);
         }
     }
 

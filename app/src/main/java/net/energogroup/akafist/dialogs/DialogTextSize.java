@@ -43,9 +43,7 @@ public class DialogTextSize extends DialogFragment {
         }
         liveTextSize.setValue(textSizeNow);
 
-        liveTextSize.observe(this, aFloat -> {
-            fontSizeDialog.setText(String.valueOf(aFloat));
-        });
+        liveTextSize.observe(this, aFloat -> fontSizeDialog.setText(String.valueOf(aFloat)));
 
         zoomOutDialog.setOnClickListener(v -> {
             textSizeNow--;

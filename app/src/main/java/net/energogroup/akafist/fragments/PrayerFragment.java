@@ -91,7 +91,7 @@ public class PrayerFragment extends Fragment {
      * @return View
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         if(getArguments() != null){
@@ -111,9 +111,7 @@ public class PrayerFragment extends Fragment {
         binding = FragmentPrayerBinding.inflate(getLayoutInflater());
         binding.textPrayer.setTextSize(convertToPx());
         //binding.textPrayer.setMovementMethod(new ScrollingMovementMethod());
-        prayerViewModel.getPrayersModelsMutableLiveData().observe(getViewLifecycleOwner(), prayersModels -> {
-            binding.textPrayer.setText(Html.fromHtml(prayersModels.getTextPrayer(), Html.FROM_HTML_MODE_COMPACT));
-        });
+        prayerViewModel.getPrayersModelsMutableLiveData().observe(getViewLifecycleOwner(), prayersModels -> binding.textPrayer.setText(Html.fromHtml(prayersModels.getTextPrayer(), Html.FROM_HTML_MODE_COMPACT)));
 
         //something that didn't work out very well
         binding.prayerOptions.getMenu().getItem(0).setChecked(false);

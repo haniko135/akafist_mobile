@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModel;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import net.energogroup.akafist.MainActivity;
-import net.energogroup.akafist.R;
 import net.energogroup.akafist.fragments.ChurchFragment;
 import net.energogroup.akafist.models.ServicesModel;
 import net.energogroup.akafist.models.TypesModel;

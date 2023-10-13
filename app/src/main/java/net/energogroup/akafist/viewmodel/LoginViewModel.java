@@ -162,7 +162,7 @@ public class LoginViewModel extends ViewModel {
             }
         }){
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
                 headers.put("User-Agent", context.getString(R.string.app_ver));
                 headers.put("Connection", "keep-alive");

@@ -10,6 +10,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -84,7 +85,7 @@ public class PlayerFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         playerBinding = FragmentPlayerBinding.inflate(inflater, container, false);
 
@@ -96,6 +97,7 @@ public class PlayerFragment extends Fragment {
                         Log.e(DEV_LOG, "inPlayer");
                         playerViewModel.getUrlForAudio().observe(getViewLifecycleOwner(), s1 -> {
                             String name = playerViewModel.getUrlForAudio().getValue();
+                            Log.e(DEV_LOG, name);
                             this.mediaPlayer = MediaPlayer.create(getActivity(), Uri.parse(name));
                             mediaPlayer.setVolume(0.5f, 0.5f);
                             mediaPlayer.setLooping(false);
@@ -128,9 +130,7 @@ public class PlayerFragment extends Fragment {
                     if(!s.startsWith("background") && mediaPlayer != null) {
                         initSeekBar();
                         initButtonClicks(container);
-                        playerViewModel.getLinksModel().observe(getViewLifecycleOwner(), linksModel -> {
-                            playerBinding.textPlayer.setText(linksModel.getName());
-                        });
+                        playerViewModel.getLinksModel().observe(getViewLifecycleOwner(), linksModel -> playerBinding.textPlayer.setText(linksModel.getName()));
 
                         playerViewModel.getIsDownload().observe(getViewLifecycleOwner(), aBoolean -> {
                             if (aBoolean){
@@ -207,9 +207,7 @@ public class PlayerFragment extends Fragment {
         appPref.edit().putBoolean("app_pref_player", true).apply();
 
         Log.e("PLAYER_FRAGMENT", "init buttons");
-        playerBinding.imageButtonPlay.setOnClickListener(view -> {
-            playAndStop();
-        });
+        playerBinding.imageButtonPlay.setOnClickListener(view -> playAndStop());
         playerBinding.downloadLinkButton.setOnClickListener(view -> {
             MainActivity.generateNotification(START_DOWNLOAD_ID, getContext());
             playerViewModel.getLinkDownload(getLayoutInflater(), container);

@@ -8,5 +8,4 @@ import android.app.Application;
  * @version 1.0.0
  */
 public class AkafistApplication extends Application {
-    boolean globalIsChecked = false;
 }

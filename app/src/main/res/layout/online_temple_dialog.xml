@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:text="Перед переходом на онлайн-трансляцию выключайте аудиоплеер молитв и бесед."
         android:fontFamily="@font/cyrillic_old"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:gravity="center"/>
 
 </LinearLayout>

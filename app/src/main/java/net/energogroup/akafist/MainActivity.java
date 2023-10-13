@@ -18,6 +18,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -148,6 +149,8 @@ public class MainActivity extends AppCompatActivity {
      */
     public void enablePlayer() {
         binding.mainLayout.playerContainer.setVisibility(View.GONE);
+        SharedPreferences appPref = getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
+        appPref.edit().putBoolean("app_pref_player", false).apply();
     }
 
     /**
@@ -246,15 +249,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void verifyBatteryPerm(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Intent intent = new Intent();
-            String packageName = getPackageName();
-            PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                intent.setData(Uri.parse("package:" + packageName));
-                startActivity(intent);
-            }
+        Intent intent = new Intent();
+        String packageName = getPackageName();
+        PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+        if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+            intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+            intent.setData(Uri.parse("package:" + packageName));
+            startActivity(intent);
         }
     }
 
