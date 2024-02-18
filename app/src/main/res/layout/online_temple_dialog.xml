@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Перед переходом на онлайн-трансляцию выключайте аудиоплеер молитв и бесед."
+        android:text="@string/user_warn_temple"
         android:fontFamily="@font/cyrillic_old"
         android:textSize="20sp"
         android:gravity="center"/>

@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:orientation="vertical"
         style="@android:style/Widget.Button"
-        android:background="@drawable/button_main">
+        android:background="@drawable/button_template">
 
         <TextView
             android:id="@+id/home_block_text_up"

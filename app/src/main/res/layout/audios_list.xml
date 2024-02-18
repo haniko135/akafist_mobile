@@ -8,7 +8,7 @@
     android:layout_marginBottom="15dp"
     android:layout_marginTop="15dp"
     style="@android:style/Widget.Button"
-    android:background="@drawable/button_main"
+    android:background="@drawable/button_template"
     android:gravity="center">
 
 

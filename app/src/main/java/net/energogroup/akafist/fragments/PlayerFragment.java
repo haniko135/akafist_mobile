@@ -8,9 +8,11 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -161,7 +163,11 @@ public class PlayerFragment extends Fragment {
                             }
                         });
 
-                        getActivity().registerReceiver(broadcastReceiver, new IntentFilter("AUDIOS"));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            getActivity().registerReceiver(broadcastReceiver, new IntentFilter("AUDIOS"), Context.RECEIVER_EXPORTED);
+                        }else {
+                            getActivity().registerReceiver(broadcastReceiver, new IntentFilter("AUDIOS"));
+                        }
                         getActivity().startService(new Intent(getContext(), OnClearFromRecentService.class));
                         playerViewModel.setIsInitialized(true);
                     }

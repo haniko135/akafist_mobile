@@ -1,5 +1,6 @@
 package net.energogroup.akafist.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.SharedPreferences;
@@ -38,6 +39,7 @@ public class DialogLogin extends DialogFragment {
         this.fragment = fragment;
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {

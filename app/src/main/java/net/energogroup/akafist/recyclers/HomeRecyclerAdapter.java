@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,7 +109,6 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
         //click on links
         if(homeBlocksModels.get(position).getDate().equals("onlineMichael") || homeBlocksModels.get(position).getDate().equals("onlineVarvara")){
             holder.getHomeBlockLinear().setOnClickListener(view -> {
-                holder.getHomeBlockLinear().setBackgroundColor(R.color.white);
                 Bundle bundle = new Bundle();
                 bundle.putString("urlToSound", fragment.getResources().getString(homeBlocksModels.get(position).getLinks()));
                 bundle.putString("soundTitle", homeBlocksModels.get(position).getAdditions());
@@ -116,13 +116,11 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
             });
         }else if (homeBlocksModels.get(position).getDate().equals("notes") || homeBlocksModels.get(position).getDate().equals("talks")){
             holder.getHomeBlockLinear().setOnClickListener(view -> {
-                holder.getHomeBlockLinear().setBackgroundColor(R.color.white);
                 Intent toSite = new Intent(Intent.ACTION_VIEW, Uri.parse(fragment.getResources().getString(homeBlocksModels.get(position).getLinks())));
                 fragment.getContext().startActivity(toSite);
             });
         } else {
             holder.getHomeBlockLinear().setOnClickListener(view -> {
-                holder.getHomeBlockLinear().setBackgroundColor(R.color.white);
                 Bundle bundle = new Bundle();
                 bundle.putString("date", homeBlocksModels.get(position).getDate());
                 bundle.putString("dateTxt", homeBlocksModels.get(position).getDateTxt());
