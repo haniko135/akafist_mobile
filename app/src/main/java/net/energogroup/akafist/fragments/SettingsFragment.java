@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.FragmentKt;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
@@ -81,6 +82,10 @@ public class SettingsFragment extends Fragment {
 
         settingsBinding.settingsRV.setLayoutManager(new LinearLayoutManager(getContext()));
         settingsBinding.settingsRV.setAdapter(new SettingsRecyclerAdapter(settingsNames, this));
+
+        settingsBinding.userImage.setOnClickListener(view -> {
+            FragmentKt.findNavController(this).navigate(R.id.action_settingsFragment_to_accountFragment);
+        });
 
         return settingsBinding.getRoot();
     }

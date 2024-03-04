@@ -14,7 +14,7 @@ import net.energogroup.akafist.viewmodel.ChurchViewModel;
 public class ServicesModel {
     private final int id;
     private final String name;
-    private final int type;
+    private int type;
     private final String date;
 
     /**
@@ -29,6 +29,12 @@ public class ServicesModel {
         this.name = name;
         this.type = type;
         this.date = date;
+    }
+
+    public ServicesModel(String date, String name, int id){
+        this.date = date;
+        this.name = name;
+        this.id = id;
     }
 
     /**

@@ -229,6 +229,13 @@
             app:exitAnim="@anim/exit_right"
             app:popEnterAnim="@anim/enter_right"
             app:popExitAnim="@anim/exit_left" />
+        <action
+            android:id="@+id/action_settingsFragment_to_accountFragment"
+            app:destination="@id/accountFragment"
+            app:enterAnim="@anim/enter_left"
+            app:exitAnim="@anim/exit_right"
+            app:popEnterAnim="@anim/enter_right"
+            app:popExitAnim="@anim/exit_left" />
     </fragment>
     <action
         android:id="@+id/action_global_settingsFragment"
@@ -237,4 +244,29 @@
         app:exitAnim="@anim/exit_right"
         app:popEnterAnim="@anim/enter_right"
         app:popExitAnim="@anim/exit_left" />
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="net.energogroup.akafist.fragments.AccountFragment"
+        android:label="fragment_account"
+        tools:layout="@layout/fragment_account" >
+        <action
+            android:id="@+id/action_accountFragment_to_starredFragment"
+            app:destination="@id/starredFragment" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_accountFragment"
+        app:destination="@id/accountFragment"
+        app:enterAnim="@anim/enter_left"
+        app:exitAnim="@anim/exit_right"
+        app:popEnterAnim="@anim/enter_right"
+        app:popExitAnim="@anim/exit_left" />
+    <fragment
+        android:id="@+id/starredFragment"
+        android:name="net.energogroup.akafist.fragments.StarredFragment"
+        android:label="fragment_starred"
+        tools:layout="@layout/fragment_starred" >
+        <action
+            android:id="@+id/action_starredFragment_to_prayerFragment"
+            app:destination="@id/prayerFragment" />
+    </fragment>
 </navigation>

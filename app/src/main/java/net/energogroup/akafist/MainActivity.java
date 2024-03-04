@@ -37,6 +37,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
 import net.energogroup.akafist.databinding.ActivityMainBinding;
+import net.energogroup.akafist.db.DBHelper;
 import net.energogroup.akafist.fragments.PlayerFragment;
 import net.energogroup.akafist.service.NetworkConnection;
 import net.energogroup.akafist.service.notification.NotificationForPlay;
@@ -71,9 +72,14 @@ public class MainActivity extends AppCompatActivity {
     public static NetworkConnection networkConnection;
     NavController navController;
     public Toolbar supToolBar;
+    private DBHelper dbHelper;
 
     public ActivityMainBinding getBinding() {
         return binding;
+    }
+
+    public DBHelper getDbHelper(){
+        return dbHelper;
     }
 
     /**
@@ -94,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
         enablePlayer();
         enablePermissions();
         enableNotifications();
+        dbHelper = new DBHelper(this);
     }
 
     /**
@@ -198,6 +205,9 @@ public class MainActivity extends AppCompatActivity {
             return true;
         } else if (item.getItemId() == R.id.settingsFrag) {
             navController.navigate(R.id.action_global_settingsFragment);
+            return true;
+        } else if (item.getItemId() == R.id.accountFrag) {
+            navController.navigate(R.id.action_global_accountFragment);
             return true;
         } else if (item.getItemId() == R.id.quitApp) {
             MainActivity.this.finish();

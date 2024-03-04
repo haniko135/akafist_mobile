@@ -97,9 +97,9 @@ public class ChurchFragment extends Fragment {
                     churchViewModel.getCurId().observe(getViewLifecycleOwner(), integer -> churchViewModel.getMutableServicesList().observe(getViewLifecycleOwner(), servicesModels -> {
                         servicesRecyclerAdapter = new ServicesRecyclerAdapter(servicesModels.stream().filter(servicesModel ->
                                 servicesModel.getType() == integer
-                        ).collect(Collectors.toList()));
+                        ).collect(Collectors.toList()), this);
                         churchBinding.downRvChurch.setAdapter(servicesRecyclerAdapter);
-                        servicesRecyclerAdapter.setFragment(this);
+                        //servicesRecyclerAdapter.setFragment(this);
                     }));
                 }else {
                     churchBinding.noInternet.setVisibility(View.VISIBLE);
@@ -108,5 +108,12 @@ public class ChurchFragment extends Fragment {
         }
 
         return churchBinding.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.getDbHelper().close();
     }
 }

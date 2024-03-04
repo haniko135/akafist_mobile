@@ -18,5 +18,9 @@
         app:showAsAction="ifRoom"
         android:id="@+id/settingsFrag"
         android:icon="@drawable/ic_baseline_settings_24"/>
+    <item android:title="@string/account_name"
+        app:showAsAction="ifRoom"
+        android:id="@+id/accountFrag"
+        android:icon="@drawable/baseline_person_24"/>
 
 </menu>

@@ -1,6 +1,9 @@
 package net.energogroup.akafist.recyclers;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,14 +17,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
+import net.energogroup.akafist.db.StarredDTO;
 import net.energogroup.akafist.fragments.LinksFragment;
 import net.energogroup.akafist.fragments.PlayerFragment;
 import net.energogroup.akafist.models.LinksModel;
+import net.energogroup.akafist.viewmodel.LinksViewModel;
 import net.energogroup.akafist.viewmodel.PlayerViewModel;
 
 import java.io.File;
@@ -30,6 +36,7 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * RecyclerView adapter class with audio files
@@ -43,11 +50,14 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
     private static final int DELETE_REPEAT_ID = R.string.deleteRepeat;
     private static final int DELETE_FILE_ID = R.string.deleteFile;
     private static final String DEV_TAG = "AudioRecyclerAdapter";
-    private LinksFragment fragment;
+    private Fragment fragment;
     private PlayerViewModel playerViewModel;
+    private LinksViewModel linksViewModel;
+    private SQLiteDatabase db;
     private List<LinksModel> audios;
     private List<String> audiosDown;
     private MainActivity mainActivity;
+    private String date;
     boolean recIsChecked;
 
     /**
@@ -67,12 +77,18 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
      * @param fragment Current fragment
      * @param filePath Path to downloaded file
      */
-    public AudioRecyclerAdapter(List<LinksModel> audios, List<String> audiosDownNames, LinksFragment fragment, String filePath){
+    public AudioRecyclerAdapter(List<LinksModel> audios, List<String> audiosDownNames,
+                                Fragment fragment, String filePath, String date){
         this.fragment = fragment;
         this.audios = audios;
         this.audiosDown = audiosDownNames;
         this.filePath = filePath;
+        this.date = date;
         playerViewModel = new ViewModelProvider(fragment.getActivity()).get(PlayerViewModel.class);
+        linksViewModel = new ViewModelProvider(fragment.getActivity()).get(LinksViewModel.class);
+
+        mainActivity = (MainActivity) fragment.getActivity();
+        db = mainActivity.getDbHelper().getWritableDatabase();
     }
 
     /**
@@ -113,7 +129,40 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
         Animation blinkAnimation = AnimationUtils.loadAnimation(fragment.getContext().getApplicationContext(), R.anim.blink);
         holder.audiosListItem.startAnimation(blinkAnimation);
 
-        //checking for the presence in tje list of downloaded files
+        Cursor cursorPrayer = db.rawQuery("SELECT * FROM " + StarredDTO.TABLE_NAME + " WHERE "
+                + StarredDTO.COLUMN_NAME_OBJECT_URL + "='" + audios.get(position).getUrl()+"'", null);
+        if(cursorPrayer.moveToFirst()){
+            holder.audioListItemStarBorder.setVisibility(View.GONE);
+            holder.audioListItemStar.setVisibility(View.VISIBLE);
+        }else {
+            holder.audioListItemStar.setVisibility(View.GONE);
+            holder.audioListItemStarBorder.setVisibility(View.VISIBLE);
+        }
+        cursorPrayer.close();
+
+        holder.audioListItemStarBorder.setOnClickListener(view -> {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(StarredDTO.COLUMN_NAME_OBJECT_URL, audios.get(position).getUrl());
+            contentValues.put(StarredDTO.COLUMN_NAME_OBJECT_TYPE, date);
+            contentValues.put(StarredDTO.COLUMN_NAME_ID, Math.round(Math.random()*1000));
+
+            db.insert(StarredDTO.TABLE_NAME,null, contentValues);
+
+            holder.audioListItemStarBorder.setVisibility(View.GONE);
+            holder.audioListItemStar.setVisibility(View.VISIBLE);
+        });
+
+        holder.audioListItemStar.setOnClickListener(view -> {
+            String[] selectionArgs = { audios.get(position).getUrl() };
+
+            db.delete(StarredDTO.TABLE_NAME,StarredDTO.COLUMN_NAME_OBJECT_URL + " LIKE ?",
+                    selectionArgs);
+
+            holder.audioListItemStar.setVisibility(View.GONE);
+            holder.audioListItemStarBorder.setVisibility(View.VISIBLE);
+        });
+
+        //checking for the presence in the list of downloaded files
         if (audiosDown !=null && audiosDown.size() != 0) {
             if (audiosDown.contains(audios.get(position).getName())) {
                 Log.e("Download", "here");
@@ -219,6 +268,8 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
         public TextView audiosListItem;
         public ImageView audioListItemDown;
         public ImageButton audioListItemDel;
+        public ImageButton audioListItemStar;
+        public ImageButton audioListItemStarBorder;
         public ProgressBar progressBar;
         public Boolean isDownload = false;
 
@@ -227,6 +278,8 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
             this.audiosListItem = itemView.findViewById(R.id.audio_list_item);
             this.audioListItemDown = itemView.findViewById(R.id.audio_list_item_down);
             this.audioListItemDel = itemView.findViewById(R.id.audio_list_item_del);
+            this.audioListItemStar = itemView.findViewById(R.id.audio_list_item_star);
+            this.audioListItemStarBorder = itemView.findViewById(R.id.audio_list_item_star_border);
             //this.progressBar = itemView.findViewById(R.id.audio_progress_bar);
         }
     }

@@ -1,6 +1,8 @@
 package net.energogroup.akafist.viewmodel;
 
 import android.annotation.SuppressLint;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,8 +16,10 @@ import com.android.volley.toolbox.JsonArrayRequest;
 
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
+import net.energogroup.akafist.db.StarredDTO;
 import net.energogroup.akafist.fragments.LinksFragment;
 import net.energogroup.akafist.models.LinksModel;
+import net.energogroup.akafist.models.StarredModel;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.json.JSONException;
@@ -75,7 +79,6 @@ public class LinksViewModel extends ViewModel {
                         url = StringEscapeUtils.unescapeJava(jsonObject.getString("url"));
                         linksModelList.add(new LinksModel(id, url, name, image));
                         mutableLinksDate.setValue(linksModelList);
-                        Log.e("PARSING", name);
                         i++;
                     }
 
@@ -139,5 +142,23 @@ public class LinksViewModel extends ViewModel {
             downloadAudio.add(new LinksModel(fullPath + file.getName(), filename));
         }
         return downloadAudio;
+    }
+
+    public ArrayList<StarredModel> getStarredAudio(String date, SQLiteDatabase db){
+        Cursor cursorPrayers = db.rawQuery("SELECT * FROM " + StarredDTO.TABLE_NAME + " WHERE "
+                + StarredDTO.COLUMN_NAME_OBJECT_TYPE + "='" + date+"'", null);
+        ArrayList<StarredModel> tempStarred = new ArrayList<>();
+
+        if(cursorPrayers.moveToFirst()){
+            do{
+                tempStarred.add(new StarredModel(
+                        Integer.parseInt(cursorPrayers.getString(0)),
+                        cursorPrayers.getString(1),
+                        cursorPrayers.getString(2)
+                ));
+            }while (cursorPrayers.moveToNext());
+        }
+        cursorPrayers.close();
+        return tempStarred;
     }
 }
