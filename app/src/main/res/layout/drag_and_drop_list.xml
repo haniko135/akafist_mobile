@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp"
+    android:layout_marginBottom="15dp"
+    android:layout_marginTop="15dp"
+    style="@android:style/Widget.Button"
+    android:background="@drawable/button_template"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/drag_and_drop_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:fontFamily="@font/cyrillic_old"
+        android:padding="15dp"
+        android:textSize="22sp"
+        android:text=""
+        android:textColor="@color/white"
+        />
+
+    <ImageButton
+        android:id="@+id/drag_and_drop_touch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_drag_handle_24"
+        android:background="@android:color/transparent"/>
+
+</LinearLayout>

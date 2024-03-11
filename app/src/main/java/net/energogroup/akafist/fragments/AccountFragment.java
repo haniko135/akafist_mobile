@@ -54,6 +54,9 @@ public class AccountFragment extends Fragment {
         accountBinding.starred.setOnClickListener(view ->
             FragmentKt.findNavController(this).navigate(R.id.action_accountFragment_to_starredFragment)
         );
+        accountBinding.molitvaPravilo.setOnClickListener(view ->
+            FragmentKt.findNavController(this).navigate(R.id.action_accountFragment_to_prayerRuleFragment)
+        );
 
         return accountBinding.getRoot();
     }

@@ -252,6 +252,9 @@
         <action
             android:id="@+id/action_accountFragment_to_starredFragment"
             app:destination="@id/starredFragment" />
+        <action
+            android:id="@+id/action_accountFragment_to_prayerRuleFragment"
+            app:destination="@id/prayerRuleFragment" />
     </fragment>
     <action
         android:id="@+id/action_global_accountFragment"
@@ -267,6 +270,15 @@
         tools:layout="@layout/fragment_starred" >
         <action
             android:id="@+id/action_starredFragment_to_prayerFragment"
+            app:destination="@id/prayerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/prayerRuleFragment"
+        android:name="net.energogroup.akafist.fragments.PrayerRuleFragment"
+        android:label="fragment_prayer_rule"
+        tools:layout="@layout/fragment_prayer_rule" >
+        <action
+            android:id="@+id/action_prayerRuleFragment_to_prayerFragment"
             app:destination="@id/prayerFragment" />
     </fragment>
 </navigation>

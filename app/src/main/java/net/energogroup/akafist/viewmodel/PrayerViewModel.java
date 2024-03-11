@@ -14,11 +14,14 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.fragments.PrayerFragment;
 import net.energogroup.akafist.models.PrayersModels;
+import net.energogroup.akafist.models.ServicesModel;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,6 +34,7 @@ public class PrayerViewModel extends ViewModel {
 
     private PrayersModels prayersModel;
     private MutableLiveData<PrayersModels> prayersModelsMutableLiveData = new MutableLiveData<>();
+    private List<ServicesModel> starredPrayers = new ArrayList<>();
 
     /**
      * @return Current prayer
