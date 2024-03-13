@@ -2,7 +2,6 @@ package net.energogroup.akafist.viewmodel;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -14,14 +13,11 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.fragments.PrayerFragment;
 import net.energogroup.akafist.models.PrayersModels;
-import net.energogroup.akafist.models.ServicesModel;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.json.JSONException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,7 +30,6 @@ public class PrayerViewModel extends ViewModel {
 
     private PrayersModels prayersModel;
     private MutableLiveData<PrayersModels> prayersModelsMutableLiveData = new MutableLiveData<>();
-    private List<ServicesModel> starredPrayers = new ArrayList<>();
 
     /**
      * @return Current prayer
@@ -48,6 +43,10 @@ public class PrayerViewModel extends ViewModel {
      */
     public MutableLiveData<PrayersModels> getPrayersModelsMutableLiveData() {
         return prayersModelsMutableLiveData;
+    }
+
+    public void setPrayersModelsMutableLiveData(MutableLiveData<PrayersModels> prayersModels) {
+        this.prayersModelsMutableLiveData = prayersModels;
     }
 
     /**
@@ -72,7 +71,6 @@ public class PrayerViewModel extends ViewModel {
                 next = response.getInt("next");
                 prayersModel = new PrayersModels(name,html,prev, next);
                 prayersModelsMutableLiveData.setValue(prayersModel);
-                Log.e("PARSING", name);
 
             } catch (JSONException e) {
                 e.printStackTrace();

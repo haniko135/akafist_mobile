@@ -74,6 +74,7 @@ public class ServicesRecyclerAdapter extends RecyclerView.Adapter<ServicesRecycl
             Bundle bundle = new Bundle();
             bundle.putString("prevMenu", servicesModels.get(position).getDate());
             bundle.putInt("prayerId", servicesModels.get(position).getId());
+            bundle.putString("mode", "prayer_read");
             FragmentKt.findNavController(fragment).navigate(R.id.action_churchFragment_to_prayerFragment, bundle);
         });
 

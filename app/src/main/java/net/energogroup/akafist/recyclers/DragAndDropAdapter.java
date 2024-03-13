@@ -1,7 +1,7 @@
 package net.energogroup.akafist.recyclers;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -11,30 +11,36 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.FragmentKt;
 import androidx.recyclerview.widget.RecyclerView;
 
 import net.energogroup.akafist.R;
 import net.energogroup.akafist.fragments.lists.ItemMoveCallback;
+import net.energogroup.akafist.fragments.lists.ItemSwipeCallback;
 import net.energogroup.akafist.fragments.lists.StartDragListner;
+import net.energogroup.akafist.fragments.lists.TextPrayersDragDropListFragment;
 import net.energogroup.akafist.models.ServicesModel;
-import net.energogroup.akafist.models.StarredModel;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class DragAndDropAdapter extends RecyclerView.Adapter<DragAndDropAdapter.DragAndDropViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
+public class DragAndDropAdapter extends RecyclerView.Adapter<DragAndDropAdapter.DragAndDropViewHolder>
+        implements ItemMoveCallback.ItemTouchHelperContract, ItemSwipeCallback.ItemSwipeContract{
 
     private StartDragListner mStartDragListener;
     private List<ServicesModel> textPrayers;
-    private Fragment fragment;
+    private TextPrayersDragDropListFragment fragment;
+    private SQLiteDatabase db;
 
-    public DragAndDropAdapter(StartDragListner mStartDragListener, List<ServicesModel> textPrayers, Fragment frag) {
+    public List<ServicesModel> getTextPrayers() {
+        return textPrayers;
+    }
+
+    public DragAndDropAdapter(StartDragListner mStartDragListener, List<ServicesModel> textPrayers, TextPrayersDragDropListFragment frag, SQLiteDatabase db) {
         this.mStartDragListener = mStartDragListener;
         this.textPrayers = textPrayers;
         this.fragment = frag;
+        this.db = db;
     }
 
     @NonNull
@@ -58,7 +64,17 @@ public class DragAndDropAdapter extends RecyclerView.Adapter<DragAndDropAdapter.
             Bundle bundle = new Bundle();
             bundle.putString("prevMenu", textPrayers.get(position).getDate());
             bundle.putInt("prayerId", textPrayers.get(position).getId());
-            FragmentKt.findNavController(fragment).navigate(R.id.action_prayerRuleFragment_to_prayerFragment, bundle);
+            if(fragment.isMode())  {
+                bundle.putString("mode", "prayer_rule");
+                fragment.getViewModel().convertToPrayersModels(fragment.getContext(), db, fragment.getViewLifecycleOwner());
+                fragment.getViewModel().getIsConverted().observe(fragment.getViewLifecycleOwner(), prayersModels -> {
+                    if(prayersModels) FragmentKt.findNavController(fragment).navigate(R.id.action_prayerRuleFragment_to_prayerFragment, bundle);
+                });
+            } else {
+                bundle.putString("mode", "prayer_read");
+                FragmentKt.findNavController(fragment).navigate(R.id.action_prayerRuleFragment_to_prayerFragment, bundle);
+            }
+            //тут указание на фрагмент молитвенного правила
         });
     }
 
@@ -91,12 +107,24 @@ public class DragAndDropAdapter extends RecyclerView.Adapter<DragAndDropAdapter.
     @Override
     public void onRowClear(DragAndDropAdapter.DragAndDropViewHolder myViewHolder) {
         myViewHolder.rowView.setBackground(fragment.getActivity().getDrawable(R.drawable.button_template));
+        fragment.getViewModel().savePrayerRuleArray(textPrayers, db);
+    }
+
+    @Override
+    public void removeItem(int position) {
+        textPrayers.remove(position);
+        notifyItemRemoved(position);
+    }
+    @Override
+    public void restoreItem(ServicesModel item, int position) {
+        textPrayers.add(position, item);
+        notifyItemInserted(position);
     }
 
     public static class DragAndDropViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView dragAndDropTitle;
-        private ImageButton dragAnDropTouch;
+        private final TextView dragAndDropTitle;
+        private final ImageButton dragAnDropTouch;
         View rowView;
 
         public DragAndDropViewHolder(@NonNull View itemView) {

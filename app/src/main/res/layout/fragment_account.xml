@@ -11,6 +11,7 @@
         android:id="@+id/userImage"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_marginTop="16dp"
         android:src="@drawable/baseline_person_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,25 +30,27 @@
 
     <TextView
         android:id="@+id/starred"
+        style="@style/menuBlock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:fontFamily="@font/cyrillic_old"
         android:text="Избранное"
-        style="@style/menuBlock"
         android:textColor="@color/block_main"
+        app:layout_constraintBottom_toTopOf="@+id/molitva_pravilo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userName" />
 
     <TextView
         android:id="@+id/molitva_pravilo"
+        style="@style/menuBlock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/cyrillic_old"
         android:text="Молитвенное правило"
-        style="@style/menuBlock"
         android:textColor="@color/block_main"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

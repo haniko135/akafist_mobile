@@ -1,9 +1,16 @@
 package net.energogroup.akafist.fragments.lists;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+
+import net.energogroup.akafist.models.ServicesModel;
 import net.energogroup.akafist.recyclers.DragAndDropAdapter;
 
 public class ItemMoveCallback extends ItemTouchHelper.Callback {
@@ -25,6 +32,11 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
+    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+    }
+
+    @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
         return makeMovementFlags(dragFlags, 0);
@@ -37,15 +49,7 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-
-    }
-
-    @Override
-    public void onSelectedChanged(RecyclerView.ViewHolder viewHolder,
-                                  int actionState) {
-
-
+    public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
             if (viewHolder instanceof DragAndDropAdapter.DragAndDropViewHolder) {
                 DragAndDropAdapter.DragAndDropViewHolder myViewHolder=
@@ -57,6 +61,7 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
 
         super.onSelectedChanged(viewHolder, actionState);
     }
+
     @Override
     public void clearView(RecyclerView recyclerView,
                           RecyclerView.ViewHolder viewHolder) {
@@ -74,7 +79,6 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
         void onRowMoved(int fromPosition, int toPosition);
         void onRowSelected(DragAndDropAdapter.DragAndDropViewHolder myViewHolder);
         void onRowClear(DragAndDropAdapter.DragAndDropViewHolder myViewHolder);
-
     }
 
 }

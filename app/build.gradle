@@ -69,4 +69,6 @@ dependencies {
     implementation 'androidx.media3:media3-ui:1.2.1'
 
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation 'com.google.code.gson:gson:2.8.9'
 }

@@ -215,7 +215,7 @@ public class LinksFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        mainActivity.getDbHelper().close();
+        if(db != null) db.close();
         super.onDestroyView();
     }
 }
