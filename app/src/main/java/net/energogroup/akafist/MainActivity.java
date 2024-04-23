@@ -209,6 +209,9 @@ public class MainActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.accountFrag) {
             navController.navigate(R.id.action_global_accountFragment);
             return true;
+        } else if (item.getItemId() == R.id.calendFrag) {
+            navController.navigate(R.id.action_global_calendarFragment);
+            return true;
         } else if (item.getItemId() == R.id.quitApp) {
             MainActivity.this.finish();
             System.exit(0);

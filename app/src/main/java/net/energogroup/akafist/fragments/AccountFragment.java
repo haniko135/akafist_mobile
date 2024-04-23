@@ -57,6 +57,9 @@ public class AccountFragment extends Fragment {
         accountBinding.molitvaPravilo.setOnClickListener(view ->
             FragmentKt.findNavController(this).navigate(R.id.action_accountFragment_to_prayerRuleFragment)
         );
+        accountBinding.calendarAccount.setOnClickListener(view ->
+            FragmentKt.findNavController(this).navigate(R.id.action_accountFragment_to_calendarFragment)
+        );
 
         return accountBinding.getRoot();
     }

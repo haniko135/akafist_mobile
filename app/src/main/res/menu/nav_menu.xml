@@ -22,5 +22,9 @@
         app:showAsAction="ifRoom"
         android:id="@+id/accountFrag"
         android:icon="@drawable/baseline_person_24"/>
+    <item android:title="@string/calendar_name"
+        app:showAsAction="ifRoom"
+        android:id="@+id/calendFrag"
+        android:icon="@drawable/baseline_calendar_today_24"/>
 
 </menu>

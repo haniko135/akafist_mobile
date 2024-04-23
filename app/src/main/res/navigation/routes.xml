@@ -255,6 +255,9 @@
         <action
             android:id="@+id/action_accountFragment_to_prayerRuleFragment"
             app:destination="@id/prayerRuleFragment" />
+        <action
+            android:id="@+id/action_accountFragment_to_calendarFragment"
+            app:destination="@id/calendarFragment" />
     </fragment>
     <action
         android:id="@+id/action_global_accountFragment"
@@ -281,4 +284,16 @@
             android:id="@+id/action_prayerRuleFragment_to_prayerFragment"
             app:destination="@id/prayerFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/calendarFragment"
+        android:name="net.energogroup.akafist.fragments.CalendarFragment"
+        android:label="fragment_calendar"
+        tools:layout="@layout/fragment_calendar" />
+    <action
+        android:id="@+id/action_global_calendarFragment"
+        app:destination="@id/calendarFragment"
+        app:enterAnim="@anim/enter_left"
+        app:exitAnim="@anim/exit_right"
+        app:popEnterAnim="@anim/enter_right"
+        app:popExitAnim="@anim/exit_left" />
 </navigation>

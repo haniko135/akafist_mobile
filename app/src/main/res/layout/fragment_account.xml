@@ -56,4 +56,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/starred" />
 
+    <TextView
+        android:id="@+id/calendar_account"
+        style="@style/menuBlock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/cyrillic_old"
+        android:text="Календарь"
+        android:textColor="@color/block_main"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/molitva_pravilo" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
