@@ -36,7 +36,6 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * RecyclerView adapter class with audio files

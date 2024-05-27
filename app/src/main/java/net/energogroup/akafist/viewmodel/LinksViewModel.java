@@ -12,7 +12,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.android.volley.Request;
-import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.Response;
 
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
@@ -20,17 +20,17 @@ import net.energogroup.akafist.db.StarredDTO;
 import net.energogroup.akafist.fragments.LinksFragment;
 import net.energogroup.akafist.models.LinksModel;
 import net.energogroup.akafist.models.StarredModel;
+import net.energogroup.akafist.service.RequestServiceHandler;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A class containing data processing logic
@@ -58,44 +58,37 @@ public class LinksViewModel extends ViewModel {
      * for output in the method {@link LinksFragment#onCreateView(LayoutInflater, ViewGroup, Bundle)}
      * @param cas String case
      * @param inflater LayoutInflater
-     * @exception JSONException
      */
     public void getJson(String cas, LayoutInflater inflater){
         if (cas.equals("links")) {
             String urlToGet = inflater.getContext().getResources().getString(MainActivity.API_PATH)+"talks";
 
-            JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, //получение данных
-                    urlToGet, null, response -> {
-                JSONObject jsonObject;
-                image = R.mipmap.ic_launcher;
-                int id;
-                String url, name;
-                try {
-                    int i = 0;
-                    while (i < response.length()) {
-                        jsonObject = response.getJSONObject(i);
-                        id = jsonObject.getInt("id");
-                        name = StringEscapeUtils.unescapeJava(jsonObject.getString("name"));
-                        url = StringEscapeUtils.unescapeJava(jsonObject.getString("url"));
-                        linksModelList.add(new LinksModel(id, url, name, image));
-                        mutableLinksDate.setValue(linksModelList);
-                        i++;
-                    }
+            RequestServiceHandler serviceHandler = new RequestServiceHandler();
+            serviceHandler.addHeader("User-Agent", inflater.getContext().getResources().getString(MainActivity.APP_VER));
+            serviceHandler.addHeader("Connection", "keep-alive");
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }, Throwable::printStackTrace) {
-                @Override
-                public Map<String, String> getHeaders() {
-                    Map<String, String> headers = new HashMap<>();
-                    headers.put("User-Agent", inflater.getContext().getResources().getString(MainActivity.APP_VER));
-                    headers.put("Connection", "keep-alive");
-                    return headers;
-                }
+            serviceHandler.objectRequest(urlToGet, Request.Method.GET,
+                    null, JSONArray.class, (Response.Listener<JSONArray>) response -> {
+                        JSONObject jsonObject;
+                        image = R.mipmap.ic_launcher;
+                        int id;
+                        String url, name;
+                        try {
+                            int i = 0;
+                            while (i < response.length()) {
+                                jsonObject = response.getJSONObject(i);
+                                id = jsonObject.getInt("id");
+                                name = StringEscapeUtils.unescapeJava(jsonObject.getString("name"));
+                                url = StringEscapeUtils.unescapeJava(jsonObject.getString("url"));
+                                linksModelList.add(new LinksModel(id, url, name, image));
+                                mutableLinksDate.setValue(linksModelList);
+                                i++;
+                            }
 
-            };
-            MainActivity.mRequestQueue.add(request);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }, error -> Log.e("Response", error.getMessage()));
         }
         else if(cas.equals("molitvyOfflain")){
             image = R.mipmap.ic_launcher;

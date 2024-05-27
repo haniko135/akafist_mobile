@@ -10,11 +10,13 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.android.volley.Request;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.Response;
+
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.fragments.ChurchFragment;
 import net.energogroup.akafist.models.ServicesModel;
 import net.energogroup.akafist.models.TypesModel;
+import net.energogroup.akafist.service.RequestServiceHandler;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.json.JSONArray;
@@ -22,9 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A class containing data processing logic of
@@ -94,54 +94,47 @@ public class ChurchViewModel extends ViewModel{
     public void getJson(String date, Context context){
         String urlToGet = context.getResources().getString(MainActivity.API_PATH)+date;
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
-                urlToGet, null, response -> {
-            JSONArray types, services;
-            JSONObject jsonObject;
-            int id, type;
-            String  name;
-            try {
-                dateTxt = response.getString("dateTxt");
-                nameTxt = response.getString("name");
-                liveDataTxt.setValue(dateTxt);
-                liveNameTxt.setValue(nameTxt);
-                types = response.getJSONArray("types");
-                int i = 0;
-                while (i < types.length()) {
-                    jsonObject = types.getJSONObject(i);
-                    id = jsonObject.getInt("id");
-                    name = StringEscapeUtils.unescapeJava(jsonObject.getString("name"));
-                    typesModelList.add(new TypesModel(id, name));
-                    mutableTypesList.setValue(typesModelList);
-                    Log.e("PARSING", name);
-                    i++;
-                }
-                i=0;
-                services = response.getJSONArray("services");
-                while (i < services.length()) {
-                    jsonObject = services.getJSONObject(i);
-                    id = jsonObject.getInt("id");
-                    name = StringEscapeUtils.unescapeJava(jsonObject.getString("name"));
-                    type = jsonObject.getInt("type");
-                    servicesModelList.add(new ServicesModel(id, name, type, date));
-                    mutableServicesList.setValue(servicesModelList);
-                    Log.e("PARSING", name);
-                    i++;
-                }
+        RequestServiceHandler serviceHandler = new RequestServiceHandler();
+        serviceHandler.addHeader("User-Agent", context.getResources().getString(MainActivity.APP_VER));
+        serviceHandler.addHeader("Connection", "keep-alive");
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }, Throwable::printStackTrace) {
-            @Override
-            public Map<String, String> getHeaders() {
-                Map<String, String> headers = new HashMap<>();
-                headers.put("User-Agent", context.getResources().getString(MainActivity.APP_VER));
-                headers.put("Connection", "keep-alive");
-                return headers;
-            }
+        serviceHandler.objectRequest(urlToGet, Request.Method.GET,
+                null, JSONObject.class,
+                (Response.Listener<JSONObject>) response -> {
+                    JSONArray types, services;
+                    JSONObject jsonObject;
+                    int id, type;
+                    String  name;
+                    try {
+                        dateTxt = response.getString("dateTxt");
+                        nameTxt = response.getString("name");
+                        liveDataTxt.setValue(dateTxt);
+                        liveNameTxt.setValue(nameTxt);
+                        types = response.getJSONArray("types");
+                        int i = 0;
+                        while (i < types.length()) {
+                            jsonObject = types.getJSONObject(i);
+                            id = jsonObject.getInt("id");
+                            name = StringEscapeUtils.unescapeJava(jsonObject.getString("name"));
+                            typesModelList.add(new TypesModel(id, name));
+                            mutableTypesList.setValue(typesModelList);
+                            i++;
+                        }
+                        i=0;
+                        services = response.getJSONArray("services");
+                        while (i < services.length()) {
+                            jsonObject = services.getJSONObject(i);
+                            id = jsonObject.getInt("id");
+                            name = StringEscapeUtils.unescapeJava(jsonObject.getString("name"));
+                            type = jsonObject.getInt("type");
+                            servicesModelList.add(new ServicesModel(id, name, type, date));
+                            mutableServicesList.setValue(servicesModelList);
+                            i++;
+                        }
 
-        };
-        MainActivity.mRequestQueue.add(request);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }, error -> Log.e("Response", error.getMessage()));
     }
 }

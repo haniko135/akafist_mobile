@@ -3,18 +3,14 @@ package net.energogroup.akafist.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import net.energogroup.akafist.R;
 import net.energogroup.akafist.databinding.FragmentPrayerRuleBinding;
-import net.energogroup.akafist.viewmodel.StarredViewModel;
 import net.energogroup.akafist.viewpagers.PrayerRuleAdapter;
 
 /**

@@ -90,12 +90,10 @@ public class LoginFragment extends Fragment {
      * @param savedInstanceState If non-null, this fragment is being re-constructed
      * from a previous saved state as given here.
      *
-     * @return
      */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.e("Login", "OnCreateView");
         loginBinding = FragmentLoginBinding.inflate(inflater, container, false);
 
         if (!appPref.getBoolean("app_pref_firstlogin", true) && !appPref.contains("app_pref_username") && !appPref.contains("app_pref_email")) {
@@ -106,20 +104,21 @@ public class LoginFragment extends Fragment {
         authService.getAuthorizationURL().observe(getViewLifecycleOwner(), s -> {
             loginBinding.webViewLog.loadUrl(s);
             loginBinding.webViewLog.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
-            Log.e("URL_LOGIN", s);
         });
 
         authService.getNameMLD().observe(getViewLifecycleOwner(), s -> {
-            name = authService.getNameMLD().getValue();
-            email = authService.getEmailMLD().getValue();
+            name = s;
+            authService.getEmailMLD().observe(getViewLifecycleOwner(), s1 -> {
+                email = s1;
 
-            SharedPreferences.Editor editor = appPref.edit();
+                SharedPreferences.Editor editor = appPref.edit();
 
-            editor.putString("app_pref_username", name);
-            editor.putString("app_pref_email", email);
-            editor.apply();
+                editor.putString("app_pref_username", name);
+                editor.putString("app_pref_email", email);
+                editor.apply();
 
-            FragmentKt.findNavController(this).navigate(R.id.action_loginFragment_to_home2);
+                FragmentKt.findNavController(this).navigate(R.id.action_loginFragment_to_home2);
+            });
         });
 
         return loginBinding.getRoot();
@@ -135,7 +134,7 @@ public class LoginFragment extends Fragment {
         int rand2 = random.nextInt(1000);
         int rand3 = random.nextInt(7548);
 
-        editor.putString("app_pref_username", "Guest_" + rand1+"_"+rand2+"_"+rand3);
+        editor.putString("app_pref_username", "Гость_" + rand1+"_"+rand2+"_"+rand3);
         editor.putString("app_pref_email", rand1+"_"+rand2+"_"+rand3+"@guest");
         editor.apply();
     }

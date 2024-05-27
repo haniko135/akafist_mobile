@@ -46,50 +46,9 @@
             app:popEnterAnim="@anim/enter_right"
             app:popExitAnim="@anim/exit_left" />
     </fragment>
-    <fragment
-        android:id="@+id/menu"
-        android:name="net.energogroup.akafist.fragments.Menu"
-        android:label="fragment_menu"
-        tools:layout="@layout/fragment_menu" >
-        <action
-            android:id="@+id/action_menu_to_skypesFragment"
-            app:destination="@id/skypesFragment"
-            app:enterAnim="@anim/enter_left"
-            app:exitAnim="@anim/exit_right"
-            app:popEnterAnim="@anim/enter_right"
-            app:popExitAnim="@anim/exit_left" />
-        <action
-            android:id="@+id/action_menu_to_onlineTempleFragment"
-            app:destination="@id/onlineTempleFragment"
-            app:enterAnim="@anim/enter_left"
-            app:exitAnim="@anim/exit_right"
-            app:popEnterAnim="@anim/enter_right"
-            app:popExitAnim="@anim/exit_left" />
-        <action
-            android:id="@+id/action_menu_to_linksFragment"
-            app:destination="@id/linksFragment"
-            app:enterAnim="@anim/enter_left"
-            app:exitAnim="@anim/exit_right"
-            app:popEnterAnim="@anim/enter_right"
-            app:popExitAnim="@anim/exit_left" />
-        <action
-            android:id="@+id/action_menu_to_churchFragment"
-            app:destination="@id/churchFragment"
-            app:enterAnim="@anim/enter_left"
-            app:exitAnim="@anim/exit_right"
-            app:popEnterAnim="@anim/enter_right"
-            app:popExitAnim="@anim/exit_left" />
-    </fragment>
     <action
         android:id="@+id/action_global_home2"
         app:destination="@id/home2"
-        app:enterAnim="@anim/enter_left"
-        app:exitAnim="@anim/exit_right"
-        app:popEnterAnim="@anim/enter_right"
-        app:popExitAnim="@anim/exit_left" />
-    <action
-        android:id="@+id/action_global_menu"
-        app:destination="@id/menu"
         app:enterAnim="@anim/enter_left"
         app:exitAnim="@anim/exit_right"
         app:popEnterAnim="@anim/enter_right"
@@ -183,13 +142,6 @@
             app:popEnterAnim="@anim/enter_right"
             app:popExitAnim="@anim/exit_left" />
         <action
-            android:id="@+id/action_churchFragment_to_menu"
-            app:destination="@id/menu"
-            app:enterAnim="@anim/enter_left"
-            app:exitAnim="@anim/exit_right"
-            app:popEnterAnim="@anim/enter_right"
-            app:popExitAnim="@anim/exit_left" />
-        <action
             android:id="@+id/action_churchFragment_to_prayerFragment"
             app:destination="@id/prayerFragment"
             app:enterAnim="@anim/enter_left"
@@ -256,8 +208,8 @@
             android:id="@+id/action_accountFragment_to_prayerRuleFragment"
             app:destination="@id/prayerRuleFragment" />
         <action
-            android:id="@+id/action_accountFragment_to_calendarFragment"
-            app:destination="@id/calendarFragment" />
+            android:id="@+id/action_accountFragment_to_accountCalendarFragment"
+            app:destination="@id/accountCalendarFragment" />
     </fragment>
     <action
         android:id="@+id/action_global_accountFragment"
@@ -288,7 +240,11 @@
         android:id="@+id/calendarFragment"
         android:name="net.energogroup.akafist.fragments.CalendarFragment"
         android:label="fragment_calendar"
-        tools:layout="@layout/fragment_calendar" />
+        tools:layout="@layout/fragment_calendar" >
+        <action
+            android:id="@+id/action_calendarFragment_to_churchFragment"
+            app:destination="@id/churchFragment" />
+    </fragment>
     <action
         android:id="@+id/action_global_calendarFragment"
         app:destination="@id/calendarFragment"
@@ -296,4 +252,9 @@
         app:exitAnim="@anim/exit_right"
         app:popEnterAnim="@anim/enter_right"
         app:popExitAnim="@anim/exit_left" />
+    <fragment
+        android:id="@+id/accountCalendarFragment"
+        android:name="net.energogroup.akafist.fragments.AccountCalendarFragment"
+        android:label="fragment_account_calendar"
+        tools:layout="@layout/fragment_account_calendar" />
 </navigation>

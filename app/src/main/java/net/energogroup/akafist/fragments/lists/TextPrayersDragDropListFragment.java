@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,15 +18,10 @@ import android.view.ViewGroup;
 import com.google.android.material.snackbar.Snackbar;
 
 import net.energogroup.akafist.MainActivity;
-import net.energogroup.akafist.R;
 import net.energogroup.akafist.databinding.FragmentTextPrayersDragDropListBinding;
 import net.energogroup.akafist.models.ServicesModel;
 import net.energogroup.akafist.recyclers.DragAndDropAdapter;
-import net.energogroup.akafist.recyclers.ServicesRecyclerAdapter;
 import net.energogroup.akafist.viewmodel.StarredViewModel;
-
-import java.io.Console;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.

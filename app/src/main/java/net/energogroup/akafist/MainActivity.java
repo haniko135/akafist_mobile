@@ -62,7 +62,9 @@ public class MainActivity extends AppCompatActivity {
 
     public ActivityMainBinding binding;
     public static final int SEC_TOKEN = R.string.secToken;
+    public static final int AZBYKA_TOKEN = R.string.azbykaToken;
     public static final int API_PATH = R.string.apiPath;
+    public static final int AZBYKA_API_PATH = R.string.azbykaApiPath;
     public static final int APP_VER = R.string.app_ver;
 
 
@@ -199,9 +201,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.homeFragment) {
             navController.navigate(R.id.action_global_home2);
-            return true;
-        } else if (item.getItemId() == R.id.menuFragment) {
-            navController.navigate(R.id.action_global_menu);
             return true;
         } else if (item.getItemId() == R.id.settingsFrag) {
             navController.navigate(R.id.action_global_settingsFragment);

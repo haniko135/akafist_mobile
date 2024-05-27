@@ -14,19 +14,19 @@ import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
 import com.android.volley.Request;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.Response;
 
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
 import net.energogroup.akafist.fragments.PlayerFragment;
 import net.energogroup.akafist.models.LinksModel;
+import net.energogroup.akafist.service.RequestServiceHandler;
 import net.energogroup.akafist.service.background.DownloadFromYandexTask;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -117,60 +117,51 @@ public class PlayerViewModel extends ViewModel {
      * This method requests a link to download an audio file from Yandex.Disk API.
      * It is using in method {@link PlayerFragment#initButtonClicks(ViewGroup)}
      * @param container ViewGroup
-     * @exception JSONException
      */
     public void getLinkDownload(LayoutInflater inflater, ViewGroup container) {
         String urlToGet = inflater.getContext().getResources().getString(DOWNLOAD_URL) + urlForLink;
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, //получение данных
-                urlToGet, null, response -> {
-            String resName, resLink;
-            try {
-                resName = response.getString("name");
-                Log.i("YANDEX", resName);
+        RequestServiceHandler serviceHandler = new RequestServiceHandler();
+        serviceHandler.addHeader("Authorization: Bearer ", inflater.getContext().getResources().getString(MainActivity.SEC_TOKEN));
+        serviceHandler.addHeader("User-Agent", inflater.getContext().getResources().getString(MainActivity.APP_VER));
+        serviceHandler.addHeader("Connection", "keep-alive");
 
-                //имя файла
-                File newFile = new File(filePath + "/" + fileName + ".mp3");
+        serviceHandler.objectRequest(urlToGet, Request.Method.GET,
+                null, JSONObject.class,
+                (Response.Listener<JSONObject>) response -> {
+                    String resName, resLink;
+                    try {
+                        resName = response.getString("name");
 
-                //скачивание файла в фоновом режиме
-                if (!newFile.exists()) {
-                    resLink = response.getString("file");
-                    Data data = new Data.Builder().putString("URL", resLink)
-                            .putString("FILENAME", fileName + ".mp3")
-                            .putString("FILE_DIR", filePath).build();
-                    workRequest = new OneTimeWorkRequest.Builder(DownloadFromYandexTask.class)
-                            .setInputData(data).build();
-                    WorkManager.getInstance(inflater.getContext()).enqueue(workRequest);
+                        //имя файла
+                        File newFile = new File(filePath + "/" + fileName + ".mp3");
 
-                    WorkManager.getInstance(inflater.getContext()).getWorkInfoByIdLiveData(workRequest.getId())
-                            .observe(Objects.requireNonNull(ViewTreeLifecycleOwner.get(container.getRootView().getRootView())), workInfo -> {
-                                if (workInfo != null && workInfo.getState() == WorkInfo.State.SUCCEEDED) {
-                                    String audioName = workInfo.getOutputData().getString("AUDIO_NAME");
-                                    String audioLink = workInfo.getOutputData().getString("AUDIO_LINK");
-                                    //downloadAudio.add(new LinksModel(audioName, audioLink));
-                                    Log.i("YANDEX", "Download file: " + audioName + ", " + audioLink);
-                                } else {
-                                    Log.i("YANDEX", "Is not yet");
-                                }
-                            });
+                        //скачивание файла в фоновом режиме
+                        if (!newFile.exists()) {
+                            resLink = response.getString("file");
+                            Data data = new Data.Builder().putString("URL", resLink)
+                                    .putString("FILENAME", fileName + ".mp3")
+                                    .putString("FILE_DIR", filePath).build();
+                            workRequest = new OneTimeWorkRequest.Builder(DownloadFromYandexTask.class)
+                                    .setInputData(data).build();
+                            WorkManager.getInstance(inflater.getContext()).enqueue(workRequest);
 
-                    Log.i("YANDEX", filePath);
-                }
+                            WorkManager.getInstance(inflater.getContext()).getWorkInfoByIdLiveData(workRequest.getId())
+                                    .observe(Objects.requireNonNull(ViewTreeLifecycleOwner.get(container.getRootView().getRootView())), workInfo -> {
+                                        if (workInfo != null && workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+                                            String audioName = workInfo.getOutputData().getString("AUDIO_NAME");
+                                            String audioLink = workInfo.getOutputData().getString("AUDIO_LINK");
+                                            //downloadAudio.add(new LinksModel(audioName, audioLink));
+                                            Log.i("YANDEX", "Download file: " + audioName + ", " + audioLink);
+                                        } else {
+                                            Log.i("YANDEX", "Is not yet");
+                                        }
+                                    });
+                        }
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }, Throwable::printStackTrace) {
-            @Override
-            public Map<String, String> getHeaders() {
-                Map<String, String> headers = new HashMap<>();
-                headers.put("Authorization: Bearer ", inflater.getContext().getResources().getString(MainActivity.SEC_TOKEN));
-                headers.put("User-Agent", inflater.getContext().getResources().getString(MainActivity.APP_VER));
-                headers.put("Connection", "keep-alive");
-                return headers;
-            }
-
-        };
-        MainActivity.mRequestQueue.add(request);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }, error -> Log.e("Response", error.getMessage()));
     }
 }

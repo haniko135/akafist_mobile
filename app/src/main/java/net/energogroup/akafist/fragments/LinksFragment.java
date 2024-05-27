@@ -2,7 +2,6 @@ package net.energogroup.akafist.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
@@ -13,12 +12,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import net.energogroup.akafist.db.StarredDTO;
 import net.energogroup.akafist.dialogs.DialogLinks;
 import net.energogroup.akafist.MainActivity;
 

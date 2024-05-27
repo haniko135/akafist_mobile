@@ -56,10 +56,11 @@ public class DialogLogin extends DialogFragment {
                             loginBinding.webViewLog.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
                             loginBinding.webViewLog.setWebViewClient(new WebViewClient(){
                                 public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request){
-                                    Log.e("AUTH", request.getUrl().toString());
+                                    Log.e("AUTH DIALOG", request.getUrl().toString());
                                     if (request.getUrl().toString().startsWith(urlPattern))
                                     {
-                                        String code = request.getUrl().toString().substring(58, 101);
+                                        String code = request.getUrl().toString().substring(54, 97);
+                                        Log.e("AUTH HERE", code);
                                         authService.getSecond(code, fragment.getContext());
                                         return true;
                                     } else {

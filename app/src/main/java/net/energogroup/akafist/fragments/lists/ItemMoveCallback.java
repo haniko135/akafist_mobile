@@ -1,16 +1,9 @@
 package net.energogroup.akafist.fragments.lists;
 
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.view.View;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
-
-import net.energogroup.akafist.models.ServicesModel;
 import net.energogroup.akafist.recyclers.DragAndDropAdapter;
 
 public class ItemMoveCallback extends ItemTouchHelper.Callback {

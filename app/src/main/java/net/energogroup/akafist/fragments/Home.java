@@ -93,7 +93,7 @@ public class Home extends Fragment {
         homeBinding.homeSwipe.setOnRefreshListener(() -> {
             homeBinding.homeSwipe.setRefreshing(true);
             if(menuViewModel.getBlocksModelList().size() == 7) {
-                menuViewModel.getJson("home", getContext());
+                menuViewModel.getJson(getContext());
                 menuViewModel.getMutableLiveData().observe(getViewLifecycleOwner(), homeBlocksModels -> homeBinding.homeRv.setAdapter(new HomeRecyclerAdapter(homeBlocksModels, fr)));
             }
             homeBinding.homeSwipe.setRefreshing(false);
@@ -145,7 +145,7 @@ public class Home extends Fragment {
             menuViewModel.firstSet("energogroup", getContext());
         }
 
-        menuViewModel.getJson("home", getContext());
+        menuViewModel.getJson(getContext());
     }
 
     /**

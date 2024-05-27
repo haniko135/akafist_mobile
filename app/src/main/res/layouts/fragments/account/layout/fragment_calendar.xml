@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.CalendarFragment">
+
+    <TextView
+        android:id="@+id/month_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/cyrillic_old"
+        android:gravity="center"
+        android:text="TEST"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.kizitonwose.calendar.view.CalendarView
+        android:id="@+id/calendar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:cv_dayViewResource="@layout/calendar_day_layout"
+        app:cv_monthHeaderResource="@layout/calendar_day_titles_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/month_title" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/calendar_main">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:isScrollContainer="true">
+
+            <LinearLayout
+                android:id="@+id/calendar_church_block"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:orientation="vertical"
+                >
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/calendar_church_block_load"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:indeterminate="true"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"/>
+
+                <LinearLayout
+                    android:id="@+id/calendar_church_block_day"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:visibility="invisible">
+
+                    <TextView
+                        android:id="@+id/calendar_church_block_text_up"
+                        style="@style/churchCalendBlock"
+                        android:text=" " />
+
+                    <TextView
+                        android:id="@+id/calendar_church_block_text_down"
+                        style="@style/churchCalendBlockText"
+                        android:text=" " />
+
+                    <TextView
+                        android:id="@+id/calendar_church_block_read_day"
+                        style="@style/churchCalendBlockText"
+                        android:gravity="center"
+                        android:text="Чтение Священного Писания"
+                        android:textSize="24sp" />
+
+                    <TextView
+                        android:id="@+id/calendar_church_block_read_day_text"
+                        style="@style/churchCalendBlockText"
+                        android:text=" " />
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

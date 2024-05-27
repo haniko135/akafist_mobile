@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,6 +73,10 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
             homeBlocksModels.get(position).setLinks(R.string.link_Michael);
             homeBlocksModels.get(position).setAdditions("Трансляция арх. Михаила");
         }
+        if (homeBlocksModels.get(position).getDate().equals("onlinePokrovaPls")){
+            homeBlocksModels.get(position).setLinks(R.string.link_Pokrova_Pls);
+            homeBlocksModels.get(position).setAdditions("Трансляция Покрова Пр. Богородицы");
+        }
         if (homeBlocksModels.get(position).getDate().equals("onlineVarvara")){
             homeBlocksModels.get(position).setLinks(R.string.link_Varvara);
             homeBlocksModels.get(position).setAdditions("Трансляция св. Варвары");
@@ -107,14 +110,19 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
         }
 
         //click on links
-        if(homeBlocksModels.get(position).getDate().equals("onlineMichael") || homeBlocksModels.get(position).getDate().equals("onlineVarvara")){
+        if(homeBlocksModels.get(position).getDate().equals("onlineMichael")
+                || homeBlocksModels.get(position).getDate().equals("onlineVarvara")
+                || homeBlocksModels.get(position).getDate().equals("onlinePokrovaPls"))
+        {
             holder.getHomeBlockLinear().setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
                 bundle.putString("urlToSound", fragment.getResources().getString(homeBlocksModels.get(position).getLinks()));
                 bundle.putString("soundTitle", homeBlocksModels.get(position).getAdditions());
                 FragmentKt.findNavController(fragment).navigate(R.id.onlineTempleFragment, bundle);
             });
-        }else if (homeBlocksModels.get(position).getDate().equals("notes") || homeBlocksModels.get(position).getDate().equals("talks")){
+        }else if (homeBlocksModels.get(position).getDate().equals("notes")
+                || homeBlocksModels.get(position).getDate().equals("talks"))
+        {
             holder.getHomeBlockLinear().setOnClickListener(view -> {
                 Intent toSite = new Intent(Intent.ACTION_VIEW, Uri.parse(fragment.getResources().getString(homeBlocksModels.get(position).getLinks())));
                 fragment.getContext().startActivity(toSite);

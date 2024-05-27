@@ -6,12 +6,13 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
+import net.energogroup.akafist.service.RequestServiceHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,7 +55,11 @@ public class LoginViewModel extends ViewModel {
     public void getFirst(Context context){
         String url = context.getString(R.string.first_url);
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
+        RequestServiceHandler serviceHandler = new RequestServiceHandler();
+        serviceHandler.addHeader("User-Agent", context.getString(MainActivity.APP_VER));
+        serviceHandler.addHeader("Connection", "keep-alive");
+
+        serviceHandler.objectRequest(url, Request.Method.GET, null, JSONObject.class, (Response.Listener<JSONObject>) response -> {
             String codeVerif, authURL;
             try {
                 codeVerif = response.getString("codeVerifier");
@@ -74,17 +79,7 @@ public class LoginViewModel extends ViewModel {
                 isHostUnavailable.setValue(true);
                 Log.e(DEV_TAG, "isHostUnavailable = true");
             }
-        }){
-            @Override
-            public Map<String, String> getHeaders() {
-                Map<String, String> headers = new HashMap<>();
-                headers.put("User-Agent", context.getString(R.string.app_ver));
-                headers.put("Connection", "keep-alive");
-                return headers;
-            }
-        };
-
-        MainActivity.mRequestQueue.add(request);
+        });
     }
 
     /**
@@ -129,6 +124,8 @@ public class LoginViewModel extends ViewModel {
         }catch (JSONException e) {
             e.printStackTrace();
         }
+
+
     }
 
     /**

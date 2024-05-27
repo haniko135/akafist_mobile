@@ -6,6 +6,10 @@ import static com.kizitonwose.calendar.core.ExtensionsKt.firstDayOfWeekFromLocal
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +18,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.kizitonwose.calendar.core.CalendarDay;
 import com.kizitonwose.calendar.core.CalendarMonth;
@@ -25,12 +30,14 @@ import net.energogroup.akafist.R;
 import net.energogroup.akafist.databinding.FragmentCalendarBinding;
 import net.energogroup.akafist.fragments.calendar.CalendarDayView;
 import net.energogroup.akafist.fragments.calendar.MonthViewContainer;
+import net.energogroup.akafist.viewmodel.CalendarViewModel;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.TextStyle;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import kotlin.Unit;
 
@@ -42,6 +49,7 @@ import kotlin.Unit;
 public class CalendarFragment extends Fragment {
 
     private FragmentCalendarBinding calendarBinding;
+    private CalendarViewModel calendarViewModel;
 
     /**
      * Required empty public constructor
@@ -62,6 +70,7 @@ public class CalendarFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.calendar_name);
+        calendarViewModel = new ViewModelProvider(this).get(CalendarViewModel.class);
     }
 
     @SuppressLint("SetTextI18n")
@@ -75,6 +84,10 @@ public class CalendarFragment extends Fragment {
         int dayToday = today.getDayOfMonth();
         int monthToday = today.getMonthValue();
         int yearValue = today.getYear();
+
+        calendarViewModel.getByDate(String.valueOf(today), getContext());
+
+        Fragment thisContext = this;
         calendarBinding.calendarMain.setDayBinder(new MonthDayBinder<CalendarDayView>() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -83,11 +96,63 @@ public class CalendarFragment extends Fragment {
                 container.dayTextView.setText(Integer.toString(calendarDay.getDate().getDayOfMonth()));
                 if (calendarDay.getPosition() == DayPosition.MonthDate) {
                     container.dayTextView.setTextColor(Color.BLACK);
+
+                    /*calendarViewModel.getLiveDataTxt().observe(getViewLifecycleOwner(), s -> {
+                        calendarBinding.calendarChurchBlock.setVisibility(View.VISIBLE);
+                        calendarBinding.calendarChurchBlockTextUp.setText(s);
+                        calendarViewModel.getLiveNameTxt().observe(getViewLifecycleOwner(), s1 -> {
+                            calendarBinding.calendarChurchBlockTextDown.setText(s1);
+                        });
+
+                        calendarViewModel.getLiveDate().observe(getViewLifecycleOwner(), s2 ->{
+                            calendarBinding.calendarChurchBlock.setOnClickListener(view -> {
+                                Bundle bundle = new Bundle();
+                                bundle.putString("date", s2);
+                                bundle.putString("dateTxt", s);
+                                FragmentKt.findNavController(thisContext).navigate(R.id.action_calendarFragment_to_churchFragment, bundle);
+                            });
+                        });
+                    });*/
+
+                    calendarViewModel.getIsFinished().observe(getViewLifecycleOwner(), aBoolean -> {
+                        if(aBoolean){
+                            calendarBinding.calendarChurchBlockLoad.setVisibility(View.GONE);
+                            calendarViewModel.getWholeDays().observe(getViewLifecycleOwner(), wholeDays -> {
+                                calendarBinding.calendarChurchBlockDay.setVisibility(View.VISIBLE);
+                                SpannableString content = new SpannableString(wholeDays.get(0).getDate());
+                                content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+                                calendarBinding.calendarChurchBlockTextUp.setText(content);
+                                calendarBinding.calendarChurchBlockTextDown.setText(
+                                        wholeDays.get(0).getMemorialDays()
+                                                .stream()
+                                                .map(s -> Html.fromHtml(s, Html.FROM_HTML_MODE_COMPACT))
+                                                .collect(Collectors.joining(", "))
+                                );
+                                calendarViewModel.getIsFinishedTexts().observe(getViewLifecycleOwner(), aBoolean1 -> {
+                                    if(aBoolean1){
+                                        calendarBinding.calendarChurchBlockReadDayText.setText(
+                                                Html.fromHtml(wholeDays.get(0).getTexts()
+                                                        .stream()
+                                                        .filter(wholeDayText -> wholeDayText.getType() == 1)
+                                                        .collect(Collectors.toList())
+                                                        .get(0)
+                                                        .getText(),
+                                                        Html.FROM_HTML_MODE_COMPACT)
+                                        );
+                                    }
+                                });
+                            });
+                        }else {
+                            calendarBinding.calendarChurchBlockDay.setVisibility(View.INVISIBLE);
+                            calendarBinding.calendarChurchBlockLoad.setVisibility(View.VISIBLE);
+                        }
+                    });
+
                     if(calendarDay.getDate().getDayOfMonth() == dayToday
                             && calendarDay.getDate().getMonth().getValue() == monthToday
                             && calendarDay.getDate().getYear() == yearValue){
                         container.dayTextView.setTextColor(Color.WHITE);
-                        container.dayTextView.setBackgroundColor(Color.YELLOW);
+                        container.dayTextView.setBackgroundResource(R.drawable.calendar_today);
                     }
                 } else {
                     container.dayTextView.setTextColor(Color.GRAY);
@@ -97,7 +162,7 @@ public class CalendarFragment extends Fragment {
             @NonNull
             @Override
             public CalendarDayView create(@NonNull View view) {
-                return new CalendarDayView(view);
+                return new CalendarDayView(view, calendarViewModel);
             }
 
         });
@@ -132,9 +197,12 @@ public class CalendarFragment extends Fragment {
 
 
         calendarBinding.calendarMain.setMonthScrollListener(calendarMonth -> {
-            // декабрь не выводит
-            calendarBinding.monthTitle.setText(calendarMonth.getYearMonth().getMonth().getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
-                + " "+calendarMonth.getYearMonth().getYear());
+            if(calendarMonth.getYearMonth().getMonth().getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()) != "") {
+                calendarBinding.monthTitle.setText(calendarMonth.getYearMonth().getMonth().getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
+                        + " " + calendarMonth.getYearMonth().getYear());
+            }else {
+                calendarBinding.monthTitle.setText("декабрь " + calendarMonth.getYearMonth().getYear());
+            }
             return Unit.INSTANCE;
         });
 

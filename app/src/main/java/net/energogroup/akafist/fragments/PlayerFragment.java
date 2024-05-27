@@ -12,7 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -80,7 +79,6 @@ public class PlayerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("PLAYER_FRAGMENT", "ON_CREATE");
         playerViewModel = new ViewModelProvider(getActivity()).get(PlayerViewModel.class);
         playerViewModel.setWorkMode("background");
         appPref = getActivity().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
@@ -283,7 +281,6 @@ public class PlayerFragment extends Fragment {
         mediaPlayer.stop();
         getActivity().unregisterReceiver(broadcastReceiver);
         appPref.edit().putBoolean("app_pref_player", false).apply();
-        Log.e("PLAYER_PREF", String.valueOf(appPref.getBoolean("app_pref_player", false)));
     }
 
     @Override

@@ -7,13 +7,13 @@
         android:id="@+id/quitApp"
         android:icon="@drawable/ic_baseline_exit_to_app_24"/>
     <item android:title="@string/home_title"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         android:id="@+id/homeFragment"
         android:icon="@drawable/ic_baseline_home_24" />
-    <item android:title="@string/menu_title"
-        app:showAsAction="ifRoom"
-        android:id="@+id/menuFragment"
-        android:icon="@drawable/ic_baseline_menu_24"/>
+    <item android:title="@string/calendar_name"
+        app:showAsAction="always"
+        android:id="@+id/calendFrag"
+        android:icon="@drawable/baseline_calendar_today_24"/>
     <item android:title="@string/settings_name"
         app:showAsAction="ifRoom"
         android:id="@+id/settingsFrag"
@@ -22,9 +22,5 @@
         app:showAsAction="ifRoom"
         android:id="@+id/accountFrag"
         android:icon="@drawable/baseline_person_24"/>
-    <item android:title="@string/calendar_name"
-        app:showAsAction="ifRoom"
-        android:id="@+id/calendFrag"
-        android:icon="@drawable/baseline_calendar_today_24"/>
 
 </menu>
