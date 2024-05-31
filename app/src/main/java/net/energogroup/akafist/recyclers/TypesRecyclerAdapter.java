@@ -26,7 +26,7 @@ import java.util.List;
  * @version 1.0.0
  */
 public class TypesRecyclerAdapter extends RecyclerView.Adapter<TypesRecyclerAdapter.TypesViewHolder>{
-    private List<TypesModel> typesModels;
+    private final List<TypesModel> typesModels;
     private ChurchViewModel churchViewModel;
     private TypesViewHolder prevViewHolder;
     Fragment fragment;

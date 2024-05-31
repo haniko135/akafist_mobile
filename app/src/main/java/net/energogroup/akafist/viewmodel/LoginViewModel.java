@@ -27,12 +27,12 @@ import java.util.Map;
  */
 public class LoginViewModel extends ViewModel {
     private static final String DEV_TAG = "LoginViewModel";
-    private MutableLiveData<String> authorizationURL = new MutableLiveData<>();
-    private MutableLiveData<String> accessToken = new MutableLiveData<>();
-    private MutableLiveData<String> refreshToken = new MutableLiveData<>();
-    private MutableLiveData<String> nameMLD = new MutableLiveData<>();
-    private MutableLiveData<String> emailMLD = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isHostUnavailable = new MutableLiveData<>(false);
+    private final MutableLiveData<String> authorizationURL = new MutableLiveData<>();
+    private final MutableLiveData<String> accessToken = new MutableLiveData<>();
+    private final MutableLiveData<String> refreshToken = new MutableLiveData<>();
+    private final MutableLiveData<String> nameMLD = new MutableLiveData<>();
+    private final MutableLiveData<String> emailMLD = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isHostUnavailable = new MutableLiveData<>(false);
     private String codeVerifier;
 
 

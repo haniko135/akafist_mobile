@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int SEC_TOKEN = R.string.secToken;
     public static final int AZBYKA_TOKEN = R.string.azbykaToken;
     public static final int API_PATH = R.string.apiPath;
+    public static final int API_PATH_PSALTIR = R.string.apiPathPsaltir;
     public static final int AZBYKA_API_PATH = R.string.azbykaApiPath;
     public static final int APP_VER = R.string.app_ver;
 

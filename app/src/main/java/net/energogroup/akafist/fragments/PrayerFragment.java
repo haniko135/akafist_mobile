@@ -14,14 +14,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.FragmentKt;
 
-import android.text.Html;
-import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import net.energogroup.akafist.MainActivity;
@@ -31,8 +27,6 @@ import net.energogroup.akafist.databinding.FragmentPrayerBinding;
 import net.energogroup.akafist.viewmodel.PrayerViewModel;
 import net.energogroup.akafist.viewmodel.StarredViewModel;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,9 +38,10 @@ import java.util.regex.Pattern;
  */
 public class PrayerFragment extends Fragment {
 
+    private final String TAG = "PRAYER_FRAGMENT";
     private float textSize;
     private String prevMenu, mode;
-    private int prayerId;
+    private int prayerId, blockId;
     private PrayerViewModel prayerViewModel;
     private StarredViewModel starredViewModel;
     private SharedPreferences appPref;
@@ -77,6 +72,7 @@ public class PrayerFragment extends Fragment {
         if(getArguments() != null){
             prevMenu = getArguments().getString("prevMenu");
             prayerId = getArguments().getInt("prayerId");
+            blockId = getArguments().getInt("blockId");
             mode = getArguments().getString("mode");
         }
         MainActivity mainActivity = (MainActivity) getActivity();
@@ -86,6 +82,7 @@ public class PrayerFragment extends Fragment {
         starredViewModel = provider.get(StarredViewModel.class);
         prayerViewModel = provider.get(PrayerViewModel.class);
         if(Objects.equals(mode,"prayer_read")) prayerViewModel.getJson(prevMenu, prayerId, getContext());
+        else if (Objects.equals(mode,"psaltir_read")) prayerViewModel.getJsonPsaltir(blockId, prayerId, getContext());
         else if (Objects.equals(mode, "prayer_rule")) {
             prayerViewModel.setPrayersModelsMutableLiveData(starredViewModel.getPrayerModelsCollectionItem(prayerId, db));
         }
@@ -101,6 +98,7 @@ public class PrayerFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         if(getArguments() != null){
             prevMenu = getArguments().getString("prevMenu");
+            blockId = getArguments().getInt("blockId");
             prayerId = getArguments().getInt("prayerId");
         }
     }
@@ -119,6 +117,7 @@ public class PrayerFragment extends Fragment {
 
         if(getArguments() != null){
             prevMenu = getArguments().getString("prevMenu");
+            blockId = getArguments().getInt("blockId");
             prayerId = getArguments().getInt("largeText");
             if(appPref.contains("app_pref_text_size")){
                 textSize = appPref.getFloat("app_pref_text_size", getResources().getDimension(R.dimen.text_prayer));
@@ -145,56 +144,44 @@ public class PrayerFragment extends Fragment {
                         );
 
 
-                prayerViewModel.getPrayersModelsMutableLiveData()
-                        .observe(getViewLifecycleOwner(), prayersModels -> {
-                            String[] prayerTexts = prayersModels.getTextPrayer().split("(?=<details>)");
-                            ArrayList<String> prayerTextArr = new ArrayList<>();
-                            for (String prayerText : prayerTexts) {
-                                String[] temp = prayerText.split("(?<=</details>)");
-                                if (temp.length != 0) {
-                                    prayerTextArr.addAll(Arrays.asList(temp));
-                                }
+                prayerViewModel.getPrayerTextArrMLD()
+                        .observe(getViewLifecycleOwner(), prayerTextArr -> prayerTextArr.forEach(a->{
+                            TextView textView = new TextView(getContext());
+                            textView.setTextSize(convertToPx());
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                Typeface textFont = getResources().getFont(R.font.hirmos_ucs);
+                                textView.setTypeface(textFont);
                             }
-                            prayerTextArr.forEach(a->Log.e("PRAYER_TEXT", a));
 
-                            prayerTextArr.forEach(a->{
-                                TextView textView = new TextView(getContext());
-                                textView.setTextSize(convertToPx());
-                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                                    Typeface textFont = getResources().getFont(R.font.hirmos_ucs);
-                                    textView.setTypeface(textFont);
-                                }
+                            if(a.contains("<details>")){
+                                Pattern pattern = Pattern.compile( "<summary>(.*?)</summary>" );
+                                Matcher m = pattern.matcher(a);
+                                if(m.find()) {
+                                    textView.setText(m.group(1));
+                                    textView.setId(R.id.textPrayerDetailsId);
 
-                                if(a.contains("<details>")){
-                                    Pattern pattern = Pattern.compile( "<summary>(.*?)</summary>" );
-                                    Matcher m = pattern.matcher(a);
-                                    if(m.find()) {
-                                        textView.setText(m.group(1));
-                                        textView.setId(R.id.textPrayerDetailsId);
-
-                                        String s = a.split(m.group(1))[1];
-                                        TextView other = new TextView(getContext());
-                                        other.setText(HtmlCompat.fromHtml(s, HtmlCompat.FROM_HTML_MODE_COMPACT));
-                                        other.setId(R.id.textPrayerDetailsOtherId);
-                                        other.setTextSize(convertToPx());
-                                        other.setVisibility(View.GONE);
-                                        binding.textPrayer.addView(textView);
-                                        binding.textPrayer.addView(other);
-
-                                        textView.setOnClickListener(view -> {
-                                            if(other.getVisibility() == View.VISIBLE){
-                                                other.setVisibility(View.GONE);
-                                            }else {
-                                                other.setVisibility(View.VISIBLE);
-                                            }
-                                        });
-                                    }
-                                }else {
-                                    textView.setText(HtmlCompat.fromHtml(a, HtmlCompat.FROM_HTML_MODE_COMPACT));
+                                    String s = a.split(m.group(1))[1];
+                                    TextView other = new TextView(getContext());
+                                    other.setText(HtmlCompat.fromHtml(s, HtmlCompat.FROM_HTML_MODE_COMPACT));
+                                    other.setId(R.id.textPrayerDetailsOtherId);
+                                    other.setTextSize(convertToPx());
+                                    other.setVisibility(View.GONE);
                                     binding.textPrayer.addView(textView);
+                                    binding.textPrayer.addView(other);
+
+                                    textView.setOnClickListener(view -> {
+                                        if(other.getVisibility() == View.VISIBLE){
+                                            other.setVisibility(View.GONE);
+                                        }else {
+                                            other.setVisibility(View.VISIBLE);
+                                        }
+                                    });
                                 }
-                            });
-                        });
+                            }else {
+                                textView.setText(HtmlCompat.fromHtml(a, HtmlCompat.FROM_HTML_MODE_COMPACT));
+                                binding.textPrayer.addView(textView);
+                            }
+                        }));
 
 
 
@@ -216,8 +203,13 @@ public class PrayerFragment extends Fragment {
                             return true;
                         } else if (item.getItemId() == R.id.to_menu) {
                             Bundle bundle1 = new Bundle();
-                            bundle1.putString("date",prevMenu);
-                            FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_to_churchFragment, bundle1);
+                            if (prevMenu != null){
+                                bundle1.putString("date", prevMenu);
+                                FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_to_churchFragment, bundle1);
+                            }else {
+                                bundle1.putInt("id", getArguments().getInt("blockId"));
+                                FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_to_psaltirFragment, bundle1);
+                            }
                             return true;
                         } else if (item.getItemId() == R.id.zoom_in) {
                             textSize++;
@@ -232,29 +224,53 @@ public class PrayerFragment extends Fragment {
                         } else if (item.getItemId() == R.id.next_prayer) {
                             if(prayersModels.getNext() == 0){
                                 Bundle bundle3 = new Bundle();
-                                bundle3.putString("date",prevMenu);
-                                FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_to_churchFragment, bundle3);
+                                if (prevMenu != null) {
+                                    bundle3.putString("date", prevMenu);
+                                    FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_to_churchFragment, bundle3);
+                                } else {
+                                    bundle3.putInt("id", getArguments().getInt("blockId"));
+                                    FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_to_psaltirFragment, bundle3);
+                                }
                                 return true;
                             } else {
                                 Bundle bundle4 = new Bundle();
-                                bundle4.putString("prevMenu", prevMenu);
-                                bundle4.putInt("prayerId", prayersModels.getNext());
-                                bundle4.putString("mode", mode);
-                                FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_self, bundle4);
+                                if (prevMenu != null) {
+                                    bundle4.putString("prevMenu", prevMenu);
+                                    bundle4.putInt("prayerId", prayersModels.getNext());
+                                    bundle4.putString("mode", mode);
+                                    FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_self, bundle4);
+                                } else {
+                                    bundle4.putInt("blockId", getArguments().getInt("blockId"));
+                                    bundle4.putInt("prayerId", prayersModels.getNext());
+                                    bundle4.putString("mode", "psaltir_read");
+                                    FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_self, bundle4);
+                                }
                                 return true;
                             }
                         } else if (item.getItemId() == R.id.prev_prayer) {
                             if(prayersModels.getPrev() == 0){
                                 Bundle bundle5 = new Bundle();
-                                bundle5.putString("date",prevMenu);
-                                FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_to_churchFragment, bundle5);
+                                if (prevMenu != null) {
+                                    bundle5.putString("date", prevMenu);
+                                    FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_to_churchFragment, bundle5);
+                                }else {
+                                    bundle5.putInt("id", getArguments().getInt("blockId"));
+                                    FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_to_psaltirFragment, bundle5);
+                                }
                                 return true;
                             }else {
                                 Bundle bundle2 = new Bundle();
-                                bundle2.putString("prevMenu", prevMenu);
-                                bundle2.putInt("prayerId", prayersModels.getPrev());
-                                bundle2.putString("mode", mode);
-                                FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_self, bundle2);
+                                if (prevMenu != null) {
+                                    bundle2.putString("prevMenu", prevMenu);
+                                    bundle2.putInt("prayerId", prayersModels.getPrev());
+                                    bundle2.putString("mode", mode);
+                                    FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_self, bundle2);
+                                } else {
+                                    bundle2.putInt("blockId", getArguments().getInt("blockId"));
+                                    bundle2.putInt("prayerId", prayersModels.getPrev());
+                                    bundle2.putString("mode", "psaltir_read");
+                                    FragmentKt.findNavController(getParentFragment()).navigate(R.id.action_prayerFragment_self, bundle2);
+                                }
                                 return true;
                             }
                         }

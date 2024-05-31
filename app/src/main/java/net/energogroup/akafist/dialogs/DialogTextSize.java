@@ -20,7 +20,7 @@ import net.energogroup.akafist.R;
 public class DialogTextSize extends DialogFragment {
 
     private SharedPreferences appPref;
-    private MutableLiveData<Float> liveTextSize = new MutableLiveData<>();
+    private final MutableLiveData<Float> liveTextSize = new MutableLiveData<>();
     private float textSizeNow;
 
     @NonNull

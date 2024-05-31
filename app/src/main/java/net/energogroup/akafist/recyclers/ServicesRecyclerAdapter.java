@@ -31,10 +31,10 @@ import java.util.List;
  * @version 1.0.0
  */
 public class ServicesRecyclerAdapter extends RecyclerView.Adapter<ServicesRecyclerAdapter.ServicesViewHolder> {
-    private List<ServicesModel> servicesModels;
+    private final List<ServicesModel> servicesModels;
     private Fragment fragment;
-    private MainActivity mainActivity;
-    private SQLiteDatabase db;
+    private final MainActivity mainActivity;
+    private final SQLiteDatabase db;
 
 
     public ServicesRecyclerAdapter(List<ServicesModel> servicesModels, Fragment fragment) {
@@ -124,9 +124,9 @@ public class ServicesRecyclerAdapter extends RecyclerView.Adapter<ServicesRecycl
      * The internal class responsible for the correct display of the RecyclerView element
      */
     static class ServicesViewHolder extends RecyclerView.ViewHolder{
-        private TextView serviceListItem;
-        private ImageButton serviceListItemStarBorder;
-        private ImageButton serviceListItemStar;
+        private final TextView serviceListItem;
+        private final ImageButton serviceListItemStarBorder;
+        private final ImageButton serviceListItemStar;
         public TextView getServiceListItem() {
             return serviceListItem;
         }

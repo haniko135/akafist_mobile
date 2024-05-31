@@ -33,10 +33,10 @@ import java.util.List;
  * @version 1.0.0
  */
 public class SkypeViewModel extends ViewModel {
-    private List<SkypesConfs> skypeModels = new ArrayList<>();
-    private List<SkypesConfs> confsModels = new ArrayList<>();
-    private MutableLiveData<List<SkypesConfs>> skypesMutableLiveData = new MutableLiveData<>();
-    private MutableLiveData<List<SkypesConfs>> confsMutableLiveData = new MutableLiveData<>();
+    private final List<SkypesConfs> skypeModels = new ArrayList<>();
+    private final List<SkypesConfs> confsModels = new ArrayList<>();
+    private final MutableLiveData<List<SkypesConfs>> skypesMutableLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<SkypesConfs>> confsMutableLiveData = new MutableLiveData<>();
 
     /**
      * @return Current conference groups

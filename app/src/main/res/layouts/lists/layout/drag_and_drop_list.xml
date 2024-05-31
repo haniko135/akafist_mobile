@@ -27,6 +27,7 @@
         android:id="@+id/drag_and_drop_touch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/drag_and_drop_slide_bar_icon"
         android:src="@drawable/baseline_drag_handle_24"
         android:background="@android:color/transparent"/>
 

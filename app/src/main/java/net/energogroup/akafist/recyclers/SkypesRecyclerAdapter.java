@@ -27,8 +27,8 @@ import java.util.List;
  * @version 1.0.0
  */
 public class SkypesRecyclerAdapter extends RecyclerView.Adapter<SkypesRecyclerAdapter.SkypesViewHolder>{
-    private List<SkypesConfs> skypesConfs;
-    private Fragment fragment;
+    private final List<SkypesConfs> skypesConfs;
+    private final Fragment fragment;
 
     /**
      * List's constructor

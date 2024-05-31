@@ -30,7 +30,7 @@ import java.util.List;
 public class SettingsFragment extends Fragment {
 
     public FragmentSettingsBinding settingsBinding;
-    private List<String> settingsNames = new ArrayList<>();
+    private final List<String> settingsNames = new ArrayList<>();
 
     /**
      * Required class constructor
@@ -83,9 +83,7 @@ public class SettingsFragment extends Fragment {
         settingsBinding.settingsRV.setLayoutManager(new LinearLayoutManager(getContext()));
         settingsBinding.settingsRV.setAdapter(new SettingsRecyclerAdapter(settingsNames, this));
 
-        settingsBinding.userImage.setOnClickListener(view -> {
-            FragmentKt.findNavController(this).navigate(R.id.action_settingsFragment_to_accountFragment);
-        });
+        settingsBinding.userImage.setOnClickListener(view -> FragmentKt.findNavController(this).navigate(R.id.action_settingsFragment_to_accountFragment));
 
         return settingsBinding.getRoot();
     }

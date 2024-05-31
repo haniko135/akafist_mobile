@@ -31,12 +31,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class StarredViewModel extends ViewModel {
-    private MutableLiveData<List<ServicesModel>> textPrayers = new MutableLiveData<>();
-    private MutableLiveData<List<ServicesModel>> prayerRules = new MutableLiveData<>();
-    private List<PrayersModels> prayersCollection = new ArrayList<>();
-    private MutableLiveData<List<PrayersModels>> mutablePrayersCollection = new MutableLiveData<>();
+    private final MutableLiveData<List<ServicesModel>> textPrayers = new MutableLiveData<>();
+    private final MutableLiveData<List<ServicesModel>> prayerRules = new MutableLiveData<>();
+    private final List<PrayersModels> prayersCollection = new ArrayList<>();
+    private final MutableLiveData<List<PrayersModels>> mutablePrayersCollection = new MutableLiveData<>();
     private MutableLiveData<PrayersModels> prayersModels = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isConverted = new MutableLiveData<>(false);
+    private final MutableLiveData<Boolean> isConverted = new MutableLiveData<>(false);
 
     public MutableLiveData<List<ServicesModel>> getTextPrayers() { return textPrayers; }
 
@@ -89,9 +89,7 @@ public class StarredViewModel extends ViewModel {
 
         List<String> tempStrings = new ArrayList<>();
         Gson gson1 = new Gson();
-        prayerRuleText.forEach((item)->{
-            tempStrings.add(gson1.toJson(item));
-        });
+        prayerRuleText.forEach((item)-> tempStrings.add(gson1.toJson(item)));
         Gson gson = new Gson();
         String string = gson.toJson(tempStrings);
 
@@ -104,7 +102,7 @@ public class StarredViewModel extends ViewModel {
 
     public boolean getPrayerRuleArray(SQLiteDatabase db){
         Cursor prayerRule = db.rawQuery("SELECT * FROM "+StarredDTO.TABLE_NAME+" WHERE "+StarredDTO.COLUMN_NAME_OBJECT_TYPE+"='prayer_rule'",null);
-        String stringArr = "";
+        String stringArr;
         boolean isPrayerRule;
 
         if(prayerRule.moveToFirst()){
@@ -203,7 +201,7 @@ public class StarredViewModel extends ViewModel {
 
     public MutableLiveData<PrayersModels> getPrayerModelsCollectionItem(int id, SQLiteDatabase db){
         Cursor getPrayerCollection = db.rawQuery("SELECT * FROM "+StarredDTO.TABLE_NAME+" WHERE "+StarredDTO.COLUMN_NAME_OBJECT_TYPE+"='prayer_rule_col'",null);
-        String jsonArr = "";
+        String jsonArr;
         if (getPrayerCollection.moveToFirst()){
             do{
                 jsonArr = getPrayerCollection.getString(2);

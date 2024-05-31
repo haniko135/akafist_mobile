@@ -10,6 +10,8 @@ public class HomeBlocksModel {
     private String date;
     private String dateTxt;
     private String name;
+    private int id;
+    private String desc;
     private String additions;
     private int links;
 
@@ -23,6 +25,12 @@ public class HomeBlocksModel {
         this.date = date;
         this.dateTxt = dateTxt;
         this.name = name;
+    }
+
+    public HomeBlocksModel(int id, String name, String desc) {
+        this.id = id;
+        this.name = name;
+        this.desc = desc;
     }
 
     /**
@@ -85,4 +93,6 @@ public class HomeBlocksModel {
     public String getAdditions() {
         return additions;
     }
+
+    public int getId() { return id; }
 }

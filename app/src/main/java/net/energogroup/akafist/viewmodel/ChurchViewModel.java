@@ -33,14 +33,14 @@ import java.util.List;
  * @version 1.0.0
  */
 public class ChurchViewModel extends ViewModel{
-    private List<TypesModel> typesModelList = new ArrayList<>();
-    private MutableLiveData<List<TypesModel>> mutableTypesList = new MutableLiveData<>();
-    private List<ServicesModel> servicesModelList = new ArrayList<>();
-    private MutableLiveData<List<ServicesModel>> mutableServicesList = new MutableLiveData<>();
-    private MutableLiveData<Integer> curId = new MutableLiveData<>();
+    private final List<TypesModel> typesModelList = new ArrayList<>();
+    private final MutableLiveData<List<TypesModel>> mutableTypesList = new MutableLiveData<>();
+    private final List<ServicesModel> servicesModelList = new ArrayList<>();
+    private final MutableLiveData<List<ServicesModel>> mutableServicesList = new MutableLiveData<>();
+    private final MutableLiveData<Integer> curId = new MutableLiveData<>();
     private String dateTxt, nameTxt;
-    private MutableLiveData <String> liveDataTxt = new MutableLiveData<>();
-    private MutableLiveData <String> liveNameTxt = new MutableLiveData<>();
+    private final MutableLiveData <String> liveDataTxt = new MutableLiveData<>();
+    private final MutableLiveData <String> liveNameTxt = new MutableLiveData<>();
 
     /**
      * @param id Current type id

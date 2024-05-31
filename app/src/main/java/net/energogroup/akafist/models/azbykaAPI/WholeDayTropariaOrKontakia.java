@@ -1,7 +1,7 @@
 package net.energogroup.akafist.models.azbykaAPI;
 
 public class WholeDayTropariaOrKontakia {
-    private int id;
+    private final int id;
     private String type;
     private String text;
     private String title;

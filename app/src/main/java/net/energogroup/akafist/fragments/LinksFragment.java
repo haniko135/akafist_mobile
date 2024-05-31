@@ -46,7 +46,7 @@ public class LinksFragment extends Fragment {
     private MainActivity mainActivity;
     private SQLiteDatabase db;
     private List<LinksModel> downloadAudio = new ArrayList<>();
-    private ArrayList<String> downloadAudioNames = new ArrayList<>();
+    private final ArrayList<String> downloadAudioNames = new ArrayList<>();
     private ArrayList<StarredModel> starredAudio;
     private SharedPreferences appPref;
     public static boolean isChecked = false; //для пользовательского соглашения
@@ -188,7 +188,7 @@ public class LinksFragment extends Fragment {
         }
         ViewModelProvider provider = new ViewModelProvider(this);
         linksViewModel = provider.get(LinksViewModel.class);
-        if((AppCompatActivity)getActivity() != null) {
+        if(getActivity() != null) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(dateTxt);
             linksViewModel.getJson(date, getLayoutInflater());
             if(isStarredFrag != null){

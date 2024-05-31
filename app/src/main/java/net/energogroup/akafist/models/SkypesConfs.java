@@ -59,8 +59,6 @@ public class SkypesConfs {
      * @return
      */
     public boolean isUrl(){
-        if(url != null)
-            return true;
-        return false;
+        return url != null;
     }
 }

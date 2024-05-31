@@ -48,7 +48,7 @@ public class SkypesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if((AppCompatActivity)getActivity() != null) {
+        if(getActivity() != null) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Конференции по группам");
             ViewModelProvider provider = new ViewModelProvider(this);
             skypeViewModel = provider.get(SkypeViewModel.class);
@@ -69,7 +69,7 @@ public class SkypesFragment extends Fragment {
                              Bundle savedInstanceState) {
         skypesBinding = FragmentSkypesBinding.inflate(getLayoutInflater());
 
-        if((AppCompatActivity)getActivity() != null) {
+        if(getActivity() != null) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Конференции по группам");
 
             if(getActivity().getApplicationContext() != null){

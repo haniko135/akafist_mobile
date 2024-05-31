@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -84,6 +85,7 @@ public class PlayerFragment extends Fragment {
         appPref = getActivity().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -164,7 +166,7 @@ public class PlayerFragment extends Fragment {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             getActivity().registerReceiver(broadcastReceiver, new IntentFilter("AUDIOS"), Context.RECEIVER_EXPORTED);
                         }else {
-                            getActivity().registerReceiver(broadcastReceiver, new IntentFilter("AUDIOS"));
+                            getActivity().registerReceiver(broadcastReceiver, new IntentFilter("AUDIOS"), Context.RECEIVER_NOT_EXPORTED); //Context.RECEIVER_NOT_EXPORTED - на всяк случай
                         }
                         getActivity().startService(new Intent(getContext(), OnClearFromRecentService.class));
                         playerViewModel.setIsInitialized(true);

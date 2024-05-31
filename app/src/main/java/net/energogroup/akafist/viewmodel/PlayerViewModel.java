@@ -37,13 +37,13 @@ import java.util.Objects;
 public class PlayerViewModel extends ViewModel {
 
     private static final int DOWNLOAD_URL = R.string.downloadURL;
-    private MutableLiveData<String> workMode = new MutableLiveData<>();
-    private MutableLiveData<String> urlForAudio = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isInitialized = new MutableLiveData<>();
-    private MutableLiveData<LinksModel> linksModel = new MutableLiveData<>();
-    private MutableLiveData<MediaPlayer> currMediaPlayer = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isDownload = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isProgressBarActive = new MutableLiveData<>();
+    private final MutableLiveData<String> workMode = new MutableLiveData<>();
+    private final MutableLiveData<String> urlForAudio = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isInitialized = new MutableLiveData<>();
+    private final MutableLiveData<LinksModel> linksModel = new MutableLiveData<>();
+    private final MutableLiveData<MediaPlayer> currMediaPlayer = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isDownload = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isProgressBarActive = new MutableLiveData<>();
     private OneTimeWorkRequest workRequest;
     private String urlForLink, fileName, filePath;
 

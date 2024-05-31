@@ -32,8 +32,8 @@ import java.util.Locale;
  * @version 1.0.0
  */
 public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapter.HomeViewHolder> {
-    private List<HomeBlocksModel> homeBlocksModels;
-    private Fragment fragment;
+    private final List<HomeBlocksModel> homeBlocksModels;
+    private final Fragment fragment;
 
     public HomeRecyclerAdapter(List<HomeBlocksModel> homeBlocksModels, Home fragment) {
         this.homeBlocksModels = homeBlocksModels;
@@ -65,73 +65,88 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
         holder.getHomeBlockTextUp().setText(homeBlocksModels.get(position).getDateTxt());
         holder.getHomeBlockTextDown().setText(homeBlocksModels.get(position).getName());
 
-        //link assignment
-        if (homeBlocksModels.get(position).getDate().equals("skypeConfs")){
-            homeBlocksModels.get(position).setLinks(R.id.action_home2_to_skypesFragment);
+        if(homeBlocksModels.get(position).getDate() != null){
+            holder.getHomeBlockTextUp().setText(homeBlocksModels.get(position).getDateTxt());
+            holder.getHomeBlockTextDown().setText(homeBlocksModels.get(position).getName());
+            //link assignment
+            if (homeBlocksModels.get(position).getDate().equals("skypeConfs")){
+                homeBlocksModels.get(position).setLinks(R.id.action_home2_to_skypesFragment);
+            }
+            if (homeBlocksModels.get(position).getDate().equals("onlineMichael")){
+                homeBlocksModels.get(position).setLinks(R.string.link_Michael);
+                homeBlocksModels.get(position).setAdditions("Трансляция арх. Михаила");
+            }
+            if (homeBlocksModels.get(position).getDate().equals("onlinePokrovaPls")){
+                homeBlocksModels.get(position).setLinks(R.string.link_Pokrova_Pls);
+                homeBlocksModels.get(position).setAdditions("Трансляция Покрова Пр. Богородицы");
+            }
+            if (homeBlocksModels.get(position).getDate().equals("onlineVarvara")){
+                homeBlocksModels.get(position).setLinks(R.string.link_Varvara);
+                homeBlocksModels.get(position).setAdditions("Трансляция св. Варвары");
+            }
+            if (homeBlocksModels.get(position).getDate().equals("molitvyOfflain")){
+                homeBlocksModels.get(position).setLinks(R.id.action_home2_to_linksFragment);
+            }
+            if (homeBlocksModels.get(position).getDate().equals("links")){
+                homeBlocksModels.get(position).setLinks(R.id.action_home2_to_linksFragment);
+            }
+            if (homeBlocksModels.get(position).getDate().equals("notes")){
+                homeBlocksModels.get(position).setLinks(R.string.link_notes);
+            }
+            if (homeBlocksModels.get(position).getDate().equals("talks")){
+                homeBlocksModels.get(position).setLinks(R.string.link_talks);
+            }
+            if (homeBlocksModels.get(position).getDate().equals("now")){
+                homeBlocksModels.get(position).setLinks(R.id.action_home2_to_churchFragment);
+            }
+            if (homeBlocksModels.get(position).getDate().equals(tomorrow)){
+                homeBlocksModels.get(position).setLinks(R.id.action_home2_to_churchFragment);
+            }
+            if (homeBlocksModels.get(position).getDate().equals("everyday")){
+                homeBlocksModels.get(position).setLinks(R.id.action_home2_to_churchFragment);
+            }
+            if(homeBlocksModels.get(position).getDate().equals("needs")){
+                homeBlocksModels.get(position).setLinks(R.id.action_home2_to_churchFragment);
+            }
         }
-        if (homeBlocksModels.get(position).getDate().equals("onlineMichael")){
-            homeBlocksModels.get(position).setLinks(R.string.link_Michael);
-            homeBlocksModels.get(position).setAdditions("Трансляция арх. Михаила");
-        }
-        if (homeBlocksModels.get(position).getDate().equals("onlinePokrovaPls")){
-            homeBlocksModels.get(position).setLinks(R.string.link_Pokrova_Pls);
-            homeBlocksModels.get(position).setAdditions("Трансляция Покрова Пр. Богородицы");
-        }
-        if (homeBlocksModels.get(position).getDate().equals("onlineVarvara")){
-            homeBlocksModels.get(position).setLinks(R.string.link_Varvara);
-            homeBlocksModels.get(position).setAdditions("Трансляция св. Варвары");
-        }
-        if (homeBlocksModels.get(position).getDate().equals("molitvyOfflain")){
-            homeBlocksModels.get(position).setLinks(R.id.action_home2_to_linksFragment);
-        }
-        if (homeBlocksModels.get(position).getDate().equals("links")){
-            homeBlocksModels.get(position).setLinks(R.id.action_home2_to_linksFragment);
-        }
-        if (homeBlocksModels.get(position).getDate().equals("notes")){
-            homeBlocksModels.get(position).setLinks(R.string.link_notes);
-        }
-        if (homeBlocksModels.get(position).getDate().equals("talks")){
-            homeBlocksModels.get(position).setLinks(R.string.link_talks);
-        }
-        if (homeBlocksModels.get(position).getDate().equals("now")){
-            homeBlocksModels.get(position).setLinks(R.id.action_home2_to_churchFragment);
-        }
-        if (homeBlocksModels.get(position).getDate().equals(tomorrow)){
-            homeBlocksModels.get(position).setLinks(R.id.action_home2_to_churchFragment);
-        }
-        if (homeBlocksModels.get(position).getDate().equals("everyday")){
-            homeBlocksModels.get(position).setLinks(R.id.action_home2_to_churchFragment);
-        }
-        if(homeBlocksModels.get(position).getDate().equals("psaltir")){
-            homeBlocksModels.get(position).setLinks(R.id.action_home2_to_churchFragment);
-        }
-        if(homeBlocksModels.get(position).getDate().equals("needs")){
-            homeBlocksModels.get(position).setLinks(R.id.action_home2_to_churchFragment);
+        else{
+            holder.getHomeBlockTextUp().setVisibility(View.GONE);
+            holder.getHomeBlockTextDown().setText(homeBlocksModels.get(position).getName());
+            holder.getHomeBlockline().setVisibility(View.GONE);
+            if(homeBlocksModels.get(position).getName().startsWith("Псалтирь")){
+                homeBlocksModels.get(position).setLinks(R.id.action_home2_to_psaltirFragment);
+            }
         }
 
-        //click on links
-        if(homeBlocksModels.get(position).getDate().equals("onlineMichael")
-                || homeBlocksModels.get(position).getDate().equals("onlineVarvara")
-                || homeBlocksModels.get(position).getDate().equals("onlinePokrovaPls"))
-        {
+        if(homeBlocksModels.get(position).getDate() != null) {
+            //click on links
+            if (homeBlocksModels.get(position).getDate().equals("onlineMichael")
+                    || homeBlocksModels.get(position).getDate().equals("onlineVarvara")
+                    || homeBlocksModels.get(position).getDate().equals("onlinePokrovaPls")) {
+                holder.getHomeBlockLinear().setOnClickListener(view -> {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("urlToSound", fragment.getResources().getString(homeBlocksModels.get(position).getLinks()));
+                    bundle.putString("soundTitle", homeBlocksModels.get(position).getAdditions());
+                    FragmentKt.findNavController(fragment).navigate(R.id.onlineTempleFragment, bundle);
+                });
+            } else if (homeBlocksModels.get(position).getDate().equals("notes")
+                    || homeBlocksModels.get(position).getDate().equals("talks")) {
+                holder.getHomeBlockLinear().setOnClickListener(view -> {
+                    Intent toSite = new Intent(Intent.ACTION_VIEW, Uri.parse(fragment.getResources().getString(homeBlocksModels.get(position).getLinks())));
+                    fragment.getContext().startActivity(toSite);
+                });
+            } else {
+                holder.getHomeBlockLinear().setOnClickListener(view -> {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("date", homeBlocksModels.get(position).getDate());
+                    bundle.putString("dateTxt", homeBlocksModels.get(position).getDateTxt());
+                    FragmentKt.findNavController(fragment).navigate(homeBlocksModels.get(position).getLinks(), bundle);
+                });
+            }
+        } else if (homeBlocksModels.get(position).getName().startsWith("Псалтирь")){
             holder.getHomeBlockLinear().setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
-                bundle.putString("urlToSound", fragment.getResources().getString(homeBlocksModels.get(position).getLinks()));
-                bundle.putString("soundTitle", homeBlocksModels.get(position).getAdditions());
-                FragmentKt.findNavController(fragment).navigate(R.id.onlineTempleFragment, bundle);
-            });
-        }else if (homeBlocksModels.get(position).getDate().equals("notes")
-                || homeBlocksModels.get(position).getDate().equals("talks"))
-        {
-            holder.getHomeBlockLinear().setOnClickListener(view -> {
-                Intent toSite = new Intent(Intent.ACTION_VIEW, Uri.parse(fragment.getResources().getString(homeBlocksModels.get(position).getLinks())));
-                fragment.getContext().startActivity(toSite);
-            });
-        } else {
-            holder.getHomeBlockLinear().setOnClickListener(view -> {
-                Bundle bundle = new Bundle();
-                bundle.putString("date", homeBlocksModels.get(position).getDate());
-                bundle.putString("dateTxt", homeBlocksModels.get(position).getDateTxt());
+                bundle.putInt("id", homeBlocksModels.get(position).getId());
                 FragmentKt.findNavController(fragment).navigate(homeBlocksModels.get(position).getLinks(), bundle);
             });
         }
@@ -147,15 +162,17 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
      */
     static class HomeViewHolder extends RecyclerView.ViewHolder{
 
-        private LinearLayout homeBlockLinear;
-        private TextView homeBlockTextUp;
-        private TextView homeBlockTextDown;
+        private final LinearLayout homeBlockLinear;
+        private final TextView homeBlockTextUp;
+        private final TextView homeBlockTextDown;
+        private final TextView homeBlockline;
 
         public HomeViewHolder(@NonNull View itemView) {
             super(itemView);
             this.homeBlockLinear = itemView.findViewById(R.id.home_block_list);
             this.homeBlockTextUp = itemView.findViewById(R.id.home_block_text_up);
             this.homeBlockTextDown = itemView.findViewById(R.id.home_block_text_down);
+            this.homeBlockline = itemView.findViewById(R.id.home_block_line);
         }
 
         public LinearLayout getHomeBlockLinear() {
@@ -169,5 +186,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
         public TextView getHomeBlockTextDown() {
             return homeBlockTextDown;
         }
+
+        public TextView getHomeBlockline() { return homeBlockline; }
     }
 }

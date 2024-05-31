@@ -45,6 +45,9 @@
             app:exitAnim="@anim/exit_right"
             app:popEnterAnim="@anim/enter_right"
             app:popExitAnim="@anim/exit_left" />
+        <action
+            android:id="@+id/action_home2_to_psaltirFragment"
+            app:destination="@id/psaltirFragment" />
     </fragment>
     <action
         android:id="@+id/action_global_home2"
@@ -115,6 +118,9 @@
             app:exitAnim="@anim/exit_right"
             app:popEnterAnim="@anim/enter_right"
             app:popExitAnim="@anim/exit_left" />
+        <action
+            android:id="@+id/action_prayerFragment_to_psaltirFragment"
+            app:destination="@id/psaltirFragment" />
     </fragment>
     <fragment
         android:id="@+id/skypesBlocksFragment"
@@ -257,4 +263,13 @@
         android:name="net.energogroup.akafist.fragments.AccountCalendarFragment"
         android:label="fragment_account_calendar"
         tools:layout="@layout/fragment_account_calendar" />
+    <fragment
+        android:id="@+id/psaltirFragment"
+        android:name="net.energogroup.akafist.fragments.PsaltirFragment"
+        android:label="fragment_psaltir"
+        tools:layout="@layout/fragment_psaltir" >
+        <action
+            android:id="@+id/action_psaltirFragment_to_prayerFragment"
+            app:destination="@id/prayerFragment" />
+    </fragment>
 </navigation>

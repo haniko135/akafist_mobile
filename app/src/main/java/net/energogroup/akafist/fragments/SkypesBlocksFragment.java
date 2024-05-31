@@ -55,7 +55,7 @@ public class SkypesBlocksFragment extends Fragment {
             nameTitle = getArguments().getString("nameTitle");
             urlId = getArguments().getInt("urlId");
         }
-        if((AppCompatActivity)getActivity() != null){
+        if(getActivity() != null){
             ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(nameTitle);
             ViewModelProvider provider = new ViewModelProvider(this);
             skypeViewModel = provider.get(SkypeViewModel.class);

@@ -25,8 +25,8 @@ import java.util.List;
  */
 public class SettingsRecyclerAdapter extends RecyclerView.Adapter<SettingsRecyclerAdapter.SettingsViewHolder> {
 
-    private List<String> textMenu;
-    private Fragment fragment;
+    private final List<String> textMenu;
+    private final Fragment fragment;
     private SharedPreferences preferences;
 
     /**
@@ -67,13 +67,6 @@ public class SettingsRecyclerAdapter extends RecyclerView.Adapter<SettingsRecycl
                 contactDeveloper.show(fragment.requireActivity().getSupportFragmentManager(), "contactDeveloper");
             });
         }
-
-        /*if(position == 0){
-            holder.getTextMenu().setOnClickListener(v -> {
-                DialogTextSize textSize = new DialogTextSize();
-                textSize.show(fragment.requireActivity().getSupportFragmentManager(), "userTextSizeDialog");
-            });
-        }*/
     }
 
     @Override

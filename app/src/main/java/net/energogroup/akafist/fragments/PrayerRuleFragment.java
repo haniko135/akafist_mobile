@@ -2,6 +2,8 @@ package net.energogroup.akafist.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -31,10 +33,13 @@ public class PrayerRuleFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getActivity() != null) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Правило");
+        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         prayerRuleBinding = FragmentPrayerRuleBinding.inflate(getLayoutInflater(), container, false);
 
@@ -52,8 +57,4 @@ public class PrayerRuleFragment extends Fragment {
         return prayerRuleBinding.getRoot();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
 }

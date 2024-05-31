@@ -9,7 +9,7 @@ import net.energogroup.akafist.MainActivity;
 import java.util.Map;
 
 public class RequestServiceHandler {
-    private Map<String, String> mHeaders;
+    private final Map<String, String> mHeaders;
 
     public RequestServiceHandler() {
         mHeaders = new ArrayMap<>();

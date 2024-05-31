@@ -17,8 +17,8 @@ import androidx.lifecycle.LiveData;
  * @version 1.0.0
  */
 public class NetworkConnection extends LiveData<Boolean> {
-    private Context context;
-    private ConnectivityManager connectivityManager;
+    private final Context context;
+    private final ConnectivityManager connectivityManager;
 
     /**
      * The constructor of the class taking into account the current context

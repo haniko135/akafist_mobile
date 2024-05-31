@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class SkypesGridRecyclerAdapter extends RecyclerView.Adapter<SkypesGridRecyclerAdapter.SkypesGridViewHolder> {
 
-    private List<SkypesConfs> skypesConfs;
+    private final List<SkypesConfs> skypesConfs;
 
     public SkypesGridRecyclerAdapter(List<SkypesConfs> skypesConfs) {
         this.skypesConfs = skypesConfs;
@@ -63,7 +63,7 @@ public class SkypesGridRecyclerAdapter extends RecyclerView.Adapter<SkypesGridRe
      * The internal class responsible for the correct display of the RecyclerView element
      */
     static class SkypesGridViewHolder extends RecyclerView.ViewHolder{
-        private TextView skypesListItem;
+        private final TextView skypesListItem;
 
         public SkypesGridViewHolder(@NonNull View itemView) {
             super(itemView);

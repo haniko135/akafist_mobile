@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +36,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.TextStyle;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import kotlin.Unit;
@@ -96,23 +96,6 @@ public class CalendarFragment extends Fragment {
                 container.dayTextView.setText(Integer.toString(calendarDay.getDate().getDayOfMonth()));
                 if (calendarDay.getPosition() == DayPosition.MonthDate) {
                     container.dayTextView.setTextColor(Color.BLACK);
-
-                    /*calendarViewModel.getLiveDataTxt().observe(getViewLifecycleOwner(), s -> {
-                        calendarBinding.calendarChurchBlock.setVisibility(View.VISIBLE);
-                        calendarBinding.calendarChurchBlockTextUp.setText(s);
-                        calendarViewModel.getLiveNameTxt().observe(getViewLifecycleOwner(), s1 -> {
-                            calendarBinding.calendarChurchBlockTextDown.setText(s1);
-                        });
-
-                        calendarViewModel.getLiveDate().observe(getViewLifecycleOwner(), s2 ->{
-                            calendarBinding.calendarChurchBlock.setOnClickListener(view -> {
-                                Bundle bundle = new Bundle();
-                                bundle.putString("date", s2);
-                                bundle.putString("dateTxt", s);
-                                FragmentKt.findNavController(thisContext).navigate(R.id.action_calendarFragment_to_churchFragment, bundle);
-                            });
-                        });
-                    });*/
 
                     calendarViewModel.getIsFinished().observe(getViewLifecycleOwner(), aBoolean -> {
                         if(aBoolean){
@@ -197,7 +180,7 @@ public class CalendarFragment extends Fragment {
 
 
         calendarBinding.calendarMain.setMonthScrollListener(calendarMonth -> {
-            if(calendarMonth.getYearMonth().getMonth().getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()) != "") {
+            if(!Objects.equals(calendarMonth.getYearMonth().getMonth().getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()), "")) {
                 calendarBinding.monthTitle.setText(calendarMonth.getYearMonth().getMonth().getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
                         + " " + calendarMonth.getYearMonth().getYear());
             }else {

@@ -14,9 +14,9 @@ import net.energogroup.akafist.fragments.OnlineTempleFragment;
  * @version 1.0.0
  */
 public class OnlineTempleViewModel extends ViewModel {
-    private static MediaPlayer mediaPlayer = new MediaPlayer();
+    private static final MediaPlayer mediaPlayer = new MediaPlayer();
 
-    private MutableLiveData<String> urlSound = new MutableLiveData<>();
+    private final MutableLiveData<String> urlSound = new MutableLiveData<>();
     public void setUrlSound(String urlSound) {
         this.urlSound.setValue(urlSound);
     }

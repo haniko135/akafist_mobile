@@ -1,8 +1,8 @@
 package net.energogroup.akafist.models.azbykaAPI;
 
 public class WholeDayText {
-    private int id;
-    private int type;
+    private final int id;
+    private final int type;
     private String text;
     private String title;
     private String url;

@@ -8,11 +8,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import android.text.Html;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +32,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.TextStyle;
 import java.util.Locale;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 import kotlin.Unit;
 
@@ -46,7 +44,6 @@ import kotlin.Unit;
 public class AccountCalendarFragment extends Fragment {
 
     private FragmentAccountCalendarBinding accountCalendarBinding;
-    private String mParam2;
 
     public AccountCalendarFragment() { }
 
@@ -63,6 +60,9 @@ public class AccountCalendarFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getActivity() != null) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Мой календарь");
+        }
     }
 
     @Override
@@ -132,11 +132,21 @@ public class AccountCalendarFragment extends Fragment {
 
 
         accountCalendarBinding.calendarAccountMain.setMonthScrollListener(calendarMonth -> {
-            if(calendarMonth.getYearMonth().getMonth().getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()) != "") {
-                accountCalendarBinding.accountMonthTitle.setText(calendarMonth.getYearMonth().getMonth().getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
-                        + " " + calendarMonth.getYearMonth().getYear());
+            if(!Objects.equals(calendarMonth.getYearMonth().getMonth().getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()), "")) {
+                accountCalendarBinding.accountMonthTitle.setText(
+                        getResources().getString(
+                                R.string.calendar_month_year_label,
+                                calendarMonth.getYearMonth().getMonth().getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()),
+                                calendarMonth.getYearMonth().getYear()
+                        )
+                );
             }else {
-                accountCalendarBinding.accountMonthTitle.setText("декабрь " + calendarMonth.getYearMonth().getYear());
+                accountCalendarBinding.accountMonthTitle.setText(
+                        getResources().getString(
+                            R.string.calendar_month_year_label,
+                            "декабрь ",
+                            calendarMonth.getYearMonth().getYear()
+                ));
             }
             return Unit.INSTANCE;
         });

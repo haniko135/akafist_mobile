@@ -37,7 +37,7 @@ public class Home extends Fragment {
     public FragmentHomeBinding homeBinding;
     private SharedPreferences appPref;
     private String userName;
-    private boolean isFirstTime = false;
+    private final boolean isFirstTime = false;
     AppCompatActivity fragActivity;
 
     /**
@@ -125,7 +125,6 @@ public class Home extends Fragment {
     /**
      * This method initializes the main parameters of the home page
      * and is using {@link Home#onCreate(Bundle)}
-     * @return
      */
     private void initializeHome(){
         if (((AppCompatActivity)getActivity()).getSupportActionBar() != null){
@@ -138,8 +137,7 @@ public class Home extends Fragment {
 
         appPref = getActivity().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
         userName = appPref.getString("app_pref_username", "guest");
-        Log.e("YOU_ARE_LOH", userName);
-        if(userName.startsWith("Guest_")){
+        if(userName.startsWith("Гость_")){
             menuViewModel.firstSet("guest", getContext());
         }else {
             menuViewModel.firstSet("energogroup", getContext());
@@ -150,7 +148,6 @@ public class Home extends Fragment {
 
     /**
      * Processing clicks on the "Back" button in the bottom panel
-     * @return
      */
     private void onBackPressed(){
         requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {

@@ -2,6 +2,7 @@ package net.energogroup.akafist.fragments.lists;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -18,9 +19,8 @@ import net.energogroup.akafist.databinding.FragmentAudioDragAndDropBinding;
 public class AudioDragAndDropFragment extends Fragment {
     private FragmentAudioDragAndDropBinding binding;
 
-    public AudioDragAndDropFragment() {
-        // Required empty public constructor
-    }
+    // Required empty public constructor
+    public AudioDragAndDropFragment() { }
 
     /**
      * Use this factory method to create a new instance of
@@ -29,8 +29,7 @@ public class AudioDragAndDropFragment extends Fragment {
      * @return A new instance of fragment AudioDragAndDropFragment.
      */
     public static AudioDragAndDropFragment newInstance() {
-        AudioDragAndDropFragment fragment = new AudioDragAndDropFragment();
-        return fragment;
+        return new AudioDragAndDropFragment();
     }
 
     @Override
@@ -39,7 +38,7 @@ public class AudioDragAndDropFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         binding = FragmentAudioDragAndDropBinding.inflate(getLayoutInflater(), container, false);

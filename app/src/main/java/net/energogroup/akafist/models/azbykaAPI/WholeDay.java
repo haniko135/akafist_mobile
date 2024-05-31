@@ -1,5 +1,7 @@
 package net.energogroup.akafist.models.azbykaAPI;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 
 public class WholeDay {
@@ -47,6 +49,7 @@ public class WholeDay {
 
     public WholeDay() {}
 
+    @NonNull
     @Override
     public String toString() {
         return "WholeDay: {" +

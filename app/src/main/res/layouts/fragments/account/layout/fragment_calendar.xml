@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/cyrillic_old"
         android:gravity="center"
-        android:text="TEST"
+        android:text=""
         android:textSize="20sp"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
@@ -74,24 +74,24 @@
                     <TextView
                         android:id="@+id/calendar_church_block_text_up"
                         style="@style/churchCalendBlock"
-                        android:text=" " />
+                        android:text="" />
 
                     <TextView
                         android:id="@+id/calendar_church_block_text_down"
                         style="@style/churchCalendBlockText"
-                        android:text=" " />
+                        android:text="" />
 
                     <TextView
                         android:id="@+id/calendar_church_block_read_day"
                         style="@style/churchCalendBlockText"
                         android:gravity="center"
-                        android:text="Чтение Священного Писания"
+                        android:text="@string/calendar_pis_label"
                         android:textSize="24sp" />
 
                     <TextView
                         android:id="@+id/calendar_church_block_read_day_text"
                         style="@style/churchCalendBlockText"
-                        android:text=" " />
+                        android:text="" />
                 </LinearLayout>
 
             </LinearLayout>

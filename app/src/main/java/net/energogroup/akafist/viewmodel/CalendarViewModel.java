@@ -30,18 +30,18 @@ import java.util.stream.Collectors;
 
 public class CalendarViewModel extends ViewModel {
 
-    private List<TypesModel> typesModelList = new ArrayList<>();
-    private List<ServicesModel> servicesModelList = new ArrayList<>();
-    private List<WholeDay> wholeDaysList = new ArrayList<>();
-    private MutableLiveData<List<ServicesModel>> mutableServicesList = new MutableLiveData<>();
-    private MutableLiveData<List<TypesModel>> mutableTypesList = new MutableLiveData<>();
-    private MutableLiveData<String> liveDataTxt = new MutableLiveData<>();
-    private MutableLiveData <String> liveNameTxt = new MutableLiveData<>();
-    private MutableLiveData <String> liveDate = new MutableLiveData<>();
-    private MutableLiveData<List<WholeDay>> wholeDays = new MutableLiveData<>();
-    private MutableLiveData<List<WholeDayText>> wholeDayTexts = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isFinished = new MutableLiveData<>(false);
-    private MutableLiveData<Boolean> isFinishedTexts = new MutableLiveData<>(false);
+    private final List<TypesModel> typesModelList = new ArrayList<>();
+    private final List<ServicesModel> servicesModelList = new ArrayList<>();
+    private final List<WholeDay> wholeDaysList = new ArrayList<>();
+    private final MutableLiveData<List<ServicesModel>> mutableServicesList = new MutableLiveData<>();
+    private final MutableLiveData<List<TypesModel>> mutableTypesList = new MutableLiveData<>();
+    private final MutableLiveData<String> liveDataTxt = new MutableLiveData<>();
+    private final MutableLiveData <String> liveNameTxt = new MutableLiveData<>();
+    private final MutableLiveData <String> liveDate = new MutableLiveData<>();
+    private final MutableLiveData<List<WholeDay>> wholeDays = new MutableLiveData<>();
+    private final MutableLiveData<List<WholeDayText>> wholeDayTexts = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isFinished = new MutableLiveData<>(false);
+    private final MutableLiveData<Boolean> isFinishedTexts = new MutableLiveData<>(false);
 
     /**
      * @return Current upper block name
@@ -70,58 +70,6 @@ public class CalendarViewModel extends ViewModel {
     public MutableLiveData<Boolean> getIsFinishedTexts() { return isFinishedTexts; }
 
     public void getByDate(String date, Context context){
-        /*String urlToGet = context.getResources().getString(MainActivity.API_PATH)+date;
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
-                urlToGet, null, response -> {
-            JSONArray types, services;
-            JSONObject jsonObject;
-            int id, type;
-            String  name;
-            try {
-                liveDataTxt.setValue(response.getString("dateTxt"));
-                liveNameTxt.setValue(response.getString("name"));
-                liveDate.setValue(response.getString("date"));
-                types = response.getJSONArray("types");
-                int i = 0;
-                while (i < types.length()) {
-                    jsonObject = types.getJSONObject(i);
-                    id = jsonObject.getInt("id");
-                    name = StringEscapeUtils.unescapeJava(jsonObject.getString("name"));
-                    typesModelList.add(new TypesModel(id, name));
-                    mutableTypesList.setValue(typesModelList);
-                    i++;
-                }
-                i=0;
-                services = response.getJSONArray("services");
-                while (i < services.length()) {
-                    jsonObject = services.getJSONObject(i);
-                    id = jsonObject.getInt("id");
-                    name = StringEscapeUtils.unescapeJava(jsonObject.getString("name"));
-                    type = jsonObject.getInt("type");
-                    servicesModelList.add(new ServicesModel(id, name, type, date));
-                    mutableServicesList.setValue(servicesModelList);
-                    i++;
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }, error -> {
-            if (error.networkResponse.statusCode == 500){
-                Log.e("500 ERROR", "isHostUnavailable = true");
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                Map<String, String> headers = new HashMap<>();
-                headers.put("User-Agent", context.getResources().getString(MainActivity.APP_VER));
-                headers.put("Connection", "keep-alive");
-                return headers;
-            }
-
-        };*/
-
         isFinishedTexts.setValue(false);
         isFinished.setValue(false);
         wholeDaysList.clear();

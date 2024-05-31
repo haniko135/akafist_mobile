@@ -15,11 +15,18 @@ import com.android.volley.Response;
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.fragments.PrayerFragment;
 import net.energogroup.akafist.models.PrayersModels;
+import net.energogroup.akafist.models.psaltir.PsalmModel;
+import net.energogroup.akafist.models.psaltir.SlavaModel;
 import net.energogroup.akafist.service.RequestServiceHandler;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A class containing data processing logic
@@ -29,9 +36,16 @@ import org.json.JSONObject;
  */
 public class PrayerViewModel extends ViewModel {
 
+    private final String TAG = "PRAYER_VIEW_MODEL";
     private PrayersModels prayersModel;
     private MutableLiveData<PrayersModels> prayersModelsMutableLiveData = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isRendered = new MutableLiveData<>(false);
+    private final MutableLiveData<Boolean> isRendered = new MutableLiveData<>(false);
+
+    private final List<PsalmModel> psalmModels = new ArrayList<>();
+    private String nameKaf, fullHtml, kafStart, kafEnd, text;
+    private Integer prev, next;
+
+    private final MutableLiveData<ArrayList<String>> prayerTextArrMLD = new MutableLiveData<>();
 
     /**
      * @return Current prayer
@@ -52,6 +66,10 @@ public class PrayerViewModel extends ViewModel {
     }
 
     public MutableLiveData<Boolean> getIsRendered() { return isRendered; }
+
+    public MutableLiveData<ArrayList<String>> getPrayerTextArrMLD() {
+        return prayerTextArrMLD;
+    }
 
     /**
      * This method sends a request to a remote server and receives a response, which later
@@ -80,10 +98,105 @@ public class PrayerViewModel extends ViewModel {
                         next = response.getInt("next");
                         prayersModel = new PrayersModels(name,html,prev, next);
                         prayersModelsMutableLiveData.setValue(prayersModel);
-                        isRendered.setValue(true);
+                        formattingText(prayersModel);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }, error -> Log.e("Response", error.getMessage()));
+    }
+
+    public void getJsonPsaltir(int blockId, int kafId, Context context){
+        isRendered.setValue(false);
+        String urlToGet = context.getString(MainActivity.API_PATH_PSALTIR)+ blockId +"/"+ kafId;
+
+        RequestServiceHandler serviceHandler = new RequestServiceHandler();
+        serviceHandler.addHeader("User-Agent", context.getString(MainActivity.APP_VER));
+        serviceHandler.addHeader("Connection", "keep-alive");
+
+        serviceHandler.objectRequest(urlToGet, Request.Method.GET,
+                null, JSONObject.class,
+                (Response.Listener<JSONObject>) response -> {
+                    JSONArray psalms;
+                    try {
+                        nameKaf = StringEscapeUtils.unescapeJava(response.getString("name"));
+                        kafStart = StringEscapeUtils.unescapeJava(response.getString("kafismaStart"));
+                        kafEnd = StringEscapeUtils.unescapeJava(response.getString("kafismaEnd"));
+                        text = StringEscapeUtils.unescapeJava(response.getString("text"));
+                        prev = response.getInt("prev");
+                        next = response.getInt("next");
+
+                        psalms = response.getJSONArray("psalms");
+                        if(psalms.length() > 0) {
+                            int i = 0;
+                            JSONObject obj;
+                            int id;
+                            String name1, text1;
+                            while (i < psalms.length() - 1) {
+                                obj = psalms.getJSONObject(i);
+                                id = obj.getInt("id");
+                                name1 = obj.getString("name");
+                                text1 = obj.getString("text");
+
+                                try {
+                                    JSONObject slava = obj.getJSONObject("slava");
+                                    SlavaModel slavaModel = new SlavaModel();
+                                    slavaModel.setText(slava.getString("text"));
+                                    if (!slava.isNull("prayer")) {
+                                        slavaModel.setPrayer(slava.getString("prayer"));
+                                    }
+                                    psalmModels.add(new PsalmModel(id, name1, text1, slavaModel));
+                                }catch (JSONException e){
+                                    psalmModels.add(new PsalmModel(id, name1, text1));
+                                }
+                                i++;
+                            }
+
+                            makingModel(nameKaf, kafStart, kafEnd,prev, next, psalmModels);
+                        }else {
+                            prayersModel = new PrayersModels(nameKaf, text, prev, next);
+                            prayersModelsMutableLiveData.setValue(prayersModel);
+                            formattingText(prayersModel);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }, error -> Log.e("Response", error.getMessage()));
+
+
+    }
+
+    private void makingModel(String name, String kafStart, String kafEnd, Integer prev,
+                             Integer next, List<PsalmModel> psalms) {
+        StringBuilder tempHtml = new StringBuilder();
+        tempHtml.append(kafStart);
+        for (PsalmModel item : psalms) {
+            tempHtml.append(item.getText());
+            if (item.getSlava() != null){
+                tempHtml.append(item.getSlava().getText());
+                if(!item.getSlava().getPrayer().isEmpty()){
+                    tempHtml.append(item.getSlava().getPrayer());
+                }
+            }
+        }
+        tempHtml.append(kafEnd);
+        fullHtml = tempHtml.toString();
+
+        prayersModel = new PrayersModels(name, fullHtml, prev, next);
+        prayersModelsMutableLiveData.setValue(prayersModel);
+        formattingText(prayersModel);
+    }
+
+
+    public void formattingText(PrayersModels prayersModel){
+        String[] prayerTexts = prayersModel.getTextPrayer().split("(?=<details>)");
+        ArrayList<String> prayerTextArr = new ArrayList<>();
+        for (String prayerText : prayerTexts) {
+            String[] temp = prayerText.split("(?<=</details>)");
+            if (temp.length != 0) {
+                prayerTextArr.addAll(Arrays.asList(temp));
+            }
+        }
+        prayerTextArrMLD.setValue(prayerTextArr);
+        isRendered.setValue(true);
     }
 }

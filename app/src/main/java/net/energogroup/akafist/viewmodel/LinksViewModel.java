@@ -40,8 +40,8 @@ import java.util.List;
  */
 public class LinksViewModel extends ViewModel {
     private List<LinksModel> linksModelList = new ArrayList<>();
-    private MutableLiveData<List<LinksModel>> mutableLinksDate = new MutableLiveData<>();
-    private List<LinksModel> downloadAudio = new ArrayList<>();
+    private final MutableLiveData<List<LinksModel>> mutableLinksDate = new MutableLiveData<>();
+    private final List<LinksModel> downloadAudio = new ArrayList<>();
     private int image;
 
     /**
@@ -129,10 +129,11 @@ public class LinksViewModel extends ViewModel {
         String fullPath = audioFilesDir+"/";
         File directory = new File(fullPath);
         File[] files = directory.listFiles();
-        if (files != null && files.length > 0)
-        for (File file : files) {
-            String filename = file.getName().substring(0,file.getName().length()-4);
-            downloadAudio.add(new LinksModel(fullPath + file.getName(), filename));
+        if (files != null){
+            for (File file : files) {
+                String filename = file.getName().substring(0,file.getName().length()-4);
+                downloadAudio.add(new LinksModel(fullPath + file.getName(), filename));
+            }
         }
         return downloadAudio;
     }

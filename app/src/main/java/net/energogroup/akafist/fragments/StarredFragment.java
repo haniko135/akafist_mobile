@@ -33,7 +33,7 @@ public class StarredFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if((AppCompatActivity)getActivity() != null) {
+        if(getActivity() != null) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Избранное");
         }
     }
@@ -59,8 +59,4 @@ public class StarredFragment extends Fragment {
         return starredBinding.getRoot();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
 }

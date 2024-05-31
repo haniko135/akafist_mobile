@@ -26,9 +26,9 @@ import java.util.List;
 public class StarredRecyclerAdapter extends RecyclerView.Adapter<StarredRecyclerAdapter.StarredViewHolder> {
 
     private MainActivity mainActivity;
-    private Fragment fragment;
-    private SQLiteDatabase db;
-    private List<ServicesModel> prayersModels;
+    private final Fragment fragment;
+    private final SQLiteDatabase db;
+    private final List<ServicesModel> prayersModels;
 
 
     public StarredRecyclerAdapter(MainActivity mainActivity, Fragment fragment, List<ServicesModel> prayersModels) {

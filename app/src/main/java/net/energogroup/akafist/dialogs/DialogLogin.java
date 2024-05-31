@@ -26,10 +26,10 @@ import java.util.Random;
 
 public class DialogLogin extends DialogFragment {
 
-    private LoginViewModel authService;
-    private FragmentLoginBinding loginBinding;
-    private SharedPreferences appPref;
-    private Fragment fragment;
+    private final LoginViewModel authService;
+    private final FragmentLoginBinding loginBinding;
+    private final SharedPreferences appPref;
+    private final Fragment fragment;
 
     public DialogLogin(LoginViewModel authService, FragmentLoginBinding loginBinding,
                        SharedPreferences appPref, LoginFragment fragment){

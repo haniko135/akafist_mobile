@@ -29,7 +29,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class DownloadFromYandexTask extends Worker {
 
     public File outFile;
-    private Context context;
+    private final Context context;
     private final String tag = "FILES_AND_STORAGE";
 
     private static final int successStringId = R.string.sucessDownload;
@@ -89,7 +89,7 @@ public class DownloadFromYandexTask extends Worker {
                 InputStream is = downConn.getInputStream();
 
                 byte[] buffer = new byte[1024];
-                int len1 = 0;//init length
+                int len1;//init length
                 while ((len1 = is.read(buffer)) != -1) {
                     fos.write(buffer, 0, len1);
                 }

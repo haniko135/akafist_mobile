@@ -8,7 +8,7 @@ import net.energogroup.akafist.recyclers.DragAndDropAdapter;
 
 public class ItemMoveCallback extends ItemTouchHelper.Callback {
 
-    private ItemTouchHelperContract mAdapter;
+    private final ItemTouchHelperContract mAdapter;
 
     public ItemMoveCallback(ItemTouchHelperContract mAdapters) {
         mAdapter = mAdapters;
@@ -56,8 +56,8 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public void clearView(RecyclerView recyclerView,
-                          RecyclerView.ViewHolder viewHolder) {
+    public void clearView(@NonNull RecyclerView recyclerView,
+                          @NonNull RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
 
         if (viewHolder instanceof DragAndDropAdapter.DragAndDropViewHolder) {

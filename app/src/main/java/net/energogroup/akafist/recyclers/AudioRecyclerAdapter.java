@@ -36,6 +36,7 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * RecyclerView adapter class with audio files
@@ -49,8 +50,8 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
     private static final int DELETE_REPEAT_ID = R.string.deleteRepeat;
     private static final int DELETE_FILE_ID = R.string.deleteFile;
     private static final String DEV_TAG = "AudioRecyclerAdapter";
-    private Fragment fragment;
-    private PlayerViewModel playerViewModel;
+    private final Fragment fragment;
+    private final PlayerViewModel playerViewModel;
     private LinksViewModel linksViewModel;
     private SQLiteDatabase db;
     private List<LinksModel> audios;
@@ -106,7 +107,6 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
      * @param parent   The ViewGroup into which the new View will be added after it is bound to
      *                 an adapter position.
      * @param viewType The view type of the new View.
-     * @return
      */
     @NonNull
     @Override
@@ -162,7 +162,7 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
         });
 
         //checking for the presence in the list of downloaded files
-        if (audiosDown !=null && audiosDown.size() != 0) {
+        if (audiosDown !=null && !audiosDown.isEmpty()) {
             if (audiosDown.contains(audios.get(position).getName())) {
                 Log.e("Download", "here");
                 Log.e("Name", audios.get(position).getName());
@@ -188,8 +188,7 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
                             }
                         }
                     } catch (IOException e) {
-                        e.printStackTrace();
-                        Log.e("ERROR_DELETE", e.getLocalizedMessage());
+                        Log.e("ERROR_DELETE", Objects.requireNonNull(e.getLocalizedMessage()));
                     }
                 });
             }

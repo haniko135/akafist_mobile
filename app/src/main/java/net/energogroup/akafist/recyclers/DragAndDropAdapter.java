@@ -27,10 +27,10 @@ import java.util.List;
 public class DragAndDropAdapter extends RecyclerView.Adapter<DragAndDropAdapter.DragAndDropViewHolder>
         implements ItemMoveCallback.ItemTouchHelperContract, ItemSwipeCallback.ItemSwipeContract{
 
-    private StartDragListner mStartDragListener;
-    private List<ServicesModel> textPrayers;
-    private TextPrayersDragDropListFragment fragment;
-    private SQLiteDatabase db;
+    private final StartDragListner mStartDragListener;
+    private final List<ServicesModel> textPrayers;
+    private final TextPrayersDragDropListFragment fragment;
+    private final SQLiteDatabase db;
 
     public List<ServicesModel> getTextPrayers() {
         return textPrayers;
