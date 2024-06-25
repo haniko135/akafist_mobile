@@ -64,4 +64,14 @@ public class ServicesModel {
     public String getDate() {
         return date;
     }
+
+    @Override
+    public String toString() {
+        return "ServicesModel{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", type=" + type +
+                ", date='" + date + '\'' +
+                '}';
+    }
 }

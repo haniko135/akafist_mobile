@@ -4,13 +4,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.android.volley.Request;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.Response;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
@@ -19,15 +20,19 @@ import net.energogroup.akafist.db.StarredDTO;
 import net.energogroup.akafist.models.PrayersModels;
 import net.energogroup.akafist.models.ServicesModel;
 import net.energogroup.akafist.models.StarredModel;
+import net.energogroup.akafist.models.psaltir.PsalmModel;
+import net.energogroup.akafist.models.psaltir.SlavaModel;
+import net.energogroup.akafist.service.RequestServiceHandler;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class StarredViewModel extends ViewModel {
@@ -37,6 +42,12 @@ public class StarredViewModel extends ViewModel {
     private final MutableLiveData<List<PrayersModels>> mutablePrayersCollection = new MutableLiveData<>();
     private MutableLiveData<PrayersModels> prayersModels = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isConverted = new MutableLiveData<>(false);
+    private final List<PsalmModel> psalmModels = new ArrayList<>();
+    private String nameKaf, fullHtml, kafStart, kafEnd, text;
+    private Integer prev, next;
+
+
+
 
     public MutableLiveData<List<ServicesModel>> getTextPrayers() { return textPrayers; }
 
@@ -126,81 +137,122 @@ public class StarredViewModel extends ViewModel {
         return isPrayerRule;
     }
 
-    public void convertToPrayersModels(Context context, SQLiteDatabase db, LifecycleOwner lifecycleOwner){
+    public MutableLiveData<List<PrayersModels>> convertToPrayersModels(Context context, SQLiteDatabase db){
         isConverted.setValue(false);
-        String[] selectionArgs = { "prayer_rule_col" };
 
-        db.delete(StarredDTO.TABLE_NAME,StarredDTO.COLUMN_NAME_OBJECT_TYPE + " LIKE ?",
-                selectionArgs);
 
-        List<ServicesModel> tempModels = prayerRules.getValue();
-        for (int i = 0; i < tempModels.size(); i++) {
-            if(i == 0){
-                getJsonSaved(tempModels.get(i).getDate(),
-                        tempModels.get(i).getId(), context,
-                        tempModels.get(i+1).getId(), 0);
-            } else if (i == tempModels.size()-1) {
-                getJsonSaved(tempModels.get(i).getDate(),
-                        tempModels.get(i).getId(), context,
-                        0, tempModels.get(i-1).getId());
-            }else {
-                getJsonSaved(tempModels.get(i).getDate(),
-                        tempModels.get(i).getId(), context,
-                        tempModels.get(i+1).getId(),
-                        tempModels.get(i-1).getId());
+        if(mutablePrayersCollection.getValue() == null) {
+            String[] selectionArgs = { "prayer_rule_col" };
+
+            db.delete(StarredDTO.TABLE_NAME,StarredDTO.COLUMN_NAME_OBJECT_TYPE + " LIKE ?",
+                    selectionArgs);
+
+            List<ServicesModel> tempModels = prayerRules.getValue();
+
+            for (int i = 0; i < tempModels.size(); i++) {
+
+                if (i == 0) {
+                    getJsonSaved(tempModels.get(i).getDate(),
+                            tempModels.get(i).getId(), context,
+                            tempModels.get(i + 1).getId(), 0);
+                } else if (i == tempModels.size() - 1) {
+                    getJsonSaved(tempModels.get(i).getDate(),
+                            tempModels.get(i).getId(), context,
+                            0, tempModels.get(i - 1).getId());
+                } else {
+                    getJsonSaved(tempModels.get(i).getDate(),
+                            tempModels.get(i).getId(), context,
+                            tempModels.get(i + 1).getId(),
+                            tempModels.get(i - 1).getId());
+                }
             }
         }
-
-        mutablePrayersCollection.observe(lifecycleOwner, prayersModels -> {
-            if(prayersModels.size() == tempModels.size()) {
-
-                Gson gson = new Gson();
-                String jsonString = gson.toJson(prayersModels);
-
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(StarredDTO.COLUMN_NAME_OBJECT_URL, jsonString);
-                contentValues.put(StarredDTO.COLUMN_NAME_OBJECT_TYPE, "prayer_rule_col");
-                contentValues.put(StarredDTO.COLUMN_NAME_ID, Math.round(Math.random() * 1000));
-                db.insert(StarredDTO.TABLE_NAME, null, contentValues);
-                isConverted.setValue(true);
-            }
-        });
+        //return isConverted;
+        return mutablePrayersCollection;
     }
 
     public void getJsonSaved(String date, int id, Context context, int nextId, int prevId){
         String urlToGet = context.getString(MainActivity.API_PATH)+date+"/"+id;
+        String urlToGetPsaltir = context.getString(MainActivity.API_PATH_PSALTIR)+1+"/"+id; //костыль что block_id всегда равен 1
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
-                urlToGet, null, response -> {
-            int idNew, prev, next;
-            String  name, html;
-            try {
-                idNew = id;
-                name = StringEscapeUtils.unescapeJava(response.getString("name"));
-                html = StringEscapeUtils.unescapeJava(response.getString("html"));
-                prev = prevId;
-                next = nextId;
+        RequestServiceHandler serviceHandler = new RequestServiceHandler();
+        serviceHandler.addHeader("User-Agent", context.getString(MainActivity.APP_VER));
+        serviceHandler.addHeader("Connection", "keep-alive");
 
-                prayersCollection.add(new PrayersModels(idNew,name,html,prev,next));
-                mutablePrayersCollection.setValue(prayersCollection);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }, Throwable::printStackTrace) {
-            @Override
-            public Map<String, String> getHeaders() {
-                Map<String, String> headers = new HashMap<>();
-                headers.put("User-Agent", context.getString(MainActivity.APP_VER));
-                headers.put("Connection", "keep-alive");
-                return headers;
-            }
+        if(!Objects.equals(date, "psaltir")) {
+            serviceHandler.objectRequest(urlToGet, Request.Method.GET,
+                    null, JSONObject.class,
+                    (Response.Listener<JSONObject>) response -> {
+                        int idNew, prev, next;
+                        String name, html;
+                        try {
+                            idNew = id;
+                            name = StringEscapeUtils.unescapeJava(response.getString("name"));
+                            html = StringEscapeUtils.unescapeJava(response.getString("html"));
+                            prev = prevId;
+                            next = nextId;
 
-        };
-        MainActivity.mRequestQueue.add(request);
+                            prayersCollection.add(new PrayersModels(idNew, name, html, prev, next));
+                            mutablePrayersCollection.setValue(prayersCollection);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }, error -> Log.e("Response", error.getMessage()));
+        }else {
+            serviceHandler.objectRequest(urlToGetPsaltir, Request.Method.GET,
+                    null, JSONObject.class,
+                    (Response.Listener<JSONObject>) response ->{
+                        JSONArray psalms;
+                        try {
+                            nameKaf = StringEscapeUtils.unescapeJava(response.getString("name"));
+                            kafStart = StringEscapeUtils.unescapeJava(response.getString("kafismaStart"));
+                            kafEnd = StringEscapeUtils.unescapeJava(response.getString("kafismaEnd"));
+                            text = StringEscapeUtils.unescapeJava(response.getString("text"));
+                            prev = prevId;
+                            next = nextId;
+
+                            psalms = response.getJSONArray("psalms");
+                            if(psalms.length() > 0) {
+                                int i = 0;
+                                JSONObject obj;
+                                int id2;
+                                String name1, text1;
+                                while (i < psalms.length() - 1) {
+                                    obj = psalms.getJSONObject(i);
+                                    id2 = obj.getInt("id");
+                                    name1 = obj.getString("name");
+                                    text1 = obj.getString("text");
+
+                                    try {
+                                        JSONObject slava = obj.getJSONObject("slava");
+                                        SlavaModel slavaModel = new SlavaModel();
+                                        slavaModel.setText(slava.getString("text"));
+                                        if (!slava.isNull("prayer")) {
+                                            slavaModel.setPrayer(slava.getString("prayer"));
+                                        }
+                                        psalmModels.add(new PsalmModel(id2, name1, text1, slavaModel));
+                                    }catch (JSONException e){
+                                        psalmModels.add(new PsalmModel(id2, name1, text1));
+                                    }
+                                    i++;
+                                }
+
+                                makingModel(id, nameKaf, kafStart, kafEnd,prev, next, psalmModels);
+                            }else {
+                                PrayersModels prayersModel = new PrayersModels(id, nameKaf, text, prev, next);
+                                prayersCollection.add(prayersModel);
+                                mutablePrayersCollection.setValue(prayersCollection);
+                            }
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+                    }, error -> Log.e("Response",error.getMessage()));
+        }
     }
 
     public MutableLiveData<PrayersModels> getPrayerModelsCollectionItem(int id, SQLiteDatabase db){
         Cursor getPrayerCollection = db.rawQuery("SELECT * FROM "+StarredDTO.TABLE_NAME+" WHERE "+StarredDTO.COLUMN_NAME_OBJECT_TYPE+"='prayer_rule_col'",null);
+        Log.w("STARRED", String.valueOf(getPrayerCollection.toString()));
         String jsonArr;
         if (getPrayerCollection.moveToFirst()){
             do{
@@ -216,6 +268,26 @@ public class StarredViewModel extends ViewModel {
             prayersModels = null;
         }
         getPrayerCollection.close();
+        Log.w("STARRED", prayersModels.toString());
         return prayersModels;
+    }
+
+    public void makingModel(int id, String name, String kafStart, String kafEnd, Integer prev, Integer next, List<PsalmModel> psalms) {
+        StringBuilder tempHtml = new StringBuilder();
+        tempHtml.append(kafStart);
+        for (PsalmModel item : psalms) {
+            tempHtml.append(item.getText());
+            if (item.getSlava() != null){
+                tempHtml.append(item.getSlava().getText());
+                if(!item.getSlava().getPrayer().isEmpty()){
+                    tempHtml.append(item.getSlava().getPrayer());
+                }
+            }
+        }
+        tempHtml.append(kafEnd);
+
+        PrayersModels prayersModel = new PrayersModels(id, name, tempHtml.toString(), prev, next);
+        prayersCollection.add(prayersModel);
+        mutablePrayersCollection.setValue(prayersCollection);
     }
 }

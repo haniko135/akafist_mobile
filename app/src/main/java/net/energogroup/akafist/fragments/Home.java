@@ -6,14 +6,21 @@ import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.MenuHost;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.FragmentKt;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -63,7 +70,7 @@ public class Home extends Fragment {
         Log.e("Home", "OnCreate");
         if(getActivity() != null) {
             initializeHome();
-            onBackPressed();
+            //onBackPressed();
         }
 
     }
@@ -146,16 +153,35 @@ public class Home extends Fragment {
         menuViewModel.getJson(getContext());
     }
 
-    /**
-     * Processing clicks on the "Back" button in the bottom panel
-     */
-    private void onBackPressed(){
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        MenuHost menuHost = requireActivity();
+        menuHost.addMenuProvider(new MenuProvider() {
             @Override
-            public void handleOnBackPressed() {
-                requireActivity().finish();
-                System.exit(0);
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menu.removeItem(R.id.menuContinueRead);
+                menu.removeItem(R.id.menuContinueMyRead);
             }
-        });
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                return false;
+            }
+        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
     }
+
+//    /**
+//     * Processing clicks on the "Back" button in the bottom panel
+//     */
+//    private void onBackPressed(){
+//        requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+//            @Override
+//            public void handleOnBackPressed() {
+//                requireActivity().finish();
+//                System.exit(0);
+//            }
+//        });
+//    }
 }

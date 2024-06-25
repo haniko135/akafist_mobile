@@ -2,4 +2,6 @@
 <resources>
     <item name="textPrayerDetailsId" type="id"/>
     <item name="textPrayerDetailsOtherId" type="id"/>
+    <item name="menuContinueRead" type="id"/>
+    <item name="menuContinueMyRead" type="id"/>
 </resources>

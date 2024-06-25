@@ -27,17 +27,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!--<TextView
-            android:id="@+id/text_prayer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="?attr/actionBarSize"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:fontFamily="@font/hirmos_ucs"
-            android:textSize="@dimen/text_prayer"
-            />-->
-
         <LinearLayout
             android:id="@+id/text_prayer"
             android:layout_width="match_parent"

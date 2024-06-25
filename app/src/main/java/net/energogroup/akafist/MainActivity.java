@@ -1,5 +1,7 @@
 package net.energogroup.akafist;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +10,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -39,6 +42,7 @@ import com.android.volley.toolbox.Volley;
 import net.energogroup.akafist.databinding.ActivityMainBinding;
 import net.energogroup.akafist.db.DBHelper;
 import net.energogroup.akafist.fragments.PlayerFragment;
+import net.energogroup.akafist.fragments.PrayerFragment;
 import net.energogroup.akafist.service.NetworkConnection;
 import net.energogroup.akafist.service.notification.NotificationForPlay;
 
@@ -74,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     public static RequestQueue mRequestQueue;
     public static NetworkConnection networkConnection;
     NavController navController;
+    private NavHostFragment navHostFragment;
     public Toolbar supToolBar;
     private DBHelper dbHelper;
 
@@ -99,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
         unableNightTheme();
         enableSupToolBar();
         enableNavigation();
+        enableOnBackPress();
         enableNetwork();
         enablePlayer();
         enablePermissions();
@@ -127,9 +133,21 @@ public class MainActivity extends AppCompatActivity {
      * This method creates the top panel
      */
     public void enableNavigation() {
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_fragment);
+        navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_fragment);
         navController = navHostFragment.getNavController();
         navController.setGraph(R.navigation.routes);
+    }
+
+    public void enableOnBackPress(){
+        OnBackPressedDispatcher onBackPressedDispatcher = getOnBackPressedDispatcher();
+        onBackPressedDispatcher.addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (!navController.popBackStack()) {
+                    finish();
+                }
+            }
+        });
     }
 
     /**
@@ -213,10 +231,18 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.action_global_calendarFragment);
             return true;
         } else if (item.getItemId() == R.id.quitApp) {
+            if(navHostFragment != null){
+                Fragment fragment = navHostFragment.getChildFragmentManager().getPrimaryNavigationFragment();
+                Log.w("MAIN_ACTIVITY", fragment.toString());
+                if(fragment instanceof PrayerFragment){
+                    ((PrayerFragment) fragment).saveData();
+                }
+            }
             MainActivity.this.finish();
             System.exit(0);
+            return true;
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -238,6 +264,14 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onDestroy() {
+        if(navHostFragment != null){
+            Fragment fragment = navHostFragment.getChildFragmentManager().getPrimaryNavigationFragment();
+            Log.d("MAIN_ACTIVITY", fragment.toString());
+            if(fragment instanceof PrayerFragment){
+                ((PrayerFragment) fragment).saveData();
+            }
+        }
+
         super.onDestroy();
     }
 

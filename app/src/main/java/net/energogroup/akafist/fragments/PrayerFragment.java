@@ -10,20 +10,29 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.text.HtmlCompat;
+import androidx.core.view.MenuHost;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.FragmentKt;
 
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
 
 import net.energogroup.akafist.databinding.FragmentPrayerBinding;
+import net.energogroup.akafist.service.SavePrayerData;
 import net.energogroup.akafist.viewmodel.PrayerViewModel;
 import net.energogroup.akafist.viewmodel.StarredViewModel;
 
@@ -36,7 +45,7 @@ import java.util.regex.Pattern;
  * @author Nastya
  * @version 1.0.0
  */
-public class PrayerFragment extends Fragment {
+public class PrayerFragment extends Fragment implements SavePrayerData {
 
     private final String TAG = "PRAYER_FRAGMENT";
     private float textSize;
@@ -76,7 +85,7 @@ public class PrayerFragment extends Fragment {
             mode = getArguments().getString("mode");
         }
         MainActivity mainActivity = (MainActivity) getActivity();
-        db = mainActivity.getDbHelper().getReadableDatabase();
+        db = mainActivity.getDbHelper().getWritableDatabase();
 
         ViewModelProvider provider = new ViewModelProvider(this);
         starredViewModel = provider.get(StarredViewModel.class);
@@ -100,6 +109,20 @@ public class PrayerFragment extends Fragment {
             prevMenu = getArguments().getString("prevMenu");
             blockId = getArguments().getInt("blockId");
             prayerId = getArguments().getInt("prayerId");
+
+            MenuHost menuHost = requireActivity();
+            menuHost.addMenuProvider(new MenuProvider() {
+                @Override
+                public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                    menu.removeItem(R.id.menuContinueRead);
+                    menu.removeItem(R.id.menuContinueMyRead);
+                }
+
+                @Override
+                public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                    return false;
+                }
+            }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
         }
     }
 
@@ -145,43 +168,47 @@ public class PrayerFragment extends Fragment {
 
 
                 prayerViewModel.getPrayerTextArrMLD()
-                        .observe(getViewLifecycleOwner(), prayerTextArr -> prayerTextArr.forEach(a->{
-                            TextView textView = new TextView(getContext());
-                            textView.setTextSize(convertToPx());
-                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                                Typeface textFont = getResources().getFont(R.font.hirmos_ucs);
-                                textView.setTypeface(textFont);
-                            }
-
-                            if(a.contains("<details>")){
-                                Pattern pattern = Pattern.compile( "<summary>(.*?)</summary>" );
-                                Matcher m = pattern.matcher(a);
-                                if(m.find()) {
-                                    textView.setText(m.group(1));
-                                    textView.setId(R.id.textPrayerDetailsId);
-
-                                    String s = a.split(m.group(1))[1];
-                                    TextView other = new TextView(getContext());
-                                    other.setText(HtmlCompat.fromHtml(s, HtmlCompat.FROM_HTML_MODE_COMPACT));
-                                    other.setId(R.id.textPrayerDetailsOtherId);
-                                    other.setTextSize(convertToPx());
-                                    other.setVisibility(View.GONE);
-                                    binding.textPrayer.addView(textView);
-                                    binding.textPrayer.addView(other);
-
-                                    textView.setOnClickListener(view -> {
-                                        if(other.getVisibility() == View.VISIBLE){
-                                            other.setVisibility(View.GONE);
-                                        }else {
-                                            other.setVisibility(View.VISIBLE);
-                                        }
-                                    });
+                        .observe(getViewLifecycleOwner(), prayerTextArr -> {
+                            prayerTextArr.forEach(a->{
+                                TextView textView = new TextView(getContext());
+                                textView.setTextSize(convertToPx());
+                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                    Typeface textFont = getResources().getFont(R.font.hirmos_ucs);
+                                    textView.setTypeface(textFont);
                                 }
-                            }else {
-                                textView.setText(HtmlCompat.fromHtml(a, HtmlCompat.FROM_HTML_MODE_COMPACT));
-                                binding.textPrayer.addView(textView);
-                            }
-                        }));
+
+                                if(a.contains("<details>")){
+                                    Pattern pattern = Pattern.compile( "<summary>(.*?)</summary>" );
+                                    Matcher m = pattern.matcher(a);
+                                    if(m.find()) {
+                                        textView.setText(m.group(1));
+                                        textView.setId(R.id.textPrayerDetailsId);
+
+                                        String s = a.split(m.group(1))[1];
+                                        TextView other = new TextView(getContext());
+                                        other.setText(HtmlCompat.fromHtml(s, HtmlCompat.FROM_HTML_MODE_COMPACT));
+                                        other.setId(R.id.textPrayerDetailsOtherId);
+                                        other.setTextSize(convertToPx());
+                                        other.setVisibility(View.GONE);
+                                        binding.textPrayer.addView(textView);
+                                        binding.textPrayer.addView(other);
+
+                                        textView.setOnClickListener(view -> {
+                                            if(other.getVisibility() == View.VISIBLE){
+                                                other.setVisibility(View.GONE);
+                                            }else {
+                                                other.setVisibility(View.VISIBLE);
+                                            }
+                                        });
+                                    }
+                                }else {
+                                    textView.setText(HtmlCompat.fromHtml(a, HtmlCompat.FROM_HTML_MODE_COMPACT));
+                                    binding.textPrayer.addView(textView);
+                                }
+                            });
+
+                            prayerViewModel.setIsRenderedTextArr(true);
+                        });
 
 
 
@@ -281,6 +308,59 @@ public class PrayerFragment extends Fragment {
         });
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        saveData();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        int scrollPosition;
+        if(Objects.equals(mode,"prayer_read")) {
+            scrollPosition = appPref.getInt("app_pref_prayer_scroll_pos_" + prevMenu + "/" + prayerId, 0);
+            Log.d(TAG, "saved data: app_pref_prayer_scroll_pos_   "+scrollPosition);
+        } else if (Objects.equals(mode,"psaltir_read")) {
+            scrollPosition = appPref.getInt("app_pref_psaltir_scroll_pos_" + blockId + "/" + prayerId, 0);
+            Log.d(TAG, "saved data: app_pref_psaltir_scroll_pos_   "+scrollPosition);
+        } else if (Objects.equals(mode, "prayer_rule")) {
+            scrollPosition = appPref.getInt("app_pref_prayerrule_scroll_pos_" + prevMenu + "/" + prayerId, 0);
+            Log.d(TAG, "saved data: app_pref_prayerrule_scroll_pos_   "+scrollPosition);
+        } else {
+            scrollPosition = 0;
+        }
+
+        prayerViewModel.getIsRenderedTextArr().observe(getViewLifecycleOwner(), aBoolean -> {
+            if(aBoolean){
+                binding.scrollPrayer.post(() -> binding.scrollPrayer.scrollTo(0, scrollPosition));
+            }
+        });
+    }
+
+    @Override
+    public void saveData() {
+        SharedPreferences.Editor editor = appPref.edit();
+        int windowHeight = binding.textPrayer.getHeight() - binding.scrollPrayer.getScrollY();
+        int scrollPosition = windowHeight > binding.scrollPrayer.getHeight() ? binding.scrollPrayer.getScrollY() : 0;
+
+        if(Objects.equals(mode,"prayer_read")) {
+            editor.putInt("app_pref_prayer_scroll_pos_" + prevMenu + "/" + prayerId, scrollPosition);
+            editor.putLong("app_pref_prayer_scroll_pos_" + prevMenu + "/" + prayerId+"_timestamp", System.currentTimeMillis());
+            Log.w(TAG, "saved data: app_pref_prayer_scroll_pos_    "+scrollPosition);
+        } else if (Objects.equals(mode,"psaltir_read")) {
+            editor.putInt("app_pref_psaltir_scroll_pos_" + blockId + "/" + prayerId, scrollPosition);
+            editor.putLong("app_pref_psaltir_scroll_pos_" + blockId + "/" + prayerId+"_timestamp", System.currentTimeMillis());
+            Log.w(TAG, "saved data: app_pref_psaltir_scroll_pos_    "+scrollPosition);
+        } else if (Objects.equals(mode, "prayer_rule")) {
+            editor.putInt("app_pref_prayerrule_scroll_pos_" + prevMenu + "/" + prayerId, scrollPosition);
+            editor.putLong("app_pref_prayerrule_scroll_pos_" + prevMenu + "/" + prayerId+"_timestamp", System.currentTimeMillis());
+            Log.w(TAG, "saved data: app_pref_prayerrule_scroll_pos_    "+scrollPosition);
+        }
+        boolean success = editor.commit();
+        Log.w(TAG, "saveData: "+success);
     }
 
     /**

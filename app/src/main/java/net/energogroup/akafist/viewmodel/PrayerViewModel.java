@@ -27,6 +27,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A class containing data processing logic
@@ -40,6 +41,7 @@ public class PrayerViewModel extends ViewModel {
     private PrayersModels prayersModel;
     private MutableLiveData<PrayersModels> prayersModelsMutableLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isRendered = new MutableLiveData<>(false);
+    private final MutableLiveData<Boolean> isRenderedTextArr = new MutableLiveData<>(false);
 
     private final List<PsalmModel> psalmModels = new ArrayList<>();
     private String nameKaf, fullHtml, kafStart, kafEnd, text;
@@ -63,12 +65,21 @@ public class PrayerViewModel extends ViewModel {
 
     public void setPrayersModelsMutableLiveData(MutableLiveData<PrayersModels> prayersModels) {
         this.prayersModelsMutableLiveData = prayersModels;
+        formattingText(Objects.requireNonNull(this.prayersModelsMutableLiveData.getValue()));
     }
 
     public MutableLiveData<Boolean> getIsRendered() { return isRendered; }
 
     public MutableLiveData<ArrayList<String>> getPrayerTextArrMLD() {
         return prayerTextArrMLD;
+    }
+
+    public void setIsRenderedTextArr(Boolean isRenderedTextArrTemp){
+        this.isRenderedTextArr.setValue(isRenderedTextArrTemp);
+    }
+
+    public MutableLiveData<Boolean> getIsRenderedTextArr() {
+        return isRenderedTextArr;
     }
 
     /**
@@ -165,7 +176,8 @@ public class PrayerViewModel extends ViewModel {
 
     }
 
-    private void makingModel(String name, String kafStart, String kafEnd, Integer prev,
+
+    public void makingModel(String name, String kafStart, String kafEnd, Integer prev,
                              Integer next, List<PsalmModel> psalms) {
         StringBuilder tempHtml = new StringBuilder();
         tempHtml.append(kafStart);
@@ -179,9 +191,8 @@ public class PrayerViewModel extends ViewModel {
             }
         }
         tempHtml.append(kafEnd);
-        fullHtml = tempHtml.toString();
 
-        prayersModel = new PrayersModels(name, fullHtml, prev, next);
+        prayersModel = new PrayersModels(name, tempHtml.toString(), prev, next);
         prayersModelsMutableLiveData.setValue(prayersModel);
         formattingText(prayersModel);
     }
