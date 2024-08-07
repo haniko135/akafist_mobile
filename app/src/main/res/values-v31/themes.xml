@@ -6,12 +6,13 @@
         <item name="colorPrimary">@color/beige_500</item>
         <item name="colorPrimaryVariant">@color/beige_700</item>
         <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnContainer">@color/block_main</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/pink_200</item>
         <item name="colorSecondaryVariant">@color/pink_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">?attr/colorOnContainer</item>
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

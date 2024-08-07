@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import net.energogroup.akafist.AkafistApplication;
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
 import net.energogroup.akafist.databinding.FragmentChurchBinding;
@@ -78,7 +79,8 @@ public class ChurchFragment extends Fragment {
         churchViewModel = provider.get(ChurchViewModel.class);
         if(getActivity() != null){
             ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(dateTxt);
-            churchViewModel.getJson(date, getContext());
+            //churchViewModel.getJson(date, getContext());
+            churchViewModel.getJson(((AkafistApplication)getActivity().getApplication()).prAPI,date);
         }
 
         appPref = requireActivity().getSharedPreferences(MainActivity.APP_PREFERENCES,Context.MODE_PRIVATE);

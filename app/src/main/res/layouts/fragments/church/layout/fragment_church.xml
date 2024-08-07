@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/block_main_text"
     tools:context="net.energogroup.akafist.fragments.ChurchFragment">
 
     <ImageView
@@ -24,10 +25,10 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
-        android:fontFamily="@font/cyrillic_old"
+        android:fontFamily="@font/montserrat_light"
         android:text=""
         android:textAlignment="center"
-        android:textSize="28sp"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -38,10 +39,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
-        android:fontFamily="@font/cyrillic_old"
+        android:fontFamily="@font/montserrat_light"
         android:text=""
         android:textAlignment="center"
-        android:textSize="24sp"
+        android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/churchDateTxt" />

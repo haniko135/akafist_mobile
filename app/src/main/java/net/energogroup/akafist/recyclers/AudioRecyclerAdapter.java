@@ -4,7 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Typeface;
 import android.os.Build;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +32,7 @@ import net.energogroup.akafist.db.StarredDTO;
 import net.energogroup.akafist.fragments.LinksFragment;
 import net.energogroup.akafist.fragments.PlayerFragment;
 import net.energogroup.akafist.models.LinksModel;
+import net.energogroup.akafist.ui.CustomTypefaceSpan;
 import net.energogroup.akafist.viewmodel.LinksViewModel;
 import net.energogroup.akafist.viewmodel.PlayerViewModel;
 
@@ -37,6 +43,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * RecyclerView adapter class with audio files
@@ -124,7 +132,8 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull AudioViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        holder.audiosListItem.setText(audios.get(position).getName());
+        holder.audiosListItem.setText(makeDates(audios.get(position).getName()));
+
         Animation blinkAnimation = AnimationUtils.loadAnimation(fragment.getContext().getApplicationContext(), R.anim.blink);
         holder.audiosListItem.startAnimation(blinkAnimation);
 
@@ -258,6 +267,29 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
     public int getItemCount() {
         return audios.size();
     }
+
+
+    private SpannableString makeDates(String text) {
+        SpannableString spannableString = new SpannableString(text);
+
+        // Регулярное выражение для поиска дат формата DD.MM.YYYY
+        String regex = "\\b\\d{1,2}\\.\\d{2}\\.\\d{2,4}\\b";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(text);
+
+        Typeface customTypeface = ResourcesCompat.getFont(fragment.getContext(), R.font.montserrat_alternates_bold);
+
+        while (matcher.find()) {
+            int start = matcher.start();
+            int end = matcher.end();
+
+            CustomTypefaceSpan typefaceSpan = new CustomTypefaceSpan(customTypeface);
+            spannableString.setSpan(typefaceSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        return spannableString;
+    }
+
 
     /**
      * The internal class responsible for the display of the RecyclerView element

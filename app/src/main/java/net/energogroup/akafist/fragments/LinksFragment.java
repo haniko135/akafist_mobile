@@ -16,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import net.energogroup.akafist.AkafistApplication;
+import net.energogroup.akafist.api.PrAPI;
 import net.energogroup.akafist.dialogs.DialogLinks;
 import net.energogroup.akafist.MainActivity;
 
@@ -37,6 +39,7 @@ import java.util.stream.Collectors;
  */
 public class LinksFragment extends Fragment {
 
+    private PrAPI prAPI;
     private String date;
     private String dateTxt;
     private String finalPath;
@@ -164,7 +167,7 @@ public class LinksFragment extends Fragment {
             downloadAudio = linksViewModel.getDownload(finalPath);
             downloadAudioNames.clear();
             downloadAudio.forEach(it -> downloadAudioNames.add(it.getName()));
-            linksViewModel.retryGetJson(date, getLayoutInflater());
+            linksViewModel.retryGetJson(date, getLayoutInflater(), prAPI);
             binding.linksRoot.setRefreshing(false);
         });
 
@@ -186,11 +189,14 @@ public class LinksFragment extends Fragment {
                 db = mainActivity.getDbHelper().getReadableDatabase();
             }
         }
+
+        prAPI = ((AkafistApplication)getActivity().getApplication()).prAPI;
+
         ViewModelProvider provider = new ViewModelProvider(this);
         linksViewModel = provider.get(LinksViewModel.class);
         if(getActivity() != null) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(dateTxt);
-            linksViewModel.getJson(date, getLayoutInflater());
+            linksViewModel.getJson(date, getLayoutInflater(), prAPI);
             if(isStarredFrag != null){
                 if(starredAudio != null){
                     starredAudio.clear();

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import net.energogroup.akafist.AkafistApplication;
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.databinding.FragmentSkypesBinding;
 import net.energogroup.akafist.recyclers.SkypesRecyclerAdapter;
@@ -52,7 +53,8 @@ public class SkypesFragment extends Fragment {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Конференции по группам");
             ViewModelProvider provider = new ViewModelProvider(this);
             skypeViewModel = provider.get(SkypeViewModel.class);
-            skypeViewModel.getJsonSkype(getContext());
+            //skypeViewModel.getJsonSkype(getContext());
+            skypeViewModel.getJsonSkype(((AkafistApplication)getActivity().getApplication()).prAPI);
         }
     }
 
@@ -77,12 +79,13 @@ public class SkypesFragment extends Fragment {
                     if(isChecked){
                         skypesBinding.noInternet3.setVisibility(View.INVISIBLE);
                         skypesBinding.skypesList.setLayoutManager(new LinearLayoutManager(getContext()));
-                        skypeViewModel.getSkypesMutableLiveData().observe(getViewLifecycleOwner(),
-                                skypesConfs -> skypesBinding.skypesList.setAdapter(new SkypesRecyclerAdapter(skypesConfs, this)));
 
                         skypesBinding.confsList.setLayoutManager(new LinearLayoutManager(getContext()));
                         skypeViewModel.getConfsMutableLiveData().observe(getViewLifecycleOwner(),
-                                skypesConfs -> skypesBinding.confsList.setAdapter(new SkypesRecyclerAdapter(skypesConfs ,this)));
+                                skypesConfs -> {
+                                    SkypesRecyclerAdapter adapter  = new SkypesRecyclerAdapter(skypesConfs, this);
+                                    skypesBinding.confsList.setAdapter(adapter);
+                                });
                     } else {
                         skypesBinding.noInternet3.setVisibility(View.VISIBLE);
                     }

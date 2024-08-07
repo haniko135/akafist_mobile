@@ -22,7 +22,7 @@
     <style name="block_main_line">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/block_main_border</item>
-        <item name="android:layout_width">265dp</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:textAlignment">center</item>
     </style>
     <style name="menuBlock">
@@ -64,19 +64,22 @@
     </style>
 
     <style name="supportToolbar">
-        <item name="android:background">@color/beige_500</item>
+        <item name="android:background">@color/white</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:padding">4dp</item>
     </style>
     <style name="supportToolbarLand">
-        <item name="android:background">@color/beige_500</item>
+        <item name="android:background">@color/white</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:padding">4dp</item>
     </style>
     <style name="titleToolbar">
-        <item name="android:fontFamily">@font/cyrillic_old</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/montserrat_bold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/block_main</item>
+        <item name="android:layout_marginLeft">12dp</item>
     </style>
 
     <style name="molitvyPlayer">
@@ -90,10 +93,11 @@
     
     <style name="everyday_time_style">
         <item name="android:layout_marginTop">8dp</item>
-        <item name="android:fontFamily">@font/cyrillic_old</item>
+        <item name="android:fontFamily">@font/montserrat_medium</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/borderBottom</item>
         <item name="android:paddingStart">5dp</item>
         <item name="android:paddingEnd">5dp</item>
         <item name="android:paddingBottom">3dp</item>
@@ -106,5 +110,8 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:textAlignment">center</item>
     </style>
-    
+    <style name="Widget.BottomNavigationView"
+        parent="Widget.Design.BottomNavigationView">
+        <item name="fontFamily">@font/montserrat_medium</item>
+    </style>
 </resources>

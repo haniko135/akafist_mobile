@@ -52,9 +52,18 @@ public class PsaltirRecyclerAdapter extends RecyclerView.Adapter<PsaltirRecycler
     public void onBindViewHolder(@NonNull PsaltirViewHolder holder, int position) {
         holder.getPsaltirListItem().setText(psaltirKafismaModels.get(position).getName());
         holder.getPsaltirListItem().setOnClickListener(view -> {
-            if(psaltirKafismaModels.get(position).getDesc().startsWith("https://")){
-                Intent toSite = new Intent(Intent.ACTION_VIEW, Uri.parse(psaltirKafismaModels.get(position).getDesc()));
-                fr.getContext().startActivity(toSite);
+            if(psaltirKafismaModels.get(position).getDesc() != null) {
+                if (psaltirKafismaModels.get(position).getDesc().startsWith("https://")) {
+                    Intent toSite = new Intent(Intent.ACTION_VIEW, Uri.parse(psaltirKafismaModels.get(position).getDesc()));
+                    fr.getContext().startActivity(toSite);
+                }
+                else {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("blockId", blockId);
+                    bundle.putInt("prayerId", psaltirKafismaModels.get(position).getId());
+                    bundle.putString("mode", "psaltir_read");
+                    FragmentKt.findNavController(fr).navigate(R.id.action_psaltirFragment_to_prayerFragment, bundle);
+                }
             }else {
                 Bundle bundle = new Bundle();
                 bundle.putInt("blockId", blockId);

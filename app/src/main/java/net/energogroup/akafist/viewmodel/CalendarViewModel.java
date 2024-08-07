@@ -10,6 +10,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 
 import net.energogroup.akafist.MainActivity;
+import net.energogroup.akafist.api.AzbykaAPI;
 import net.energogroup.akafist.models.ServicesModel;
 import net.energogroup.akafist.models.TypesModel;
 import net.energogroup.akafist.models.azbykaAPI.WholeDay;
@@ -28,8 +29,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+
 public class CalendarViewModel extends ViewModel {
 
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private final List<TypesModel> typesModelList = new ArrayList<>();
     private final List<ServicesModel> servicesModelList = new ArrayList<>();
     private final List<WholeDay> wholeDaysList = new ArrayList<>();
@@ -68,6 +74,12 @@ public class CalendarViewModel extends ViewModel {
     }
 
     public MutableLiveData<Boolean> getIsFinishedTexts() { return isFinishedTexts; }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        compositeDisposable.clear();
+    }
 
     public void getByDate(String date, Context context){
         isFinishedTexts.setValue(false);
@@ -120,6 +132,22 @@ public class CalendarViewModel extends ViewModel {
                 }, error -> Log.e("Response", error.getMessage()));
     }
 
+    /*public void getByDate(AzbykaAPI azbykaAPI, String date){
+        compositeDisposable.add(
+                azbykaAPI.getDay(date)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(success -> {
+                            if(!success.getPriorities().getItems().isEmpty()) {
+                                WholeDay wholeDay = new WholeDay();
+                                ArrayList<String> memorialDayTitles = new ArrayList<>();
+
+                            }
+
+                        }, error -> {})
+        );
+    }
+*/
     public void getTextsByDate(String date, Context context, WholeDay wholeDay){
         String urlToGet = context.getResources().getString(MainActivity.AZBYKA_API_PATH)+"cache_dates?date[exact]="+date;
 

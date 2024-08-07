@@ -13,6 +13,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 
 import net.energogroup.akafist.MainActivity;
+import net.energogroup.akafist.api.PrAPI;
 import net.energogroup.akafist.fragments.SkypesFragment;
 import net.energogroup.akafist.fragments.SkypesBlocksFragment;
 import net.energogroup.akafist.models.SkypesConfs;
@@ -26,6 +27,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * A class containing data processing logic
  * {@link SkypesBlocksFragment} and {@link SkypesFragment}
@@ -33,17 +38,11 @@ import java.util.List;
  * @version 1.0.0
  */
 public class SkypeViewModel extends ViewModel {
-    private final List<SkypesConfs> skypeModels = new ArrayList<>();
-    private final List<SkypesConfs> confsModels = new ArrayList<>();
-    private final MutableLiveData<List<SkypesConfs>> skypesMutableLiveData = new MutableLiveData<>();
-    private final MutableLiveData<List<SkypesConfs>> confsMutableLiveData = new MutableLiveData<>();
 
-    /**
-     * @return Current conference groups
-     */
-    public MutableLiveData<List<SkypesConfs>> getSkypesMutableLiveData() {
-        return skypesMutableLiveData;
-    }
+    private final String TAG = "SKYPE_VM";
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final List<SkypesConfs> confsModels = new ArrayList<>();
+    private final MutableLiveData<List<SkypesConfs>> confsMutableLiveData = new MutableLiveData<>();
 
     /**
      * @return Current conferences
@@ -57,47 +56,18 @@ public class SkypeViewModel extends ViewModel {
      * used in the method {@link SkypesFragment#onCreateView(LayoutInflater, ViewGroup, Bundle)}.
      * This method is used in {@link SkypesFragment#onCreate(Bundle)}
      */
-    public void getJsonSkype(Context context){
-        String urlToGet2 = context.getString(MainActivity.API_PATH)+"skype";
-
-        RequestServiceHandler serviceHandler = new RequestServiceHandler();
-        serviceHandler.addHeader("User-Agent", context.getString(MainActivity.APP_VER));
-        serviceHandler.addHeader("Connection", "keep-alive");
-
-        serviceHandler.objectRequest(urlToGet2, Request.Method.GET,
-                null, JSONObject.class,
-                (Response.Listener<JSONObject>) response -> {
-                    JSONArray confs, blocks;
-                    JSONObject jsonObject;
-                    int id;
-                    String  name, url;
-                    try {
-                        confs = response.getJSONArray("confs");
-                        int i = 0;
-                        while (i < confs.length()) {
-                            jsonObject = confs.getJSONObject(i);
-                            id = jsonObject.getInt("id");
-                            name = StringEscapeUtils.unescapeJava(jsonObject.getString("name"));
-                            url = StringEscapeUtils.unescapeJava(jsonObject.getString("url"));
-                            confsModels.add(new SkypesConfs(id, name, url));
-                            confsMutableLiveData.setValue(confsModels);
-                            i++;
-                        }
-                        i=0;
-                        blocks = response.getJSONArray("blocks");
-                        while (i < (blocks).length()) {
-                            jsonObject = blocks.getJSONObject(i);
-                            id = jsonObject.getInt("id");
-                            name = StringEscapeUtils.unescapeJava(jsonObject.getString("name"));
-                            skypeModels.add(new SkypesConfs(id, name));
-                            skypesMutableLiveData.setValue(skypeModels);
-                            i++;
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }, error -> Log.e("Response", error.getMessage()));
+    public void getJsonSkype(PrAPI prAPI){
+        compositeDisposable.add(prAPI.getSkype()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(success -> {
+                    confsModels.addAll(success.getConfs());
+                    confsModels.addAll(success.getBlocks());
+                    confsMutableLiveData.setValue(confsModels);
+                }, error->{
+                   Log.e(TAG, error.getLocalizedMessage());
+                })
+        );
     }
 
     /**
@@ -107,37 +77,16 @@ public class SkypeViewModel extends ViewModel {
      * @param urlId Conference ID
      * @exception JSONException
      */
-    public void getJsonSkypeBlock(int urlId, Context context){
-        String urlToGet = context.getString(MainActivity.API_PATH)+"skype/"+urlId;
-
-        RequestServiceHandler serviceHandler = new RequestServiceHandler();
-        serviceHandler.addHeader("User-Agent", context.getString(MainActivity.APP_VER));
-        serviceHandler.addHeader("Connection", "keep-alive");
-
-        serviceHandler.objectRequest(urlToGet, Request.Method.GET,
-                null, JSONObject.class,
-                (Response.Listener<JSONObject>) response -> {
-                    JSONArray confs;
-                    JSONObject jsonObject;
-                    int id;
-                    String  name, url;
-                    try {
-                        confs = response.getJSONArray("confs");
-                        int i = 0;
-                        while (i <= confs.length()) {
-                            jsonObject = confs.getJSONObject(i);
-                            id = jsonObject.getInt("id");
-                            name = StringEscapeUtils.unescapeJava(jsonObject.getString("name"));
-                            url = StringEscapeUtils.unescapeJava(jsonObject.getString("url"));
-                            confsModels.add(new SkypesConfs(id, name, url));
-                            confsMutableLiveData.setValue(confsModels);
-                            Log.e("PARSING", name);
-                            i++;
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }, error -> Log.e("Response", error.getMessage()));
+    public void getJsonSkypeBlock(PrAPI prAPI, int urlId){
+        compositeDisposable.add(prAPI.getSkypeBlock(String.valueOf(urlId))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(success -> {
+                    confsModels.addAll(success.getConfs());
+                    confsMutableLiveData.setValue(confsModels);
+                }, error->{
+                    Log.e(TAG, error.getLocalizedMessage());
+                })
+        );
     }
 }

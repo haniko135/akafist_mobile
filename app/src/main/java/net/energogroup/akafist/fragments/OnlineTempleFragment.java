@@ -24,7 +24,6 @@ import net.energogroup.akafist.R;
 import net.energogroup.akafist.databinding.FragmentOnlineTempleBinding;
 import net.energogroup.akafist.dialogs.DialogOnlineTemple;
 import net.energogroup.akafist.service.NetworkConnection;
-import net.energogroup.akafist.viewmodel.OnlineTempleViewModel;
 
 /**
  * Class of online broadcasts of divine services
@@ -36,7 +35,6 @@ public class OnlineTempleFragment extends Fragment {
     public FragmentOnlineTempleBinding onlineTempleBinding;
     private String urlSound;
     private NetworkConnection networkConnection;
-    private OnlineTempleViewModel onlineTempleViewModel;
     private SharedPreferences appPref;
 
     private boolean playPauseState = true;
@@ -64,7 +62,7 @@ public class OnlineTempleFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ViewModelProvider provider = new ViewModelProvider(this);
-        onlineTempleViewModel = provider.get(OnlineTempleViewModel.class);
+        //onlineTempleViewModel = provider.get(OnlineTempleViewModel.class);
         if(((AppCompatActivity)getActivity()).getSupportActionBar() != null) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Трансляция общины");
             networkConnection = new NetworkConnection(getContext().getApplicationContext());
@@ -100,7 +98,6 @@ public class OnlineTempleFragment extends Fragment {
                     if (isChecked) {
                         onlineTempleBinding.noInternet2.setVisibility(View.INVISIBLE);
                         urlSound = getArguments().getString("urlToSound");
-                        onlineTempleViewModel.setUrlSound(urlSound);
                         Log.d("ONLINE_TEMPLE_ERROR", urlSound);
                         String soundTitle = getArguments().getString("soundTitle");
                         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(soundTitle);

@@ -70,7 +70,6 @@ public class Home extends Fragment {
         Log.e("Home", "OnCreate");
         if(getActivity() != null) {
             initializeHome();
-            //onBackPressed();
         }
 
     }
@@ -96,15 +95,6 @@ public class Home extends Fragment {
         Home fr = this;
         homeBinding.homeRv.setLayoutManager(new LinearLayoutManager(getContext()));
         menuViewModel.getMutableLiveData().observe(getViewLifecycleOwner(), homeBlocksModels -> homeBinding.homeRv.setAdapter(new HomeRecyclerAdapter(homeBlocksModels, fr)));
-
-        homeBinding.homeSwipe.setOnRefreshListener(() -> {
-            homeBinding.homeSwipe.setRefreshing(true);
-            if(menuViewModel.getBlocksModelList().size() == 7) {
-                menuViewModel.getJson(getContext());
-                menuViewModel.getMutableLiveData().observe(getViewLifecycleOwner(), homeBlocksModels -> homeBinding.homeRv.setAdapter(new HomeRecyclerAdapter(homeBlocksModels, fr)));
-            }
-            homeBinding.homeSwipe.setRefreshing(false);
-        });
 
         SharedPreferences.Editor editor = appPref.edit();
         editor.apply();
@@ -149,8 +139,6 @@ public class Home extends Fragment {
         }else {
             menuViewModel.firstSet("energogroup", getContext());
         }
-
-        menuViewModel.getJson(getContext());
     }
 
     @Override
@@ -171,17 +159,4 @@ public class Home extends Fragment {
             }
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
     }
-
-//    /**
-//     * Processing clicks on the "Back" button in the bottom panel
-//     */
-//    private void onBackPressed(){
-//        requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-//            @Override
-//            public void handleOnBackPressed() {
-//                requireActivity().finish();
-//                System.exit(0);
-//            }
-//        });
-//    }
 }

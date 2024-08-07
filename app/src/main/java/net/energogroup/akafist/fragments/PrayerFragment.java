@@ -2,7 +2,9 @@ package net.energogroup.akafist.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Observable;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
@@ -25,12 +27,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
+import net.energogroup.akafist.AkafistApplication;
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
 
+import net.energogroup.akafist.api.PrAPI;
 import net.energogroup.akafist.databinding.FragmentPrayerBinding;
 import net.energogroup.akafist.service.SavePrayerData;
 import net.energogroup.akafist.viewmodel.PrayerViewModel;
@@ -40,6 +43,12 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * Prayer Fragment Class
  * @author Nastya
@@ -48,6 +57,7 @@ import java.util.regex.Pattern;
 public class PrayerFragment extends Fragment implements SavePrayerData {
 
     private final String TAG = "PRAYER_FRAGMENT";
+    private PrAPI prAPI;
     private float textSize;
     private String prevMenu, mode;
     private int prayerId, blockId;
@@ -79,19 +89,27 @@ public class PrayerFragment extends Fragment implements SavePrayerData {
         super.onCreate(savedInstanceState);
         appPref = requireActivity().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
         if(getArguments() != null){
+            Log.d(TAG, getArguments().toString());
             prevMenu = getArguments().getString("prevMenu");
             prayerId = getArguments().getInt("prayerId");
             blockId = getArguments().getInt("blockId");
             mode = getArguments().getString("mode");
         }
+        prAPI = ((AkafistApplication)getActivity().getApplication()).prAPI;
+
         MainActivity mainActivity = (MainActivity) getActivity();
         db = mainActivity.getDbHelper().getWritableDatabase();
 
         ViewModelProvider provider = new ViewModelProvider(this);
         starredViewModel = provider.get(StarredViewModel.class);
         prayerViewModel = provider.get(PrayerViewModel.class);
-        if(Objects.equals(mode,"prayer_read")) prayerViewModel.getJson(prevMenu, prayerId, getContext());
-        else if (Objects.equals(mode,"psaltir_read")) prayerViewModel.getJsonPsaltir(blockId, prayerId, getContext());
+        if(Objects.equals(mode,"prayer_read")) {
+            prayerViewModel.getJson(prAPI, prevMenu, String.valueOf(prayerId));
+        }
+        else if (Objects.equals(mode,"psaltir_read")){
+            //prayerViewModel.getJsonPsaltir(blockId, prayerId, getContext());
+            prayerViewModel.getJsonPsaltir(prAPI, blockId, prayerId);
+        }
         else if (Objects.equals(mode, "prayer_rule")) {
             prayerViewModel.setPrayersModelsMutableLiveData(starredViewModel.getPrayerModelsCollectionItem(prayerId, db));
         }
@@ -163,7 +181,7 @@ public class PrayerFragment extends Fragment implements SavePrayerData {
                         .observe(getViewLifecycleOwner(),
                                 prayersModels -> ((AppCompatActivity)getActivity())
                                         .getSupportActionBar()
-                                        .setTitle(prayersModels.getNamePrayer())
+                                        .setTitle(prayersModels.getName())
                         );
 
 
@@ -183,12 +201,14 @@ public class PrayerFragment extends Fragment implements SavePrayerData {
                                     if(m.find()) {
                                         textView.setText(m.group(1));
                                         textView.setId(R.id.textPrayerDetailsId);
+                                        textView.setTextColor(Color.DKGRAY);
 
                                         String s = a.split(m.group(1))[1];
                                         TextView other = new TextView(getContext());
                                         other.setText(HtmlCompat.fromHtml(s, HtmlCompat.FROM_HTML_MODE_COMPACT));
                                         other.setId(R.id.textPrayerDetailsOtherId);
                                         other.setTextSize(convertToPx());
+                                        other.setTextColor(Color.BLACK);
                                         other.setVisibility(View.GONE);
                                         binding.textPrayer.addView(textView);
                                         binding.textPrayer.addView(other);
@@ -202,6 +222,7 @@ public class PrayerFragment extends Fragment implements SavePrayerData {
                                         });
                                     }
                                 }else {
+                                    textView.setTextColor(Color.BLACK);
                                     textView.setText(HtmlCompat.fromHtml(a, HtmlCompat.FROM_HTML_MODE_COMPACT));
                                     binding.textPrayer.addView(textView);
                                 }
@@ -349,18 +370,14 @@ public class PrayerFragment extends Fragment implements SavePrayerData {
         if(Objects.equals(mode,"prayer_read")) {
             editor.putInt("app_pref_prayer_scroll_pos_" + prevMenu + "/" + prayerId, scrollPosition);
             editor.putLong("app_pref_prayer_scroll_pos_" + prevMenu + "/" + prayerId+"_timestamp", System.currentTimeMillis());
-            Log.w(TAG, "saved data: app_pref_prayer_scroll_pos_    "+scrollPosition);
         } else if (Objects.equals(mode,"psaltir_read")) {
             editor.putInt("app_pref_psaltir_scroll_pos_" + blockId + "/" + prayerId, scrollPosition);
             editor.putLong("app_pref_psaltir_scroll_pos_" + blockId + "/" + prayerId+"_timestamp", System.currentTimeMillis());
-            Log.w(TAG, "saved data: app_pref_psaltir_scroll_pos_    "+scrollPosition);
         } else if (Objects.equals(mode, "prayer_rule")) {
             editor.putInt("app_pref_prayerrule_scroll_pos_" + prevMenu + "/" + prayerId, scrollPosition);
             editor.putLong("app_pref_prayerrule_scroll_pos_" + prevMenu + "/" + prayerId+"_timestamp", System.currentTimeMillis());
-            Log.w(TAG, "saved data: app_pref_prayerrule_scroll_pos_    "+scrollPosition);
         }
         boolean success = editor.commit();
-        Log.w(TAG, "saveData: "+success);
     }
 
     /**

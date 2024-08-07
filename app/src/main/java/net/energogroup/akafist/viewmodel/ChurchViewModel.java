@@ -13,6 +13,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 
 import net.energogroup.akafist.MainActivity;
+import net.energogroup.akafist.api.PrAPI;
 import net.energogroup.akafist.fragments.ChurchFragment;
 import net.energogroup.akafist.models.ServicesModel;
 import net.energogroup.akafist.models.TypesModel;
@@ -26,6 +27,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * A class containing data processing logic of
  * {@link ChurchFragment}, {@link TypesModel} and {@link ServicesModel}
@@ -33,12 +38,14 @@ import java.util.List;
  * @version 1.0.0
  */
 public class ChurchViewModel extends ViewModel{
+
+    private static final String TAG = "CHURCH_VM";
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private final List<TypesModel> typesModelList = new ArrayList<>();
     private final MutableLiveData<List<TypesModel>> mutableTypesList = new MutableLiveData<>();
     private final List<ServicesModel> servicesModelList = new ArrayList<>();
     private final MutableLiveData<List<ServicesModel>> mutableServicesList = new MutableLiveData<>();
     private final MutableLiveData<Integer> curId = new MutableLiveData<>();
-    private String dateTxt, nameTxt;
     private final MutableLiveData <String> liveDataTxt = new MutableLiveData<>();
     private final MutableLiveData <String> liveNameTxt = new MutableLiveData<>();
 
@@ -84,6 +91,12 @@ public class ChurchViewModel extends ViewModel{
         return liveNameTxt;
     }
 
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        compositeDisposable.clear();
+    }
+
     /**
      * This method sends a request to a remote server and receives a response,
      * which is subsequently used in the method {@link ChurchFragment#onCreateView(LayoutInflater, ViewGroup, Bundle)}.
@@ -91,50 +104,30 @@ public class ChurchViewModel extends ViewModel{
      * @param date Page type
      * @exception JSONException
      */
-    public void getJson(String date, Context context){
-        String urlToGet = context.getResources().getString(MainActivity.API_PATH)+date;
+    public void getJson(PrAPI prAPI, String date){
+        compositeDisposable.add(
+                prAPI.getDate(date)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(success -> {
+                            liveDataTxt.setValue(success.getDateTxt());
+                            liveNameTxt.setValue(success.getName());
 
-        RequestServiceHandler serviceHandler = new RequestServiceHandler();
-        serviceHandler.addHeader("User-Agent", context.getResources().getString(MainActivity.APP_VER));
-        serviceHandler.addHeader("Connection", "keep-alive");
-
-        serviceHandler.objectRequest(urlToGet, Request.Method.GET,
-                null, JSONObject.class,
-                (Response.Listener<JSONObject>) response -> {
-                    JSONArray types, services;
-                    JSONObject jsonObject;
-                    int id, type;
-                    String  name;
-                    try {
-                        dateTxt = response.getString("dateTxt");
-                        nameTxt = response.getString("name");
-                        liveDataTxt.setValue(dateTxt);
-                        liveNameTxt.setValue(nameTxt);
-                        types = response.getJSONArray("types");
-                        int i = 0;
-                        while (i < types.length()) {
-                            jsonObject = types.getJSONObject(i);
-                            id = jsonObject.getInt("id");
-                            name = StringEscapeUtils.unescapeJava(jsonObject.getString("name"));
-                            typesModelList.add(new TypesModel(id, name));
+                            typesModelList.addAll(success.getTypes());
+                            typesModelList.forEach(typesModel -> {
+                                typesModel.setName(StringEscapeUtils.unescapeJava(typesModel.getName()));
+                            });
                             mutableTypesList.setValue(typesModelList);
-                            i++;
-                        }
-                        i=0;
-                        services = response.getJSONArray("services");
-                        while (i < services.length()) {
-                            jsonObject = services.getJSONObject(i);
-                            id = jsonObject.getInt("id");
-                            name = StringEscapeUtils.unescapeJava(jsonObject.getString("name"));
-                            type = jsonObject.getInt("type");
-                            servicesModelList.add(new ServicesModel(id, name, type, date));
-                            mutableServicesList.setValue(servicesModelList);
-                            i++;
-                        }
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }, error -> Log.e("Response", error.getMessage()));
+                            servicesModelList.addAll(success.getServices());
+                            servicesModelList.forEach(servicesModel -> {
+                                servicesModel.setName(StringEscapeUtils.unescapeJava(servicesModel.getName()));
+                                servicesModel.setDate(success.getDate());
+                            });
+                            mutableServicesList.setValue(servicesModelList);
+                        }, error-> {
+                            Log.e(TAG, error.getMessage());
+                        })
+        );
     }
 }

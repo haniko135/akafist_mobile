@@ -23,10 +23,4 @@
         android:clickable="true"
         android:focusable="true"
         android:background="?android:attr/selectableItemBackground"/>
-
-    <TextView
-        android:id="@+id/horizontal_line"
-        android:layout_height="3dp"
-        style="@style/underline_block"
-        android:visibility="invisible"/>
 </LinearLayout>

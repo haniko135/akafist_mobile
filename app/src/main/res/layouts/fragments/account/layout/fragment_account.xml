@@ -14,51 +14,123 @@
         android:orientation="horizontal"
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
+
+        <ImageView
+            android:id="@+id/userImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:contentDescription="@string/account_icon"
+            android:padding="8dp"
+            android:src="@drawable/ic_baseline_person_24"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/userImage"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:contentDescription="@string/account_icon"
-                android:padding="8dp"
-                android:src="@drawable/baseline_person_24"
-                app:layout_constraintEnd_toStartOf="@+id/guideline"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/userName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/cyrillic_old"
-                android:text=""
-                android:textColor="@color/block_main"
-                android:layout_gravity="center"
-                android:textAlignment="center"
-                app:layout_constraintEnd_toEndOf="@+id/userImage"
-                app:layout_constraintStart_toStartOf="@+id/userImage"
-                app:layout_constraintTop_toBottomOf="@+id/userImage" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
+            app:layout_constraintGuide_begin="163dp" />
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/cyrillic_old"
+            android:text=""
+            android:textAlignment="center"
+            android:textColor="@color/block_main"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="112dp" />
+
+        <LinearLayout
+            android:id="@+id/account_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/account_info_block"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline2">
+
+            <TextView
+                android:id="@+id/starred"
+                style="@style/menuBlock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/cyrillic_old"
+                android:text="@string/starred_name"
+                android:textColor="@color/block_main"
+                app:layout_constraintBottom_toTopOf="@+id/molitva_pravilo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/account_info_block" />
+
+            <TextView
+                android:id="@+id/molitva_pravilo"
+                style="@style/menuBlock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/cyrillic_old"
+                android:text="@string/molitva_pravilo_name"
+                android:textColor="@color/block_main"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/starred" />
+
+            <TextView
+                android:id="@+id/calendar_account"
+                style="@style/menuBlock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/cyrillic_old"
+                android:text="@string/account_calendar_name"
+                android:textColor="@color/block_main"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/molitva_pravilo" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/account_menu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/account_info_block">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="6dp">
 
             <TextView
                 android:id="@+id/account_birthday_title"
@@ -73,37 +145,37 @@
                 app:layout_constraintStart_toStartOf="@+id/guideline"
                 app:layout_constraintTop_toTopOf="@id/account_info_block" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="6dp">
+            <EditText
+                android:id="@+id/account_birthday"
+                style="@style/menuBlock"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/cyrillic_old"
+                android:hint="@string/account_birthday_hint"
+                android:inputType="date"
+                android:textSize="14sp" />
 
-                <EditText
-                    android:id="@+id/account_birthday"
-                    style="@style/menuBlock"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/cyrillic_old"
-                    android:hint="@string/account_birthday_hint"
-                    android:inputType="date"
-                    android:textSize="14sp"
-                    android:layout_weight="1"/>
-                <ImageButton
-                    android:id="@+id/account_edit_birthday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/account_edit_icon"
-                    android:focusable="true"
-                    android:src="@drawable/baseline_done_24"
-                    android:padding="3dp"
-                    android:layout_gravity="center"
-                    android:clickable="true"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    android:background="@android:color/transparent"
-                    />
-            </LinearLayout>
+            <ImageButton
+                android:id="@+id/account_edit_birthday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:clickable="true"
+                android:contentDescription="@string/account_edit_icon"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:padding="3dp"
+                android:src="@drawable/ic_baseline_done_24" />
+        </LinearLayout>
 
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="6dp">
 
             <TextView
                 android:id="@+id/account_nameday_title"
@@ -118,102 +190,29 @@
                 app:layout_constraintStart_toStartOf="@+id/guideline"
                 app:layout_constraintTop_toBottomOf="@+id/account_birthday" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="6dp">
-                <EditText
-                    android:id="@+id/account_nameday"
-                    style="@style/menuBlock"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/cyrillic_old"
-                    android:hint="@string/account_nameday_hint"
-                    android:inputType="date"
-                    android:textSize="14sp"
-                    android:layout_weight="1"/>
-                <ImageButton
-                    android:id="@+id/account_edit_nameday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="3dp"
-                    android:src="@drawable/baseline_done_24"
-                    android:layout_gravity="center"
-                    android:focusable="true"
-                    android:clickable="true"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    android:background="@android:color/transparent"
-                    />
-            </LinearLayout>
+            <EditText
+                android:id="@+id/account_nameday"
+                style="@style/menuBlock"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/cyrillic_old"
+                android:hint="@string/account_nameday_hint"
+                android:inputType="date"
+                android:textSize="14sp" />
+
+            <ImageButton
+                android:id="@+id/account_edit_nameday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:padding="3dp"
+                android:src="@drawable/ic_baseline_done_24" />
         </LinearLayout>
-
-
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="163dp" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <LinearLayout
-        android:id="@+id/account_menu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="8dp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/account_info_block">
-
-        <TextView
-            android:id="@+id/starred"
-            style="@style/menuBlock"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="16dp"
-            android:fontFamily="@font/cyrillic_old"
-            android:text="@string/starred_name"
-            android:textColor="@color/block_main"
-            app:layout_constraintBottom_toTopOf="@+id/molitva_pravilo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/account_info_block" />
-
-        <TextView
-            android:id="@+id/molitva_pravilo"
-            style="@style/menuBlock"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/cyrillic_old"
-            android:text="@string/molitva_pravilo_name"
-            android:textColor="@color/block_main"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/starred" />
-
-        <TextView
-            android:id="@+id/calendar_account"
-            style="@style/menuBlock"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/cyrillic_old"
-            android:text="@string/account_calendar_name"
-            android:textColor="@color/block_main"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/molitva_pravilo" />
     </LinearLayout>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

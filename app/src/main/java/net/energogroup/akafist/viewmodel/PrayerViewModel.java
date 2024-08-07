@@ -13,9 +13,11 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 
 import net.energogroup.akafist.MainActivity;
+import net.energogroup.akafist.api.PrAPI;
 import net.energogroup.akafist.fragments.PrayerFragment;
 import net.energogroup.akafist.models.PrayersModels;
 import net.energogroup.akafist.models.psaltir.PsalmModel;
+import net.energogroup.akafist.models.psaltir.PsaltirPrayerModel;
 import net.energogroup.akafist.models.psaltir.SlavaModel;
 import net.energogroup.akafist.service.RequestServiceHandler;
 
@@ -29,6 +31,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * A class containing data processing logic
  * {@link PrayerFragment} and {@link PrayersModels}
@@ -38,6 +44,8 @@ import java.util.Objects;
 public class PrayerViewModel extends ViewModel {
 
     private final String TAG = "PRAYER_VIEW_MODEL";
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
     private PrayersModels prayersModel;
     private MutableLiveData<PrayersModels> prayersModelsMutableLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isRendered = new MutableLiveData<>(false);
@@ -82,6 +90,12 @@ public class PrayerViewModel extends ViewModel {
         return isRenderedTextArr;
     }
 
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        compositeDisposable.clear();
+    }
+
     /**
      * This method sends a request to a remote server and receives a response, which later
      * used in methods {@link PrayerFragment#onCreateView(LayoutInflater, ViewGroup, Bundle)}.
@@ -89,34 +103,27 @@ public class PrayerViewModel extends ViewModel {
      * @param date - Previous page type
      * @param id - Prayer id
      */
-    public void getJson(String date, int id, Context context){
+    public void getJson(PrAPI prAPI, String date, String id){
         isRendered.setValue(false);
-        String urlToGet = context.getString(MainActivity.API_PATH)+date+"/"+id;
-
-        RequestServiceHandler serviceHandler = new RequestServiceHandler();
-        serviceHandler.addHeader("User-Agent", context.getString(MainActivity.APP_VER));
-        serviceHandler.addHeader("Connection", "keep-alive");
-
-        serviceHandler.objectRequest(urlToGet, Request.Method.GET,
-                null, JSONObject.class,
-                (Response.Listener<JSONObject>) response -> {
-                    int prev, next;
-                    String  name, html;
-                    try {
-                        name = StringEscapeUtils.unescapeJava(response.getString("name"));
-                        html = StringEscapeUtils.unescapeJava(response.getString("html"));
-                        prev = response.getInt("prev");
-                        next = response.getInt("next");
-                        prayersModel = new PrayersModels(name,html,prev, next);
-                        prayersModelsMutableLiveData.setValue(prayersModel);
-                        formattingText(prayersModel);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }, error -> Log.e("Response", error.getMessage()));
+        compositeDisposable.add(
+                prAPI.getText(date, id)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(success -> {
+                            prayersModel = new PrayersModels();
+                            prayersModel.setName(StringEscapeUtils.unescapeJava(success.getName()));
+                            prayersModel.setHtml(StringEscapeUtils.unescapeJava(success.getHtml()));
+                            prayersModel.setNext(success.getNext());
+                            prayersModel.setPrev(success.getPrev());
+                            prayersModelsMutableLiveData.setValue(prayersModel);
+                            formattingText(prayersModel);
+                        }, error->{
+                            Log.e(TAG, error.getLocalizedMessage());
+                        })
+        );
     }
 
-    public void getJsonPsaltir(int blockId, int kafId, Context context){
+    /*public void getJsonPsaltir(int blockId, int kafId, Context context){
         isRendered.setValue(false);
         String urlToGet = context.getString(MainActivity.API_PATH_PSALTIR)+ blockId +"/"+ kafId;
 
@@ -172,8 +179,64 @@ public class PrayerViewModel extends ViewModel {
                         e.printStackTrace();
                     }
                 }, error -> Log.e("Response", error.getMessage()));
+    }*/
 
+    public void getJsonPsaltir(PrAPI prAPI, int blockId, int kafId){
+        isRendered.setValue(false);
+        compositeDisposable.add(
+                prAPI.getPsaltirPrayers(String.valueOf(blockId), String.valueOf(kafId))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(success -> {
+                            PsaltirPrayerModel psaltirPrayerModel = new PsaltirPrayerModel();
+                            psaltirPrayerModel.setName(StringEscapeUtils.unescapeJava(success.getName()));
 
+                            // ДОДЕЛАТЬ В АПИ НОРМ ВЫВОД!!!
+                            if(!success.getKafismaStart().isEmpty()){
+                                psaltirPrayerModel.setKafismaStart(StringEscapeUtils.unescapeJava(success.getKafismaStart()));
+                            }
+                            if(!success.getKafismaEnd().isEmpty()){
+                                psaltirPrayerModel.setKafismaEnd(StringEscapeUtils.unescapeJava(success.getKafismaEnd()));
+                            }
+
+                            psaltirPrayerModel.setText(StringEscapeUtils.unescapeJava(success.getText()));
+                            psaltirPrayerModel.setPrev(success.getPrev());
+                            psaltirPrayerModel.setNext(success.getNext());
+
+                            if(!success.getPsalms().isEmpty()){
+                                success.getPsalms().forEach(psalmModel -> {
+                                    Log.d(TAG, "PsalmModel: " + psalmModel.toString());
+                                    if(psalmModel.getSlava() != null){
+                                        SlavaModel slavaModel = new SlavaModel();
+                                        slavaModel.setText(psalmModel.getSlava().getText());
+                                        if(psalmModel.getSlava().getPrayer() != null){
+                                            slavaModel.setPrayer(psalmModel.getSlava().getPrayer());
+                                        }
+                                        Log.d(TAG, "SlavaModel: " + slavaModel.toString());
+                                        psalmModel.setSlava(slavaModel);
+                                    }
+                                });
+                                psaltirPrayerModel.setPsalms(success.getPsalms());
+
+                                makingModel(psaltirPrayerModel.getName(),
+                                        psaltirPrayerModel.getKafismaStart(),
+                                        psaltirPrayerModel.getKafismaEnd(),
+                                        psaltirPrayerModel.getPrev(),
+                                        psaltirPrayerModel.getNext(),
+                                        psaltirPrayerModel.getPsalms());
+                            }else {
+                                prayersModel = new PrayersModels(
+                                        psaltirPrayerModel.getName(),
+                                        psaltirPrayerModel.getText(),
+                                        psaltirPrayerModel.getPrev(),
+                                        psaltirPrayerModel.getNext());
+                                prayersModelsMutableLiveData.setValue(prayersModel);
+                                formattingText(prayersModel);
+                            }
+                        }, error->{
+                            Log.e(TAG, error.getLocalizedMessage());
+                        })
+        );
     }
 
 
@@ -199,7 +262,7 @@ public class PrayerViewModel extends ViewModel {
 
 
     public void formattingText(PrayersModels prayersModel){
-        String[] prayerTexts = prayersModel.getTextPrayer().split("(?=<details>)");
+        String[] prayerTexts = prayersModel.getHtml().split("(?=<details>)");
         ArrayList<String> prayerTextArr = new ArrayList<>();
         for (String prayerText : prayerTexts) {
             String[] temp = prayerText.split("(?<=</details>)");

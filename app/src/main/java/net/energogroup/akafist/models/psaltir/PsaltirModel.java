@@ -5,38 +5,43 @@ import androidx.annotation.NonNull;
 import java.util.List;
 
 public class PsaltirModel {
-    private final int id;
-    private final String name;
-    private final String desc;
-    private List<PsaltirKafismaModel> psaltirKafismas;
+    private int id;
+    private String name;
+    private String desc;
+    private List<PsaltirKafismaModel> kafismas;
 
-    public PsaltirModel(int id, String name, String desc, List<PsaltirKafismaModel> psaltirKafismas) {
-        this.id = id;
-        this.name = name;
-        this.desc = desc;
-        this.psaltirKafismas = psaltirKafismas;
-    }
+    public PsaltirModel() { }
 
-    public PsaltirModel(int id, String name, String desc) {
+    public void setId(int id) {
         this.id = id;
-        this.name = name;
-        this.desc = desc;
     }
 
     public int getId() {
         return id;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
     public String getDesc() {
         return desc;
     }
 
-    public List<PsaltirKafismaModel> getPsaltirKafismas() {
-        return psaltirKafismas;
+    public void setKafismas(List<PsaltirKafismaModel> kafismas) {
+        this.kafismas = kafismas;
+    }
+
+    public List<PsaltirKafismaModel> getKafismas() {
+        return kafismas;
     }
 
     @NonNull
@@ -46,7 +51,7 @@ public class PsaltirModel {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", desc='" + desc + '\'' +
-                ", psaltirKafismas=" + psaltirKafismas +
+                ", psaltirKafismas=" + kafismas +
                 '}';
     }
 }

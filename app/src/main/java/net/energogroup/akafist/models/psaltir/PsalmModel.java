@@ -23,6 +23,10 @@ public class PsalmModel {
         return text;
     }
 
+    public void setSlava(SlavaModel slava) {
+        this.slava = slava;
+    }
+
     public SlavaModel getSlava() {
         return slava;
     }

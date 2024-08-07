@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import net.energogroup.akafist.AkafistApplication;
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.databinding.FragmentSkypesBlocksBinding;
 import net.energogroup.akafist.recyclers.SkypesGridRecyclerAdapter;
@@ -59,7 +60,8 @@ public class SkypesBlocksFragment extends Fragment {
             ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(nameTitle);
             ViewModelProvider provider = new ViewModelProvider(this);
             skypeViewModel = provider.get(SkypeViewModel.class);
-            skypeViewModel.getJsonSkypeBlock(urlId, getContext());
+            //skypeViewModel.getJsonSkypeBlock(urlId, getContext());
+            skypeViewModel.getJsonSkypeBlock(((AkafistApplication)getActivity().getApplication()).prAPI, urlId);
         }
     }
 

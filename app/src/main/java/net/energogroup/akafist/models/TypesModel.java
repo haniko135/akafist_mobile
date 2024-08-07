@@ -8,7 +8,7 @@ package net.energogroup.akafist.models;
  */
 public class TypesModel {
     private final int id;
-    private final String name;
+    private String name;
 
     /**
      * Class Constructor
@@ -32,5 +32,9 @@ public class TypesModel {
      */
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

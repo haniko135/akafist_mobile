@@ -18,22 +18,8 @@
             app:popEnterAnim="@anim/enter_right"
             app:popExitAnim="@anim/exit_left" />
         <action
-            android:id="@+id/action_home2_to_onlineTempleFragment"
-            app:destination="@id/onlineTempleFragment"
-            app:enterAnim="@anim/enter_left"
-            app:exitAnim="@anim/exit_right"
-            app:popEnterAnim="@anim/enter_right"
-            app:popExitAnim="@anim/exit_left" />
-        <action
             android:id="@+id/action_home2_to_linksFragment"
             app:destination="@id/linksFragment"
-            app:enterAnim="@anim/enter_left"
-            app:exitAnim="@anim/exit_right"
-            app:popEnterAnim="@anim/enter_right"
-            app:popExitAnim="@anim/exit_left" />
-        <action
-            android:id="@+id/action_home2_to_churchFragment"
-            app:destination="@id/churchFragment"
             app:enterAnim="@anim/enter_left"
             app:exitAnim="@anim/exit_right"
             app:popEnterAnim="@anim/enter_right"
@@ -46,8 +32,8 @@
             app:popEnterAnim="@anim/enter_right"
             app:popExitAnim="@anim/exit_left" />
         <action
-            android:id="@+id/action_home2_to_psaltirFragment"
-            app:destination="@id/psaltirFragment" />
+            android:id="@+id/action_home2_to_menuOnlineTempleFragment"
+            app:destination="@id/menuOnlineTempleFragment" />
     </fragment>
     <action
         android:id="@+id/action_global_home2"
@@ -88,6 +74,9 @@
             app:exitAnim="@anim/exit_right"
             app:popEnterAnim="@anim/enter_right"
             app:popExitAnim="@anim/exit_left" />
+        <action
+            android:id="@+id/action_onlineTempleFragment_to_menuOnlineTempleFragment"
+            app:destination="@id/menuOnlineTempleFragment" />
     </fragment>
     <fragment
         android:id="@+id/linksFragment"
@@ -271,5 +260,23 @@
         <action
             android:id="@+id/action_psaltirFragment_to_prayerFragment"
             app:destination="@id/prayerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/menuOnlineTempleFragment"
+        android:name="net.energogroup.akafist.fragments.MenuOnlineTempleFragment"
+        android:label="fragment_menu_online_temple"
+        tools:layout="@layout/fragment_menu_online_temple" >
+        <action
+            android:id="@+id/action_menuOnlineTempleFragment_to_onlineTempleFragment"
+            app:destination="@id/onlineTempleFragment" />
+        <action
+            android:id="@+id/action_menuOnlineTempleFragment_to_churchFragment"
+            app:destination="@id/churchFragment" />
+        <action
+            android:id="@+id/action_menuOnlineTempleFragment_to_psaltirFragment"
+            app:destination="@id/psaltirFragment" />
+        <action
+            android:id="@+id/action_menuOnlineTempleFragment_to_linksFragment"
+            app:destination="@id/linksFragment" />
     </fragment>
 </navigation>

@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.FragmentKt;
 import androidx.recyclerview.widget.RecyclerView;
@@ -55,98 +57,70 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull HomeViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        //getting tomorrow's date
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
-        Date tom = calendar.getTime();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", new Locale("ru"));
-        String tomorrow = dateFormat.format(tom);
+        holder.homeBlockListTitle.setText(homeBlocksModels.get(position).getDateTxt());
 
-        holder.getHomeBlockTextUp().setText(homeBlocksModels.get(position).getDateTxt());
-        holder.getHomeBlockTextDown().setText(homeBlocksModels.get(position).getName());
-
-        if(homeBlocksModels.get(position).getDate() != null){
-            holder.getHomeBlockTextUp().setText(homeBlocksModels.get(position).getDateTxt());
-            holder.getHomeBlockTextDown().setText(homeBlocksModels.get(position).getName());
-            //link assignment
-            if (homeBlocksModels.get(position).getDate().equals("skypeConfs")){
-                homeBlocksModels.get(position).setLinks(R.id.action_home2_to_skypesFragment);
-            }
-            if (homeBlocksModels.get(position).getDate().equals("onlineMichael")){
-                homeBlocksModels.get(position).setLinks(R.string.link_Michael);
-                homeBlocksModels.get(position).setAdditions("Трансляция арх. Михаила");
-            }
-            if (homeBlocksModels.get(position).getDate().equals("onlinePokrovaPls")){
-                homeBlocksModels.get(position).setLinks(R.string.link_Pokrova_Pls);
-                homeBlocksModels.get(position).setAdditions("Трансляция Покрова Пр. Богородицы");
-            }
-            if (homeBlocksModels.get(position).getDate().equals("onlineVarvara")){
-                homeBlocksModels.get(position).setLinks(R.string.link_Varvara);
-                homeBlocksModels.get(position).setAdditions("Трансляция св. Варвары");
-            }
-            if (homeBlocksModels.get(position).getDate().equals("molitvyOfflain")){
-                homeBlocksModels.get(position).setLinks(R.id.action_home2_to_linksFragment);
-            }
-            if (homeBlocksModels.get(position).getDate().equals("links")){
-                homeBlocksModels.get(position).setLinks(R.id.action_home2_to_linksFragment);
-            }
-            if (homeBlocksModels.get(position).getDate().equals("notes")){
-                homeBlocksModels.get(position).setLinks(R.string.link_notes);
-            }
-            if (homeBlocksModels.get(position).getDate().equals("talks")){
-                homeBlocksModels.get(position).setLinks(R.string.link_talks);
-            }
-            if (homeBlocksModels.get(position).getDate().equals("now")){
-                homeBlocksModels.get(position).setLinks(R.id.action_home2_to_churchFragment);
-            }
-            if (homeBlocksModels.get(position).getDate().equals(tomorrow)){
-                homeBlocksModels.get(position).setLinks(R.id.action_home2_to_churchFragment);
-            }
-            if (homeBlocksModels.get(position).getDate().equals("everyday")){
-                homeBlocksModels.get(position).setLinks(R.id.action_home2_to_churchFragment);
-            }
-            if(homeBlocksModels.get(position).getDate().equals("needs")){
-                homeBlocksModels.get(position).setLinks(R.id.action_home2_to_churchFragment);
-            }
+        //link assignment
+        if (homeBlocksModels.get(position).getDate().equals("skypeConfs")){
+            homeBlocksModels.get(position).setLinks(R.id.action_home2_to_skypesFragment);
+            holder.homeBlockListImage.setImageResource(R.drawable.home_skype_img);
         }
-        else{
-            holder.getHomeBlockTextUp().setVisibility(View.GONE);
-            holder.getHomeBlockTextDown().setText(homeBlocksModels.get(position).getName());
-            holder.getHomeBlockline().setVisibility(View.GONE);
-            if(homeBlocksModels.get(position).getName().startsWith("Псалтирь")){
-                homeBlocksModels.get(position).setLinks(R.id.action_home2_to_psaltirFragment);
-            }
+        if (homeBlocksModels.get(position).getDate().equals("menuOnlineTemple")){
+            homeBlocksModels.get(position).setLinks(R.id.action_home2_to_menuOnlineTempleFragment);
+            holder.homeBlockListImage.setImageResource(R.drawable.home_online_temple_img);
+        }
+        if (homeBlocksModels.get(position).getDate().equals("links")){
+            String title = homeBlocksModels.get(position).getDateTxt()+" "+homeBlocksModels.get(position).getName();
+            holder.homeBlockListTitle.setText(title);
+            homeBlocksModels.get(position).setLinks(R.id.action_home2_to_linksFragment);
+            holder.homeBlockListImage.setImageResource(R.drawable.home_links_img);
+        }
+        if (homeBlocksModels.get(position).getDate().equals("menuChurch")){
+            homeBlocksModels.get(position).setLinks(R.id.action_home2_to_menuOnlineTempleFragment);
+            holder.homeBlockListImage.setImageResource(R.drawable.home_menuchurch_img);
+        }
+        if (homeBlocksModels.get(position).getDate().equals("notes")){
+            homeBlocksModels.get(position).setLinks(R.string.link_notes);
+            holder.homeBlockListImage.setImageResource(R.drawable.home_notes_img);
+        }
+        if (homeBlocksModels.get(position).getDate().equals("talks")){
+            homeBlocksModels.get(position).setLinks(R.string.link_talks);
+            holder.homeBlockListImage.setImageResource(R.drawable.home_talks_img);
         }
 
-        if(homeBlocksModels.get(position).getDate() != null) {
-            //click on links
-            if (homeBlocksModels.get(position).getDate().equals("onlineMichael")
-                    || homeBlocksModels.get(position).getDate().equals("onlineVarvara")
-                    || homeBlocksModels.get(position).getDate().equals("onlinePokrovaPls")) {
-                holder.getHomeBlockLinear().setOnClickListener(view -> {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("urlToSound", fragment.getResources().getString(homeBlocksModels.get(position).getLinks()));
-                    bundle.putString("soundTitle", homeBlocksModels.get(position).getAdditions());
-                    FragmentKt.findNavController(fragment).navigate(R.id.onlineTempleFragment, bundle);
-                });
-            } else if (homeBlocksModels.get(position).getDate().equals("notes")
-                    || homeBlocksModels.get(position).getDate().equals("talks")) {
-                holder.getHomeBlockLinear().setOnClickListener(view -> {
-                    Intent toSite = new Intent(Intent.ACTION_VIEW, Uri.parse(fragment.getResources().getString(homeBlocksModels.get(position).getLinks())));
-                    fragment.getContext().startActivity(toSite);
-                });
-            } else {
-                holder.getHomeBlockLinear().setOnClickListener(view -> {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("date", homeBlocksModels.get(position).getDate());
-                    bundle.putString("dateTxt", homeBlocksModels.get(position).getDateTxt());
-                    FragmentKt.findNavController(fragment).navigate(homeBlocksModels.get(position).getLinks(), bundle);
-                });
-            }
-        } else if (homeBlocksModels.get(position).getName().startsWith("Псалтирь")){
-            holder.getHomeBlockLinear().setOnClickListener(view -> {
+        //click on links
+        if (homeBlocksModels.get(position).getDate().equals("menuOnlineTemple")
+            || homeBlocksModels.get(position).getDate().equals("menuChurch")) {
+            holder.homeBlockListImage.setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
-                bundle.putInt("id", homeBlocksModels.get(position).getId());
+                bundle.putString("mode", homeBlocksModels.get(position).getDate());
+                FragmentKt.findNavController(fragment).navigate(homeBlocksModels.get(position).getLinks(),bundle);
+            });
+            holder.homeBlockListForward.setOnClickListener(view -> {
+                Bundle bundle = new Bundle();
+                bundle.putString("mode", homeBlocksModels.get(position).getDate());
+                FragmentKt.findNavController(fragment).navigate(homeBlocksModels.get(position).getLinks(),bundle);
+            });
+        } else if (homeBlocksModels.get(position).getDate().equals("notes")
+                || homeBlocksModels.get(position).getDate().equals("talks")) {
+            holder.homeBlockListImage.setOnClickListener(view -> {
+                Intent toSite = new Intent(Intent.ACTION_VIEW, Uri.parse(fragment.getResources().getString(homeBlocksModels.get(position).getLinks())));
+                fragment.getContext().startActivity(toSite);
+            });
+            holder.homeBlockListForward.setOnClickListener(view -> {
+                Intent toSite = new Intent(Intent.ACTION_VIEW, Uri.parse(fragment.getResources().getString(homeBlocksModels.get(position).getLinks())));
+                fragment.getContext().startActivity(toSite);
+            });
+        } else {
+            holder.homeBlockListImage.setOnClickListener(view  -> {
+                Bundle bundle = new Bundle();
+                bundle.putString("date", homeBlocksModels.get(position).getDate());
+                bundle.putString("dateTxt", homeBlocksModels.get(position).getDateTxt());
+                FragmentKt.findNavController(fragment).navigate(homeBlocksModels.get(position).getLinks(), bundle);
+            });
+            holder.homeBlockListForward.setOnClickListener(view  ->  {
+                Bundle bundle = new Bundle();
+                bundle.putString("date", homeBlocksModels.get(position).getDate());
+                bundle.putString("dateTxt", homeBlocksModels.get(position).getDateTxt());
                 FragmentKt.findNavController(fragment).navigate(homeBlocksModels.get(position).getLinks(), bundle);
             });
         }
@@ -162,31 +136,17 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapte
      */
     static class HomeViewHolder extends RecyclerView.ViewHolder{
 
-        private final LinearLayout homeBlockLinear;
-        private final TextView homeBlockTextUp;
-        private final TextView homeBlockTextDown;
-        private final TextView homeBlockline;
+        private final CardView homeBlockListView;
+        private final ImageButton homeBlockListImage;
+        private final TextView homeBlockListTitle;
+        private final ImageButton homeBlockListForward;
 
         public HomeViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.homeBlockLinear = itemView.findViewById(R.id.home_block_list);
-            this.homeBlockTextUp = itemView.findViewById(R.id.home_block_text_up);
-            this.homeBlockTextDown = itemView.findViewById(R.id.home_block_text_down);
-            this.homeBlockline = itemView.findViewById(R.id.home_block_line);
+            this.homeBlockListView = itemView.findViewById(R.id.home_block_list_view);
+            this.homeBlockListImage = itemView.findViewById(R.id.home_block_list_image);
+            this.homeBlockListTitle = itemView.findViewById(R.id.home_block_list_title);
+            this.homeBlockListForward = itemView.findViewById(R.id.home_block_list_forward);
         }
-
-        public LinearLayout getHomeBlockLinear() {
-            return homeBlockLinear;
-        }
-
-        public TextView getHomeBlockTextUp() {
-            return homeBlockTextUp;
-        }
-
-        public TextView getHomeBlockTextDown() {
-            return homeBlockTextDown;
-        }
-
-        public TextView getHomeBlockline() { return homeBlockline; }
     }
 }

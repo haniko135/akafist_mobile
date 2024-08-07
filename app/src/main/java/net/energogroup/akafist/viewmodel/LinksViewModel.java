@@ -16,6 +16,7 @@ import com.android.volley.Response;
 
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
+import net.energogroup.akafist.api.PrAPI;
 import net.energogroup.akafist.db.StarredDTO;
 import net.energogroup.akafist.fragments.LinksFragment;
 import net.energogroup.akafist.models.LinksModel;
@@ -32,6 +33,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * A class containing data processing logic
  * {@link LinksFragment} and {@link LinksModel}
@@ -39,6 +44,9 @@ import java.util.List;
  * @version 1.0.0
  */
 public class LinksViewModel extends ViewModel {
+
+    public static final String TAG = "LINKS_VIEW_MODEL";
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private List<LinksModel> linksModelList = new ArrayList<>();
     private final MutableLiveData<List<LinksModel>> mutableLinksDate = new MutableLiveData<>();
     private final List<LinksModel> downloadAudio = new ArrayList<>();
@@ -52,6 +60,12 @@ public class LinksViewModel extends ViewModel {
         return mutableLinksDate;
     }
 
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        compositeDisposable.clear();
+    }
+
     /**
      * This method makes a request to the remote server
      * depending on the cas parameter and receives data
@@ -59,36 +73,16 @@ public class LinksViewModel extends ViewModel {
      * @param cas String case
      * @param inflater LayoutInflater
      */
-    public void getJson(String cas, LayoutInflater inflater){
+    public void getJson(String cas, LayoutInflater inflater, PrAPI prAPI){
         if (cas.equals("links")) {
-            String urlToGet = inflater.getContext().getResources().getString(MainActivity.API_PATH)+"talks";
-
-            RequestServiceHandler serviceHandler = new RequestServiceHandler();
-            serviceHandler.addHeader("User-Agent", inflater.getContext().getResources().getString(MainActivity.APP_VER));
-            serviceHandler.addHeader("Connection", "keep-alive");
-
-            serviceHandler.objectRequest(urlToGet, Request.Method.GET,
-                    null, JSONArray.class, (Response.Listener<JSONArray>) response -> {
-                        JSONObject jsonObject;
-                        image = R.mipmap.ic_launcher;
-                        int id;
-                        String url, name;
-                        try {
-                            int i = 0;
-                            while (i < response.length()) {
-                                jsonObject = response.getJSONObject(i);
-                                id = jsonObject.getInt("id");
-                                name = StringEscapeUtils.unescapeJava(jsonObject.getString("name"));
-                                url = StringEscapeUtils.unescapeJava(jsonObject.getString("url"));
-                                linksModelList.add(new LinksModel(id, url, name, image));
-                                mutableLinksDate.setValue(linksModelList);
-                                i++;
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }, error -> Log.e("Response", error.getMessage()));
+            compositeDisposable.add(
+                    prAPI.getLinks()
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(mutableLinksDate::setValue, error -> {
+                                Log.e("Response", error.getMessage());
+                            })
+            );
         }
         else if(cas.equals("molitvyOfflain")){
             image = R.mipmap.ic_launcher;
@@ -107,13 +101,13 @@ public class LinksViewModel extends ViewModel {
      * @param cas String
      * @param inflater LayoutInflater
      */
-    public void retryGetJson(String cas, LayoutInflater inflater){
+    public void retryGetJson(String cas, LayoutInflater inflater, PrAPI prAPI){
         if (cas.equals("links")) {
             linksModelList = new ArrayList<>();
-            getJson(cas, inflater);
+            getJson(cas, inflater, prAPI);
         }else if(cas.equals("molitvyOfflain")){
             linksModelList = new ArrayList<>();
-            getJson(cas, inflater);
+            getJson(cas, inflater, prAPI);
         }
     }
 

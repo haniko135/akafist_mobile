@@ -13,9 +13,9 @@ import net.energogroup.akafist.viewmodel.ChurchViewModel;
  */
 public class ServicesModel {
     private final int id;
-    private final String name;
+    private String name;
     private int type;
-    private final String date;
+    private String date;
 
     /**
      * Class constructor
@@ -51,6 +51,10 @@ public class ServicesModel {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     /**
      * @return int - returns type field
      */
@@ -63,6 +67,10 @@ public class ServicesModel {
      */
     public String getDate() {
         return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     @Override

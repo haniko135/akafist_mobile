@@ -10,8 +10,19 @@ public class LinksModel {
     private String url;
     private String name;
     private int image;
+    private String description;
+    private String createdAt;
+    private String updatedAt;
 
     public LinksModel() { }
+
+    public LinksModel(int id, String url, String name, String createdAt, String updatedAt) {
+        this.id = id;
+        this.url = url;
+        this.name = name;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 
     /**
      * LinksModel class constructor

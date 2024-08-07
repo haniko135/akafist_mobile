@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import net.energogroup.akafist.AkafistApplication;
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
 import net.energogroup.akafist.databinding.FragmentPsaltirBinding;
@@ -71,7 +72,8 @@ public class PsaltirFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(PsaltirViewModel.class);
         if(getActivity() != null) {
             ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Псалтирь");
-            viewModel.getJson(getContext(), id);
+            //viewModel.getJson(getContext(), id);
+            viewModel.getJson(((AkafistApplication)getActivity().getApplication()).prAPI, id);
         }
 
         getLastViewedPsaltir();
@@ -97,10 +99,10 @@ public class PsaltirFragment extends Fragment {
                 psaltirBinding.psaltirDesc.setVisibility(View.GONE);
             }
 
-            if (!psaltirModel.getPsaltirKafismas().isEmpty()){
+            if (!psaltirModel.getKafismas().isEmpty()){
                 psaltirLM = new LinearLayoutManager(getContext());
                 psaltirBinding.psaltirRV.setLayoutManager(psaltirLM);
-                psaltirBinding.psaltirRV.setAdapter(new PsaltirRecyclerAdapter(psaltirModel.getPsaltirKafismas(), fr, id));
+                psaltirBinding.psaltirRV.setAdapter(new PsaltirRecyclerAdapter(psaltirModel.getKafismas(), fr, id));
             }
         });
 

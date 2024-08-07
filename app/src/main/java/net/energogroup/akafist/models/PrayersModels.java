@@ -9,21 +9,23 @@ import androidx.annotation.NonNull;
  */
 public class PrayersModels {
     private int id;
-    private final String namePrayer;
-    private final String textPrayer;
-    private final int prev;
-    private final int next;
+    private String name;
+    private String html;
+    private int prev;
+    private int next;
+
+    public PrayersModels() { }
 
     /**
      * Class constructor
-     * @param namePrayer String - name of the prayer
-     * @param textPrayer String - текст молитвы
+     * @param name String - name of the prayer
+     * @param html String - текст молитвы
      * @param prev int - the text of the prayer
      * @param next int - link to the following prayer
      */
-    public PrayersModels(String namePrayer, String textPrayer, int prev, int next) {
-        this.namePrayer = namePrayer;
-        this.textPrayer = textPrayer;
+    public PrayersModels(String name, String html, int prev, int next) {
+        this.name = name;
+        this.html = html;
         this.prev = prev;
         this.next = next;
     }
@@ -31,15 +33,15 @@ public class PrayersModels {
     /**
      * Class constructor
      * @param id int - prayer id
-     * @param namePrayer String - name of the prayer
-     * @param textPrayer String - текст молитвы
+     * @param name String - name of the prayer
+     * @param html String - текст молитвы
      * @param prev int - the text of the prayer
      * @param next int - link to the following prayer
      */
-    public PrayersModels(int id, String namePrayer, String textPrayer, int prev, int next) {
+    public PrayersModels(int id, String name, String html, int prev, int next) {
         this.id = id;
-        this.namePrayer = namePrayer;
-        this.textPrayer = textPrayer;
+        this.name = name;
+        this.html = html;
         this.prev = prev;
         this.next = next;
     }
@@ -47,15 +49,32 @@ public class PrayersModels {
     /**
      * @return String - returns the name of the prayer
      */
-    public String getNamePrayer() {
-        return namePrayer;
+    public String getName() {
+        return name;
     }
+
 
     /**
      * @return String - returns the text of the prayer
      */
-    public String getTextPrayer() {
-        return textPrayer;
+    public String getHtml() {
+        return html;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setHtml(String html) {
+        this.html = html;
+    }
+
+    public void setPrev(int prev) {
+        this.prev = prev;
+    }
+
+    public void setNext(int next) {
+        this.next = next;
     }
 
     /**
@@ -79,6 +98,6 @@ public class PrayersModels {
     @NonNull
     @Override
     public String toString() {
-        return namePrayer+" : "+textPrayer+" : "+prev+" : "+next;
+        return name +" : "+ html +" : "+prev+" : "+next;
     }
 }

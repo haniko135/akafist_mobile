@@ -13,7 +13,7 @@
     <item android:title="@string/calendar_name"
         app:showAsAction="always"
         android:id="@+id/calendFrag"
-        android:icon="@drawable/baseline_calendar_today_24"/>
+        android:icon="@drawable/ic_baseline_calendar_today_24"/>
     <item android:title="@string/settings_name"
         app:showAsAction="ifRoom"
         android:id="@+id/settingsFrag"
@@ -21,6 +21,6 @@
     <item android:title="@string/account_name"
         app:showAsAction="ifRoom"
         android:id="@+id/accountFrag"
-        android:icon="@drawable/baseline_person_24"/>
+        android:icon="@drawable/ic_baseline_person_24"/>
 
 </menu>
