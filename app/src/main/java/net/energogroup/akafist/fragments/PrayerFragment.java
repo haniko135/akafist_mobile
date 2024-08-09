@@ -35,7 +35,9 @@ import net.energogroup.akafist.R;
 
 import net.energogroup.akafist.api.PrAPI;
 import net.energogroup.akafist.databinding.FragmentPrayerBinding;
+import net.energogroup.akafist.models.PrayersModels;
 import net.energogroup.akafist.service.SavePrayerData;
+import net.energogroup.akafist.viewmodel.PrayerDBViewModel;
 import net.energogroup.akafist.viewmodel.PrayerViewModel;
 import net.energogroup.akafist.viewmodel.StarredViewModel;
 
@@ -63,6 +65,7 @@ public class PrayerFragment extends Fragment implements SavePrayerData {
     private int prayerId, blockId;
     private PrayerViewModel prayerViewModel;
     private StarredViewModel starredViewModel;
+    private PrayerDBViewModel prayerDBViewModel;
     private SharedPreferences appPref;
     private SQLiteDatabase db;
     FragmentPrayerBinding binding;
@@ -103,15 +106,19 @@ public class PrayerFragment extends Fragment implements SavePrayerData {
         ViewModelProvider provider = new ViewModelProvider(this);
         starredViewModel = provider.get(StarredViewModel.class);
         prayerViewModel = provider.get(PrayerViewModel.class);
-        if(Objects.equals(mode,"prayer_read")) {
-            prayerViewModel.getJson(prAPI, prevMenu, String.valueOf(prayerId));
-        }
-        else if (Objects.equals(mode,"psaltir_read")){
-            //prayerViewModel.getJsonPsaltir(blockId, prayerId, getContext());
-            prayerViewModel.getJsonPsaltir(prAPI, blockId, prayerId);
-        }
-        else if (Objects.equals(mode, "prayer_rule")) {
-            prayerViewModel.setPrayersModelsMutableLiveData(starredViewModel.getPrayerModelsCollectionItem(prayerId, db));
+        prayerDBViewModel = provider.get(PrayerDBViewModel.class);
+
+        String checkInDBArgs = prevMenu != null ? prevMenu : String.valueOf(blockId);
+        if(prayerDBViewModel.checkPrayerInDB(db,checkInDBArgs,prayerId)){
+            prayerViewModel.setPrayersModelsMutableLiveData(prayerDBViewModel.getPrayersModelMLD());
+        }else {
+            if (Objects.equals(mode, "prayer_read")) {
+                prayerViewModel.getJson(prAPI, prevMenu, String.valueOf(prayerId));
+            } else if (Objects.equals(mode, "psaltir_read")) {
+                prayerViewModel.getJsonPsaltir(prAPI, blockId, prayerId);
+            } else if (Objects.equals(mode, "prayer_rule")) {
+                prayerViewModel.setPrayersModelsMutableLiveData(starredViewModel.getPrayerModelsCollectionItem(prayerId, db));
+            }
         }
     }
 

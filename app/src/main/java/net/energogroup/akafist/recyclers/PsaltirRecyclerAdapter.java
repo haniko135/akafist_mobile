@@ -19,24 +19,38 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
+import net.energogroup.akafist.db.PrayersDTO;
 import net.energogroup.akafist.db.StarredDTO;
 import net.energogroup.akafist.models.psaltir.PsaltirKafismaModel;
+import net.energogroup.akafist.service.background.DownloadPrayer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PsaltirRecyclerAdapter extends RecyclerView.Adapter<PsaltirRecyclerAdapter.PsaltirViewHolder> {
 
-    private final List<PsaltirKafismaModel> psaltirKafismaModels;
-    private final Fragment fr;
-    private final int blockId;
+    private final List<PsaltirKafismaModel> psaltirKafismaModels = new ArrayList<>();
+    private Fragment fr;
+    private int blockId;
     private MainActivity mainActivity;
-    private final SQLiteDatabase db;
+    private SQLiteDatabase db;
 
-    public PsaltirRecyclerAdapter(List<PsaltirKafismaModel> psaltirKafismaModels, Fragment fr, int block_id) {
-        this.psaltirKafismaModels = psaltirKafismaModels;
+    public PsaltirRecyclerAdapter() { }
+
+    public void setData(List<PsaltirKafismaModel> psaltirKafismaModelsL){
+        psaltirKafismaModels.clear();
+        psaltirKafismaModels.addAll(psaltirKafismaModelsL);
+    }
+
+    public void setFragment(Fragment fr){
         this.fr = fr;
-        this.blockId = block_id;
+    }
 
+    public void setBlockId(int blockId){
+        this.blockId = blockId;
+    }
+
+    public void init(){
         mainActivity = (MainActivity) fr.getActivity();
         db = mainActivity.getDbHelper().getWritableDatabase();
     }
@@ -50,6 +64,20 @@ public class PsaltirRecyclerAdapter extends RecyclerView.Adapter<PsaltirRecycler
 
     @Override
     public void onBindViewHolder(@NonNull PsaltirViewHolder holder, int position) {
+        Cursor cursorPrayer = db.rawQuery("SELECT * FROM " + StarredDTO.TABLE_NAME + " WHERE "
+                        + StarredDTO.COLUMN_NAME_OBJECT_URL + "='" +
+                        "psaltir/"+psaltirKafismaModels.get(position).getName()+"/"+psaltirKafismaModels.get(position).getId()+"'",
+                null);
+        holder.switchStarredStatus(cursorPrayer.moveToFirst());
+        cursorPrayer.close();
+
+        String selectName = blockId + "/" + psaltirKafismaModels.get(position).getName();
+        Cursor cursorPrayerDB = db.rawQuery("SELECT * FROM " + PrayersDTO.TABLE_NAME + " WHERE "
+                + PrayersDTO.COLUMN_NAME_NAME + "='" + selectName +"'", null);
+        holder.switchDownloadStatus(cursorPrayerDB.moveToFirst());
+        cursorPrayerDB.close();
+
+
         holder.getPsaltirListItem().setText(psaltirKafismaModels.get(position).getName());
         holder.getPsaltirListItem().setOnClickListener(view -> {
             if(psaltirKafismaModels.get(position).getDesc() != null) {
@@ -74,21 +102,6 @@ public class PsaltirRecyclerAdapter extends RecyclerView.Adapter<PsaltirRecycler
         });
 
 
-        Cursor cursorPrayer = db.rawQuery("SELECT * FROM " + StarredDTO.TABLE_NAME + " WHERE "
-                        + StarredDTO.COLUMN_NAME_OBJECT_URL + "='" +
-                        "psaltir/"+psaltirKafismaModels.get(position).getName()+"/"+psaltirKafismaModels.get(position).getId()+"'",
-                null);
-        if(cursorPrayer.moveToFirst()){
-            holder.getPsaltirListItemStarBorder().setVisibility(View.GONE);
-            holder.getPsaltirListItemStar().setVisibility(View.VISIBLE);
-        }else {
-            holder.getPsaltirListItemStar().setVisibility(View.GONE);
-            holder.getPsaltirListItemStarBorder().setVisibility(View.VISIBLE);
-        }
-        cursorPrayer.close();
-
-
-
         holder.getPsaltirListItemStarBorder().setOnClickListener(view -> {
             ContentValues contentValues = new ContentValues();
             contentValues.put(StarredDTO.COLUMN_NAME_OBJECT_URL, "psaltir/"+psaltirKafismaModels.get(position).getName()+"/"+psaltirKafismaModels.get(position).getId());
@@ -97,8 +110,7 @@ public class PsaltirRecyclerAdapter extends RecyclerView.Adapter<PsaltirRecycler
 
             db.insert(StarredDTO.TABLE_NAME,null, contentValues);
 
-            holder.psaltirListItemStarBorder.setVisibility(View.GONE);
-            holder.psaltirListItemStar.setVisibility(View.VISIBLE);
+            holder.switchStarredStatus(true);
         });
 
         holder.getPsaltirListItemStar().setOnClickListener(view -> {
@@ -106,8 +118,25 @@ public class PsaltirRecyclerAdapter extends RecyclerView.Adapter<PsaltirRecycler
             db.delete(StarredDTO.TABLE_NAME,StarredDTO.COLUMN_NAME_OBJECT_URL + " LIKE ?",
                     selectionArgs);
 
-            holder.psaltirListItemStar.setVisibility(View.GONE);
-            holder.psaltirListItemStarBorder.setVisibility(View.VISIBLE);
+            holder.switchStarredStatus(false);
+        });
+
+
+        holder.getPsaltirListItemDownload().setOnClickListener(view -> {
+            DownloadPrayer downloadPrayer = new DownloadPrayer();
+            downloadPrayer.setData(String.valueOf(blockId), psaltirKafismaModels.get(position).getId());
+            downloadPrayer.init(mainActivity);
+            downloadPrayer.downloadPsaltir();
+
+            holder.switchDownloadStatus(true);
+        });
+
+        holder.getPsaltirListItemDownloaded().setOnClickListener(view -> {
+            DownloadPrayer downloadPrayer = new DownloadPrayer();
+            downloadPrayer.init(mainActivity);
+            downloadPrayer.deletePrayer(String.valueOf(blockId), psaltirKafismaModels.get(position).getName());
+
+            holder.switchDownloadStatus(false);
         });
     }
 
@@ -120,6 +149,8 @@ public class PsaltirRecyclerAdapter extends RecyclerView.Adapter<PsaltirRecycler
         private final TextView psaltirListItem;
         private final ImageButton psaltirListItemStarBorder;
         private final ImageButton psaltirListItemStar;
+        private final ImageButton psaltirListItemDownload;
+        private final ImageButton psaltirListItemDownloaded;
 
         public TextView getPsaltirListItem() { return psaltirListItem; }
 
@@ -127,11 +158,47 @@ public class PsaltirRecyclerAdapter extends RecyclerView.Adapter<PsaltirRecycler
 
         public ImageButton getPsaltirListItemStar() { return psaltirListItemStar; }
 
+        public ImageButton getPsaltirListItemDownload() {
+            return psaltirListItemDownload;
+        }
+
+        public ImageButton getPsaltirListItemDownloaded() {
+            return psaltirListItemDownloaded;
+        }
+
         public PsaltirViewHolder(@NonNull View itemView) {
             super(itemView);
             this.psaltirListItem = itemView.findViewById(R.id.prayers_list_item);
             this.psaltirListItemStarBorder = itemView.findViewById(R.id.prayers_list_item_star_border);
             this.psaltirListItemStar = itemView.findViewById(R.id.prayers_list_item_star);
+            this.psaltirListItemDownload = itemView.findViewById(R.id.prayers_list_item_download);
+            this.psaltirListItemDownloaded = itemView.findViewById(R.id.prayers_list_item_downloaded);
+        }
+
+        public void switchDownloadStatus(boolean status){
+            // status = true - prayer was downloaded in device
+            // status = false - prayer was deleted or not downloaded yet
+
+            if(status){
+                psaltirListItemDownload.setVisibility(View.GONE);
+                psaltirListItemDownloaded.setVisibility(View.VISIBLE);
+            }else {
+                psaltirListItemDownloaded.setVisibility(View.GONE);
+                psaltirListItemDownload.setVisibility(View.VISIBLE);
+            }
+        }
+
+        public void switchStarredStatus(boolean status){
+            // status = true - prayer was starred
+            // status = false - prayer was unstarred
+
+            if(status){
+                psaltirListItemStarBorder.setVisibility(View.GONE);
+                psaltirListItemStar.setVisibility(View.VISIBLE);
+            }else {
+                psaltirListItemStar.setVisibility(View.GONE);
+                psaltirListItemStarBorder.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

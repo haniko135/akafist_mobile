@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 
 import net.energogroup.akafist.R;
+import net.energogroup.akafist.api.PrAPI;
 import net.energogroup.akafist.db.StarredDTO;
 import net.energogroup.akafist.fragments.lists.ItemMoveCallback;
 import net.energogroup.akafist.fragments.lists.ItemSwipeCallback;
@@ -40,16 +41,22 @@ public class DragAndDropAdapter extends RecyclerView.Adapter<DragAndDropAdapter.
     private final List<ServicesModel> textPrayers;
     private final TextPrayersDragDropListFragment fragment;
     private final SQLiteDatabase db;
+    private PrAPI prAPI;
 
     public List<ServicesModel> getTextPrayers() {
         return textPrayers;
     }
 
-    public DragAndDropAdapter(StartDragListner mStartDragListener, List<ServicesModel> textPrayers, TextPrayersDragDropListFragment frag, SQLiteDatabase db) {
+    public DragAndDropAdapter(StartDragListner mStartDragListener,
+                              List<ServicesModel> textPrayers,
+                              TextPrayersDragDropListFragment frag,
+                              SQLiteDatabase db,
+                              PrAPI prApi) {
         this.mStartDragListener = mStartDragListener;
         this.textPrayers = textPrayers;
         this.fragment = frag;
         this.db = db;
+        this.prAPI = prApi;
     }
 
     @NonNull
@@ -73,7 +80,7 @@ public class DragAndDropAdapter extends RecyclerView.Adapter<DragAndDropAdapter.
             if(fragment.isMode())  {
                 int curPosition = position;
                 fragment.getViewModel()
-                        .convertToPrayersModels(fragment.getContext(), db)
+                        .convertToPrayersModels(fragment.getContext(), db, prAPI)
                         .observe(fragment.getViewLifecycleOwner(), prayersModels -> {
                                 if(prayersModels.size() == fragment.getViewModel().getPrayerRules().getValue().size()) {
 

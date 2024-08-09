@@ -42,7 +42,7 @@ public interface PrAPI {
     Single<ArrayList<HomeBlocksModel>> getPsaltir();
 
     @GET("/api/psaltir/{block_id}")
-    Single<PsaltirModel> getPsaltir(@Path("block_id") String block_id);
+    Single<PsaltirModel> getPsaltirBlock(@Path("block_id") String block_id);
 
     @GET("/api/psaltir/{block_id}/{kaf_id}")
     Single<PsaltirPrayerModel> getPsaltirPrayers(@Path("block_id") String block_id, @Path("kaf_id") String kaf_id);

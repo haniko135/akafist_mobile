@@ -48,11 +48,11 @@ public class StarredFragment extends Fragment {
         new TabLayoutMediator(starredBinding.starredTabs, starredBinding.starredPager,
                 (tab, position) -> {
                     if(position == 0){
-                        tab.setText("Молитвы");
+                        tab.setText("молитвы");
                     }else if(position == 1){
-                        tab.setText("Аудио-молитвы");
+                        tab.setText("аудио-молитвы");
                     }else if(position == 2){
-                        tab.setText("Беседы");
+                        tab.setText("беседы");
                     }
                 }).attach();
 

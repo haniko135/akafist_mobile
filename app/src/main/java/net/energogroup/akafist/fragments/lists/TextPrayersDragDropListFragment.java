@@ -31,8 +31,10 @@ import android.view.ViewGroup;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import net.energogroup.akafist.AkafistApplication;
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
+import net.energogroup.akafist.api.PrAPI;
 import net.energogroup.akafist.databinding.FragmentTextPrayersDragDropListBinding;
 import net.energogroup.akafist.models.ServicesModel;
 import net.energogroup.akafist.recyclers.DragAndDropAdapter;
@@ -51,6 +53,7 @@ public class TextPrayersDragDropListFragment extends Fragment implements StartDr
 
     private static final String TAG = "TEXT_PRAYERS_DRAG_DROP_LIST_FRAGMENT";
     public static final String LAST_PRAYER_RULE_PREF_NAME = "app_pref_prayerrule_scroll_pos_";
+    private PrAPI prAPI;
     private FragmentTextPrayersDragDropListBinding dragDropListBinding;
     private DragAndDropAdapter dropAdapter;
     private ItemTouchHelper touchHelper;
@@ -88,6 +91,7 @@ public class TextPrayersDragDropListFragment extends Fragment implements StartDr
         db = mainActivity.getDbHelper().getReadableDatabase();
         viewModel = new ViewModelProvider(this).get(StarredViewModel.class);
         mode = viewModel.getPrayerRuleArray(db);
+        prAPI = ((AkafistApplication)getActivity().getApplication()).prAPI;
         if(!mode) {
             viewModel.getStarred(db);
         }
@@ -101,7 +105,7 @@ public class TextPrayersDragDropListFragment extends Fragment implements StartDr
         if(!mode) {
             viewModel.getTextPrayers().observe(getViewLifecycleOwner(), prayers -> {
                 textPrayers = prayers;
-                dropAdapter = new DragAndDropAdapter(this, prayers, this, db);
+                dropAdapter = new DragAndDropAdapter(this, prayers, this, db, prAPI);
 
                 ItemTouchHelper.Callback callback = new ItemMoveCallback(dropAdapter);
                 touchHelper = new ItemTouchHelper(callback);
@@ -114,7 +118,7 @@ public class TextPrayersDragDropListFragment extends Fragment implements StartDr
         }else {
             viewModel.getPrayerRules().observe(getViewLifecycleOwner(), prayerRule->{
                 textPrayers = prayerRule;
-                dropAdapter = new DragAndDropAdapter(this, prayerRule, this, db);
+                dropAdapter = new DragAndDropAdapter(this, prayerRule, this, db, prAPI);
 
                 ItemSwipeCallback itemMoveCallback = new ItemSwipeCallback(getContext()){
                     @Override
@@ -223,7 +227,7 @@ public class TextPrayersDragDropListFragment extends Fragment implements StartDr
 
         if(mode){
 
-            viewModel.convertToPrayersModels(getContext(), db)
+            viewModel.convertToPrayersModels(getContext(), db, prAPI)
                     .observe(getViewLifecycleOwner(), prayersModels -> {
                     if(prayersModels.size() == viewModel.getPrayerRules().getValue().size()) {
                         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_fragment);

@@ -32,7 +32,7 @@ public class PsaltirViewModel extends ViewModel {
 
     public void getJson(PrAPI prAPI, int id) {
         compositeDisposable.add(
-                prAPI.getPsaltir(String.valueOf(id))
+                prAPI.getPsaltirBlock(String.valueOf(id))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(psaltirModelMLD::setValue

@@ -102,7 +102,14 @@ public class PsaltirFragment extends Fragment {
             if (!psaltirModel.getKafismas().isEmpty()){
                 psaltirLM = new LinearLayoutManager(getContext());
                 psaltirBinding.psaltirRV.setLayoutManager(psaltirLM);
-                psaltirBinding.psaltirRV.setAdapter(new PsaltirRecyclerAdapter(psaltirModel.getKafismas(), fr, id));
+
+                PsaltirRecyclerAdapter psaltirAdapter = new PsaltirRecyclerAdapter();
+                psaltirAdapter.setData(psaltirModel.getKafismas());
+                psaltirAdapter.setBlockId(id);
+                psaltirAdapter.setFragment(fr);
+                psaltirAdapter.init();
+
+                psaltirBinding.psaltirRV.setAdapter(psaltirAdapter);
             }
         });
 

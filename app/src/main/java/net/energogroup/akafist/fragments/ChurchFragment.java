@@ -45,7 +45,7 @@ public class ChurchFragment extends Fragment {
     private static final String TAG = "CHURCH_FRAGMENT";
     public static final String LAST_PRAYER_PREF_NAME = "app_pref_prayer_scroll_pos_";
     private String date, dateTxt, name;
-    public static ServicesRecyclerAdapter servicesRecyclerAdapter;
+    public static ServicesRecyclerAdapter servicesRecyclerAdapter = new ServicesRecyclerAdapter();
     public FragmentChurchBinding churchBinding;
     private ChurchViewModel churchViewModel;
     private SharedPreferences appPref;
@@ -117,11 +117,14 @@ public class ChurchFragment extends Fragment {
 
                     //filter by current pressed ID
                     churchViewModel.getCurId().observe(getViewLifecycleOwner(), integer -> churchViewModel.getMutableServicesList().observe(getViewLifecycleOwner(), servicesModels -> {
-                        servicesRecyclerAdapter = new ServicesRecyclerAdapter(servicesModels.stream().filter(servicesModel ->
+                        servicesRecyclerAdapter.setData(servicesModels.stream().filter(servicesModel ->
                                 servicesModel.getType() == integer
-                        ).collect(Collectors.toList()), this);
+                        ).collect(Collectors.toList()));
+
+                        servicesRecyclerAdapter.setFragment(this);
+                        servicesRecyclerAdapter.init();
+
                         churchBinding.downRvChurch.setAdapter(servicesRecyclerAdapter);
-                        //servicesRecyclerAdapter.setFragment(this);
                     }));
                 }else {
                     churchBinding.noInternet.setVisibility(View.VISIBLE);

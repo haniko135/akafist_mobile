@@ -16,11 +16,13 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
 import net.energogroup.akafist.MainActivity;
+import net.energogroup.akafist.api.PrAPI;
 import net.energogroup.akafist.db.StarredDTO;
 import net.energogroup.akafist.models.PrayersModels;
 import net.energogroup.akafist.models.ServicesModel;
 import net.energogroup.akafist.models.StarredModel;
 import net.energogroup.akafist.models.psaltir.PsalmModel;
+import net.energogroup.akafist.models.psaltir.PsaltirPrayerModel;
 import net.energogroup.akafist.models.psaltir.SlavaModel;
 import net.energogroup.akafist.service.RequestServiceHandler;
 
@@ -35,7 +37,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+
 public class StarredViewModel extends ViewModel {
+
+    private static final String TAG = "STARRED_VIEW_MODEL";
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private final MutableLiveData<List<ServicesModel>> textPrayers = new MutableLiveData<>();
     private final MutableLiveData<List<ServicesModel>> prayerRules = new MutableLiveData<>();
     private final List<PrayersModels> prayersCollection = new ArrayList<>();
@@ -137,9 +146,8 @@ public class StarredViewModel extends ViewModel {
         return isPrayerRule;
     }
 
-    public MutableLiveData<List<PrayersModels>> convertToPrayersModels(Context context, SQLiteDatabase db){
+    public MutableLiveData<List<PrayersModels>> convertToPrayersModels(Context context, SQLiteDatabase db, PrAPI prApi){
         isConverted.setValue(false);
-
 
         if(mutablePrayersCollection.getValue() == null) {
             String[] selectionArgs = { "prayer_rule_col" };
@@ -152,16 +160,16 @@ public class StarredViewModel extends ViewModel {
             for (int i = 0; i < tempModels.size(); i++) {
 
                 if (i == 0) {
-                    getJsonSaved(tempModels.get(i).getDate(),
-                            tempModels.get(i).getId(), context,
+                    getJsonSaved(prApi, tempModels.get(i).getDate(),
+                            tempModels.get(i).getId(),
                             tempModels.get(i + 1).getId(), 0);
                 } else if (i == tempModels.size() - 1) {
-                    getJsonSaved(tempModels.get(i).getDate(),
-                            tempModels.get(i).getId(), context,
+                    getJsonSaved(prApi, tempModels.get(i).getDate(),
+                            tempModels.get(i).getId(),
                             0, tempModels.get(i - 1).getId());
                 } else {
-                    getJsonSaved(tempModels.get(i).getDate(),
-                            tempModels.get(i).getId(), context,
+                    getJsonSaved(prApi, tempModels.get(i).getDate(),
+                            tempModels.get(i).getId(),
                             tempModels.get(i + 1).getId(),
                             tempModels.get(i - 1).getId());
                 }
@@ -171,7 +179,7 @@ public class StarredViewModel extends ViewModel {
         return mutablePrayersCollection;
     }
 
-    public void getJsonSaved(String date, int id, Context context, int nextId, int prevId){
+    /*public void getJsonSaved(String date, int id, Context context, int nextId, int prevId){
         String urlToGet = context.getString(MainActivity.API_PATH)+date+"/"+id;
         String urlToGetPsaltir = context.getString(MainActivity.API_PATH_PSALTIR)+1+"/"+id; //костыль что block_id всегда равен 1
 
@@ -248,6 +256,75 @@ public class StarredViewModel extends ViewModel {
                         }
                     }, error -> Log.e("Response",error.getMessage()));
         }
+    }*/
+
+    public void getJsonSaved(PrAPI prAPI, String date, int id, int nextId, int prevId){
+        if(!Objects.equals(date, "psaltir")) {
+            compositeDisposable.add(
+                    prAPI.getPsaltirPrayers(String.valueOf(1), String.valueOf(id))
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(success->{
+                                prayersCollection.add(new PrayersModels(id, success.getName(), success.getText(), prev, next));
+                                mutablePrayersCollection.setValue(prayersCollection);
+                            }, error->{
+                                Log.e(TAG, error.getLocalizedMessage());
+                            })
+            );
+        }else {
+            compositeDisposable.add(
+                    prAPI.getPsaltirPrayers(String.valueOf(1), String.valueOf(id))
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(success->{
+                                PsaltirPrayerModel psaltirPrayerModel = new PsaltirPrayerModel();
+                                psaltirPrayerModel.setName(StringEscapeUtils.unescapeJava(success.getName()));
+
+                                if(!success.getKafismaStart().isEmpty()){
+                                    psaltirPrayerModel.setKafismaStart(StringEscapeUtils.unescapeJava(success.getKafismaStart()));
+                                }
+                                if(!success.getKafismaEnd().isEmpty()){
+                                    psaltirPrayerModel.setKafismaEnd(StringEscapeUtils.unescapeJava(success.getKafismaEnd()));
+                                }
+
+                                psaltirPrayerModel.setText(StringEscapeUtils.unescapeJava(success.getText()));
+                                psaltirPrayerModel.setPrev(success.getPrev());
+                                psaltirPrayerModel.setNext(success.getNext());
+
+                                if(!success.getPsalms().isEmpty()){
+                                    success.getPsalms().forEach(psalmModel -> {
+                                        if(psalmModel.getSlava() != null){
+                                            SlavaModel slavaModel = new SlavaModel();
+                                            slavaModel.setText(psalmModel.getSlava().getText());
+                                            if(psalmModel.getSlava().getPrayer() != null){
+                                                slavaModel.setPrayer(psalmModel.getSlava().getPrayer());
+                                            }
+                                            psalmModel.setSlava(slavaModel);
+                                        }
+                                    });
+                                    psaltirPrayerModel.setPsalms(success.getPsalms());
+
+                                    makingModel(id,
+                                            psaltirPrayerModel.getName(),
+                                            psaltirPrayerModel.getKafismaStart(),
+                                            psaltirPrayerModel.getKafismaEnd(),
+                                            psaltirPrayerModel.getPrev(),
+                                            psaltirPrayerModel.getNext(),
+                                            psaltirPrayerModel.getPsalms());
+                                }else {
+                                    PrayersModels prayersModel = new PrayersModels(id,
+                                            psaltirPrayerModel.getName(),
+                                            psaltirPrayerModel.getText(),
+                                            psaltirPrayerModel.getPrev(),
+                                            psaltirPrayerModel.getNext());
+                                    prayersCollection.add(prayersModel);
+                                    mutablePrayersCollection.setValue(prayersCollection);
+                                }
+                            }, error->{
+                                Log.e(TAG, error.getLocalizedMessage());
+                            })
+            );
+        }
     }
 
     public MutableLiveData<PrayersModels> getPrayerModelsCollectionItem(int id, SQLiteDatabase db){
@@ -268,7 +345,6 @@ public class StarredViewModel extends ViewModel {
             prayersModels = null;
         }
         getPrayerCollection.close();
-        Log.w("STARRED", prayersModels.toString());
         return prayersModels;
     }
 

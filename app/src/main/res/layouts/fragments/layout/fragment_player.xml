@@ -25,6 +25,7 @@
             android:fontFamily="@font/cyrillic_old"
             android:text=""
             android:textAlignment="center"
+            android:textColor="@color/black"
             android:textSize="18sp" />
 
         <LinearLayout
@@ -38,10 +39,11 @@
                 android:id="@+id/seekBarDurTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_medium"
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
                 android:text="@string/default_time"
-                android:fontFamily="@font/cyrillic_old"/>
+                android:textColor="@color/black" />
 
             <SeekBar
                 android:id="@+id/durationBarMolitvy"
@@ -57,10 +59,11 @@
                 android:id="@+id/seekBarMaxTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_medium"
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
                 android:text="@string/default_time"
-                android:fontFamily="@font/cyrillic_old"/>
+                android:textColor="@color/black" />
 
         </LinearLayout>
 

@@ -205,14 +205,12 @@ public class PrayerViewModel extends ViewModel {
 
                             if(!success.getPsalms().isEmpty()){
                                 success.getPsalms().forEach(psalmModel -> {
-                                    Log.d(TAG, "PsalmModel: " + psalmModel.toString());
                                     if(psalmModel.getSlava() != null){
                                         SlavaModel slavaModel = new SlavaModel();
                                         slavaModel.setText(psalmModel.getSlava().getText());
                                         if(psalmModel.getSlava().getPrayer() != null){
                                             slavaModel.setPrayer(psalmModel.getSlava().getPrayer());
                                         }
-                                        Log.d(TAG, "SlavaModel: " + slavaModel.toString());
                                         psalmModel.setSlava(slavaModel);
                                     }
                                 });

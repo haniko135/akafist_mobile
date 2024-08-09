@@ -91,6 +91,10 @@ public class PrayersModels {
         return next;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
