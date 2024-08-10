@@ -44,6 +44,7 @@ public class Home extends Fragment {
     public FragmentHomeBinding homeBinding;
     private SharedPreferences appPref;
     private String userName;
+    private HomeRecyclerAdapter homeAdapter = new HomeRecyclerAdapter();
     private final boolean isFirstTime = false;
     AppCompatActivity fragActivity;
 
@@ -92,9 +93,15 @@ public class Home extends Fragment {
 
         homeBinding = FragmentHomeBinding.inflate(getLayoutInflater());
 
-        Home fr = this;
         homeBinding.homeRv.setLayoutManager(new LinearLayoutManager(getContext()));
-        menuViewModel.getMutableLiveData().observe(getViewLifecycleOwner(), homeBlocksModels -> homeBinding.homeRv.setAdapter(new HomeRecyclerAdapter(homeBlocksModels, fr)));
+        homeAdapter.setFragment(this);
+        menuViewModel.getMutableLiveData().observe(
+                getViewLifecycleOwner(),
+                homeBlocksModels ->{
+                    homeAdapter.setData(homeBlocksModels);
+                    homeBinding.homeRv.setAdapter(homeAdapter);
+                }
+        );
 
         SharedPreferences.Editor editor = appPref.edit();
         editor.apply();

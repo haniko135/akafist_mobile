@@ -56,7 +56,7 @@ public class MenuViewModel extends ViewModel {
         blocksModelList.add(new HomeBlocksModel("links",
                 context.getString(R.string.links1), context.getString(R.string.links2)));
         blocksModelList.add(new HomeBlocksModel("menuChurch",
-                context.getString(R.string.molitvy_offline)," "));
+                context.getString(R.string.menu_church_title)," "));
         blocksModelList.add(new HomeBlocksModel("notes",
                 context.getString(R.string.notes1), context.getString(R.string.notes2)));
         blocksModelList.add(new HomeBlocksModel("talks",

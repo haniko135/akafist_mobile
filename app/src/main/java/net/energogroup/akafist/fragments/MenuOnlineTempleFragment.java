@@ -14,13 +14,9 @@ import android.view.ViewGroup;
 import net.energogroup.akafist.AkafistApplication;
 import net.energogroup.akafist.R;
 import net.energogroup.akafist.databinding.FragmentMenuOnlineTempleBinding;
-import net.energogroup.akafist.models.HomeBlocksModel;
-import net.energogroup.akafist.recyclers.HomeRecyclerAdapter;
 import net.energogroup.akafist.recyclers.MenuOnlineTempleAdapter;
 import net.energogroup.akafist.viewmodel.MenuOnlineTempleViewModel;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -33,6 +29,7 @@ public class MenuOnlineTempleFragment extends Fragment {
     private static final String TAG = "MENU_ONLINE_TEMPLE_FRAGMENT";
 
     private MenuOnlineTempleViewModel menuOnlineTempleVM;
+    private MenuOnlineTempleAdapter menuOnlineTempleAdapter = new MenuOnlineTempleAdapter();
     private FragmentMenuOnlineTempleBinding binding;
     private String mode;
 
@@ -77,8 +74,9 @@ public class MenuOnlineTempleFragment extends Fragment {
                 getResources().getString(R.string.menu_church_desc);
         binding.menuOnlineTempleTV.setText(menuDescribe);
 
+        binding.menuOnlineTempleRV.setLayoutManager(new LinearLayoutManager(getContext()));
+        menuOnlineTempleAdapter.setFragment(this);
 
-        Fragment fr = this;
 
         binding.menuOnlineTempleSwipe.setOnRefreshListener(() -> {
             if(Objects.equals(mode,  "menuChurch")) {
@@ -87,7 +85,9 @@ public class MenuOnlineTempleFragment extends Fragment {
                     menuOnlineTempleVM.getJson(((AkafistApplication)getActivity().getApplication()).prAPI);
                     menuOnlineTempleVM.getOnlineTempleListMLD().observe(
                             getViewLifecycleOwner(),
-                            onlineTempleList -> binding.menuOnlineTempleRV.setAdapter(new MenuOnlineTempleAdapter(fr, onlineTempleList))
+                            onlineTempleList -> {
+                                menuOnlineTempleAdapter.setData(onlineTempleList);
+                            }
                     );
                 }
                 binding.menuOnlineTempleSwipe.setRefreshing(false);
@@ -95,8 +95,8 @@ public class MenuOnlineTempleFragment extends Fragment {
         });
 
         menuOnlineTempleVM.getOnlineTempleListMLD().observe(getViewLifecycleOwner(),onlineTempleList -> {
-            binding.menuOnlineTempleRV.setLayoutManager(new LinearLayoutManager(getContext()));
-            binding.menuOnlineTempleRV.setAdapter(new MenuOnlineTempleAdapter(fr, onlineTempleList));
+            menuOnlineTempleAdapter.setData(onlineTempleList);
+            binding.menuOnlineTempleRV.setAdapter(menuOnlineTempleAdapter);
         });
 
         return binding.getRoot();

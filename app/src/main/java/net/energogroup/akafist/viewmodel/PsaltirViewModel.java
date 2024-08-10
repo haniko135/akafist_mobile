@@ -6,10 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import net.energogroup.akafist.api.PrAPI;
-import net.energogroup.akafist.models.psaltir.PsaltirKafismaModel;
 import net.energogroup.akafist.models.psaltir.PsaltirModel;
-
-import java.util.ArrayList;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;

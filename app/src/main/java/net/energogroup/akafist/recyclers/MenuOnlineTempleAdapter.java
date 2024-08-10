@@ -21,6 +21,7 @@ import net.energogroup.akafist.models.HomeBlocksModel;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -29,13 +30,17 @@ import java.util.Locale;
 public class MenuOnlineTempleAdapter extends RecyclerView.Adapter<MenuOnlineTempleAdapter.MenuOnlineTempleVH> {
 
     private Fragment fr;
-    private List<HomeBlocksModel> onlineTempleList;
-    private RecyclerView.RecycledViewPool rVPool;
+    private List<HomeBlocksModel> onlineTempleList = new ArrayList<>();
 
-    public MenuOnlineTempleAdapter(Fragment fr, List<HomeBlocksModel> onlineTempleList) {
+    public MenuOnlineTempleAdapter() { }
+
+    public void setData(List<HomeBlocksModel> onlineTempleListTemp){
+        onlineTempleList.clear();
+        onlineTempleList.addAll(onlineTempleListTemp);
+    }
+
+    public void setFragment(Fragment fr){
         this.fr = fr;
-        this.onlineTempleList = onlineTempleList;
-        rVPool = new RecyclerView.RecycledViewPool();
     }
 
     @NonNull
@@ -59,80 +64,65 @@ public class MenuOnlineTempleAdapter extends RecyclerView.Adapter<MenuOnlineTemp
 
         if(onlineTempleList.get(position).getDate() != null) {
             if (onlineTempleList.get(position).getDate().equals("onlineMichael")) {
-                onlineTempleList.get(position).setLinks(R.string.link_Michael);
-                onlineTempleList.get(position).setAdditions("Трансляция арх. Михаила");
-                Glide.with(fr.getContext())
-                        .load(getImage("online_temple_michael"))
-                        .centerInside()
-                        .diskCacheStrategy(DiskCacheStrategy.DATA)
-                        .into(holder.image);
+                setItem(onlineTempleList.get(position),
+                        R.string.link_Michael,
+                        "Трансляция арх. Михаила",
+                        "online_temple_michael",
+                        holder);
             }
             if (onlineTempleList.get(position).getDate().equals("onlinePokrovaPls")) {
-                onlineTempleList.get(position).setLinks(R.string.link_Pokrova_Pls);
-                onlineTempleList.get(position).setAdditions("Трансляция Покрова Пр. Богородицы");
-                Glide.with(fr.getContext())
-                        .load(getImage("online_temple_pokrova"))
-                        .diskCacheStrategy(DiskCacheStrategy.DATA)
-                        .into(holder.image);
+                setItem(onlineTempleList.get(position),
+                        R.string.link_Pokrova_Pls,
+                        "Трансляция Покрова Пр. Богородицы",
+                        "online_temple_pokrova",
+                        holder);
             }
             if (onlineTempleList.get(position).getDate().equals("onlineVarvara")) {
-                onlineTempleList.get(position).setLinks(R.string.link_Varvara);
-                onlineTempleList.get(position).setAdditions("Трансляция св. Варвары");
-                Glide.with(fr.getContext())
-                        .load(getImage("online_temple_varvara"))
-                        .diskCacheStrategy(DiskCacheStrategy.DATA)
-                        .into(holder.image);
+                setItem(onlineTempleList.get(position),
+                        R.string.link_Varvara,
+                        "Трансляция св. Варвары",
+                        "online_temple_varvara",
+                        holder);
             }
             if (onlineTempleList.get(position).getDate().equals("molitvyOfflain")){
-                onlineTempleList.get(position).setLinks(R.id.action_menuOnlineTempleFragment_to_linksFragment);
-                Glide.with(fr.getContext())
-                        .load(getImage("ic_baseline_arrow_right"))
-                        .diskCacheStrategy(DiskCacheStrategy.DATA)
-                        .into(holder.image);
+                setItem(onlineTempleList.get(position),
+                        R.id.action_menuOnlineTempleFragment_to_linksFragment,
+                        null, "ic_baseline_arrow_right",
+                        holder);
+                holder.image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            }
+            if (onlineTempleList.get(position).getDate().equals("prayersDownload")){
+                setItem(onlineTempleList.get(position),
+                        R.id.action_menuOnlineTempleFragment_to_offlinePrayerFragment,
+                        null, "ic_baseline_arrow_right",
+                        holder);
                 holder.image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             }
             if (onlineTempleList.get(position).getDate().equals("now")){
                 holder.title.setText(onlineTempleList.get(position).getDateTxt());
-                onlineTempleList.get(position).setLinks(R.id.action_menuOnlineTempleFragment_to_churchFragment);
-                Glide.with(fr.getContext())
-                        .load(getImage("ic_baseline_arrow_right"))
-                        .diskCacheStrategy(DiskCacheStrategy.DATA)
-                        .into(holder.image);
+                setItem(onlineTempleList.get(position),
+                        R.id.action_menuOnlineTempleFragment_to_churchFragment,
+                        null, "ic_baseline_arrow_right",
+                        holder);
                 holder.image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             }
-            if (onlineTempleList.get(position).getDate().equals(tomorrow)){
-                onlineTempleList.get(position).setLinks(R.id.action_menuOnlineTempleFragment_to_churchFragment);
-                Glide.with(fr.getContext())
-                        .load(getImage("ic_baseline_arrow_right"))
-                        .diskCacheStrategy(DiskCacheStrategy.DATA)
-                        .into(holder.image);
+            if (onlineTempleList.get(position).getDate().equals(tomorrow) ||
+                    onlineTempleList.get(position).getDate().equals("everyday") ||
+                    onlineTempleList.get(position).getDate().equals("needs"))
+            {
+                setItem(onlineTempleList.get(position),
+                        R.id.action_menuOnlineTempleFragment_to_churchFragment,
+                        null, "ic_baseline_arrow_right",
+                        holder);
                 holder.image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             }
-            if (onlineTempleList.get(position).getDate().equals("everyday")){
-                onlineTempleList.get(position).setLinks(R.id.action_menuOnlineTempleFragment_to_churchFragment);
-                Glide.with(fr.getContext())
-                        .load(getImage("ic_baseline_arrow_right"))
-                        .diskCacheStrategy(DiskCacheStrategy.DATA)
-                        .into(holder.image);
-                holder.image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-            }
-            if(onlineTempleList.get(position).getDate().equals("needs")){
-                onlineTempleList.get(position).setLinks(R.id.action_menuOnlineTempleFragment_to_churchFragment);
-                Glide.with(fr.getContext())
-                        .load(getImage("ic_baseline_arrow_right"))
-                        .diskCacheStrategy(DiskCacheStrategy.DATA)
-                        .into(holder.image);
-                holder.image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-            }
-
         }else{
             holder.title.setText(onlineTempleList.get(position).getName());
             if(onlineTempleList.get(position).getName().startsWith("Псалтирь")){
-                onlineTempleList.get(position).setLinks(R.id.action_menuOnlineTempleFragment_to_psaltirFragment);
-                Glide.with(fr.getContext())
-                        .load(getImage("ic_baseline_arrow_right"))
-                        .diskCacheStrategy(DiskCacheStrategy.DATA)
-                        .into(holder.image);
+                setItem(onlineTempleList.get(position),
+                        R.id.action_menuOnlineTempleFragment_to_psaltirFragment,
+                        null, "ic_baseline_arrow_right",
+                        holder);
                 holder.image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             }
         }
@@ -171,6 +161,16 @@ public class MenuOnlineTempleAdapter extends RecyclerView.Adapter<MenuOnlineTemp
 
     public int getImage(String imageName) {
         return fr.getResources().getIdentifier(imageName, "drawable", fr.getActivity().getPackageName());
+    }
+
+    public void setItem(HomeBlocksModel homeBlock, int link, String additions, String imageName, MenuOnlineTempleVH vh){
+        homeBlock.setLinks(link);
+        homeBlock.setAdditions(additions);
+        Glide.with(fr.getContext())
+                .load(getImage(imageName))
+                .centerInside()
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
+                .into(vh.image);
     }
 
     static class MenuOnlineTempleVH extends RecyclerView.ViewHolder{

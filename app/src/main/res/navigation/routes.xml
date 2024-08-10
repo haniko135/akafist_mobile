@@ -278,5 +278,16 @@
         <action
             android:id="@+id/action_menuOnlineTempleFragment_to_linksFragment"
             app:destination="@id/linksFragment" />
+        <action
+            android:id="@+id/action_menuOnlineTempleFragment_to_offlinePrayerFragment"
+            app:destination="@id/offlinePrayerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/offlinePrayerFragment"
+        android:name="net.energogroup.akafist.fragments.OfflinePrayerFragment"
+        android:label="OfflinePrayerFragment" >
+        <action
+            android:id="@+id/action_offlinePrayerFragment_to_prayerFragment"
+            app:destination="@id/prayerFragment" />
     </fragment>
 </navigation>

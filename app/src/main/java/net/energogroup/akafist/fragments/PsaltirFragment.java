@@ -72,8 +72,7 @@ public class PsaltirFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(PsaltirViewModel.class);
         if(getActivity() != null) {
             ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Псалтирь");
-            //viewModel.getJson(getContext(), id);
-            viewModel.getJson(((AkafistApplication)getActivity().getApplication()).prAPI, id);
+            viewModel.getJson(((AkafistApplication) getActivity().getApplication()).prAPI, id);
         }
 
         getLastViewedPsaltir();
@@ -91,7 +90,6 @@ public class PsaltirFragment extends Fragment {
 
         viewModel.getPsaltirModelMLD().observe(getViewLifecycleOwner(), psaltirModel -> {
             psaltirBinding.psaltirName.setText(psaltirModel.getName());
-            Log.e(TAG, String.valueOf(psaltirModel.getDesc() != null));
             if(Objects.equals(psaltirModel.getDesc(), null)){
                 psaltirBinding.psaltirDesc.setVisibility(View.VISIBLE);
                 psaltirBinding.psaltirDesc.setText(psaltirModel.getDesc());
@@ -155,7 +153,6 @@ public class PsaltirFragment extends Fragment {
                 if (timestamp > lastTimestamp) {
                     lastTimestamp = timestamp;
                     lastSavedKey = key.substring(0, key.length() - "_timestamp".length());
-                    Log.w(TAG, lastSavedKey);
                 }
             }
         }

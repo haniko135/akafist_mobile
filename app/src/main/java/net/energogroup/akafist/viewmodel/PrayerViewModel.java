@@ -51,10 +51,6 @@ public class PrayerViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isRendered = new MutableLiveData<>(false);
     private final MutableLiveData<Boolean> isRenderedTextArr = new MutableLiveData<>(false);
 
-    private final List<PsalmModel> psalmModels = new ArrayList<>();
-    private String nameKaf, fullHtml, kafStart, kafEnd, text;
-    private Integer prev, next;
-
     private final MutableLiveData<ArrayList<String>> prayerTextArrMLD = new MutableLiveData<>();
 
     /**
@@ -122,64 +118,6 @@ public class PrayerViewModel extends ViewModel {
                         })
         );
     }
-
-    /*public void getJsonPsaltir(int blockId, int kafId, Context context){
-        isRendered.setValue(false);
-        String urlToGet = context.getString(MainActivity.API_PATH_PSALTIR)+ blockId +"/"+ kafId;
-
-        RequestServiceHandler serviceHandler = new RequestServiceHandler();
-        serviceHandler.addHeader("User-Agent", context.getString(MainActivity.APP_VER));
-        serviceHandler.addHeader("Connection", "keep-alive");
-
-        serviceHandler.objectRequest(urlToGet, Request.Method.GET,
-                null, JSONObject.class,
-                (Response.Listener<JSONObject>) response -> {
-                    JSONArray psalms;
-                    try {
-                        nameKaf = StringEscapeUtils.unescapeJava(response.getString("name"));
-                        kafStart = StringEscapeUtils.unescapeJava(response.getString("kafismaStart"));
-                        kafEnd = StringEscapeUtils.unescapeJava(response.getString("kafismaEnd"));
-                        text = StringEscapeUtils.unescapeJava(response.getString("text"));
-                        prev = response.getInt("prev");
-                        next = response.getInt("next");
-
-                        psalms = response.getJSONArray("psalms");
-                        if(psalms.length() > 0) {
-                            int i = 0;
-                            JSONObject obj;
-                            int id;
-                            String name1, text1;
-                            while (i < psalms.length() - 1) {
-                                obj = psalms.getJSONObject(i);
-                                id = obj.getInt("id");
-                                name1 = obj.getString("name");
-                                text1 = obj.getString("text");
-
-                                try {
-                                    JSONObject slava = obj.getJSONObject("slava");
-                                    SlavaModel slavaModel = new SlavaModel();
-                                    slavaModel.setText(slava.getString("text"));
-                                    if (!slava.isNull("prayer")) {
-                                        slavaModel.setPrayer(slava.getString("prayer"));
-                                    }
-                                    psalmModels.add(new PsalmModel(id, name1, text1, slavaModel));
-                                }catch (JSONException e){
-                                    psalmModels.add(new PsalmModel(id, name1, text1));
-                                }
-                                i++;
-                            }
-
-                            makingModel(nameKaf, kafStart, kafEnd,prev, next, psalmModels);
-                        }else {
-                            prayersModel = new PrayersModels(nameKaf, text, prev, next);
-                            prayersModelsMutableLiveData.setValue(prayersModel);
-                            formattingText(prayersModel);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }, error -> Log.e("Response", error.getMessage()));
-    }*/
 
     public void getJsonPsaltir(PrAPI prAPI, int blockId, int kafId){
         isRendered.setValue(false);

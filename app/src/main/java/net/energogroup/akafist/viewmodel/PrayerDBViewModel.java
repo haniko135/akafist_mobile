@@ -30,19 +30,15 @@ public class PrayerDBViewModel extends ViewModel {
         boolean result = false; //false by default
 
         if(cursorPrayers.moveToFirst()) {
-            Log.e("checkPrayerInDB", cursorPrayers.getString(1));
-
             do{
-                if(cursorPrayers.getString(1).contains(prevMenu)) {
-                    result = true;
-                    PrayersModels prayersModels = new PrayersModels();
-                    prayersModels.setId(Integer.parseInt(cursorPrayers.getString(0)));
-                    prayersModels.setName(cursorPrayers.getString(1).split("/")[1]);
-                    prayersModels.setHtml(cursorPrayers.getString(2));
-                    prayersModels.setPrev(Integer.parseInt(cursorPrayers.getString(3)));
-                    prayersModels.setNext(Integer.parseInt(cursorPrayers.getString(4)));
-                    prayersModelMLD.setValue(prayersModels);
-                }
+                result = true;
+                PrayersModels prayersModels = new PrayersModels();
+                prayersModels.setId(Integer.parseInt(cursorPrayers.getString(0)));
+                prayersModels.setName(cursorPrayers.getString(1).split("/")[1]);
+                prayersModels.setHtml(cursorPrayers.getString(2));
+                prayersModels.setPrev(Integer.parseInt(cursorPrayers.getString(3)));
+                prayersModels.setNext(Integer.parseInt(cursorPrayers.getString(4)));
+                prayersModelMLD.setValue(prayersModels);
             }while(cursorPrayers.moveToNext());
         }
         cursorPrayers.close();

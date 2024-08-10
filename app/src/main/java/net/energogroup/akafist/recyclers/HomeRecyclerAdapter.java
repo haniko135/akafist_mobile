@@ -23,6 +23,7 @@ import net.energogroup.akafist.models.HomeBlocksModel;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -34,11 +35,17 @@ import java.util.Locale;
  * @version 1.0.0
  */
 public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeRecyclerAdapter.HomeViewHolder> {
-    private final List<HomeBlocksModel> homeBlocksModels;
-    private final Fragment fragment;
+    private final List<HomeBlocksModel> homeBlocksModels = new ArrayList<>();
+    private Fragment fragment;
 
-    public HomeRecyclerAdapter(List<HomeBlocksModel> homeBlocksModels, Home fragment) {
-        this.homeBlocksModels = homeBlocksModels;
+    public HomeRecyclerAdapter( ){ }
+
+    public void setData(List<HomeBlocksModel> homeBlocksModelsT){
+        homeBlocksModels.clear();
+        homeBlocksModels.addAll(homeBlocksModelsT);
+    }
+
+    public void setFragment(Home fragment){
         this.fragment = fragment;
     }
 

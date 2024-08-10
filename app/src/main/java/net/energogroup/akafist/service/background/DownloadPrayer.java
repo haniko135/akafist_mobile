@@ -110,7 +110,8 @@ public class DownloadPrayer {
     }
 
     public void deletePrayer(String prevMenuData, String name){
-        String[] selectionArgs = { prevMenuData+"/"+name };
+        String arg = prevMenuData == null ? name : prevMenuData+"/"+name;
+        String[] selectionArgs = { arg };
 
         db.delete(PrayersDTO.TABLE_NAME,PrayersDTO.COLUMN_NAME_NAME + " LIKE ?",
                 selectionArgs);

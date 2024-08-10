@@ -52,6 +52,12 @@ public class MenuOnlineTempleViewModel extends ViewModel {
         return onlineTempleList;
     }
 
+    /**
+     * This method initialize base menu items
+     * @param prAPI
+     * @param context
+     * @param mode
+     */
     public void initialize(PrAPI prAPI, Context context, String mode){
         if(mode.equals("menuOnlineTemple")){
             onlineTempleList.add(new HomeBlocksModel("onlineMichael",
@@ -64,7 +70,9 @@ public class MenuOnlineTempleViewModel extends ViewModel {
         } else if (mode.equals("menuChurch")) {
             onlineTempleList.add(new HomeBlocksModel("molitvyOfflain",
                     context.getString(R.string.molitvy_offline), context.getString(R.string.molitvy_offline_2)));
-            //getJson(context);
+            onlineTempleList.add(new HomeBlocksModel("prayersDownload",
+                    context.getString(R.string.prayers_download), context.getString(R.string.prayers_download_2)));
+            onlineTempleListMLD.setValue(onlineTempleList);
             getJson(prAPI);
         }
     }
