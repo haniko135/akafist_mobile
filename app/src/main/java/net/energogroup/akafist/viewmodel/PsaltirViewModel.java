@@ -14,7 +14,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class PsaltirViewModel extends ViewModel {
 
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private final MutableLiveData<PsaltirModel> psaltirModelMLD = new MutableLiveData<>();
 
     public MutableLiveData<PsaltirModel> getPsaltirModelMLD() {

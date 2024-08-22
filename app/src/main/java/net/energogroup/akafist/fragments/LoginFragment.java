@@ -126,7 +126,6 @@ public class LoginFragment extends Fragment {
 
     /**
      * This method assigns a name to a user with guest rights
-     * @param editor
      */
     public void guestFunc(SharedPreferences.Editor editor){
         Random random = new Random();

@@ -1,6 +1,8 @@
 package net.energogroup.akafist;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -36,12 +38,11 @@ public class AkafistApplication extends Application {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
+        OkHttpClient okHttpClientPR = new OkHttpClient().newBuilder()
                 .addInterceptor(chain -> {
                     Request request = chain.request().newBuilder()
                             .header("Content-Type", "application/json")
                             .header("User-Agent", getResources().getString(R.string.app_ver))
-                            //.header("Authorization", "Bearer "+getResources().getString(R.string.api_token))//api-token
                             .method(chain.request().method(), chain.request().body())
                             .build();
 
@@ -49,6 +50,24 @@ public class AkafistApplication extends Application {
                 })
                 .addInterceptor(loggingInterceptor)
                 .build();
+
+
+        SharedPreferences preferences = getApplicationContext().getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
+
+        OkHttpClient okHttpClientAzbyka= new OkHttpClient().newBuilder()
+                .addInterceptor(chain -> {
+                    Request request = chain.request().newBuilder()
+                            .header("Content-Type", "application/json")
+                            .header("User-Agent", getResources().getString(R.string.app_ver))
+                            .header("Authorization", "Bearer " + preferences.getString("app_pref_azbyka_token", "00"))
+                            .method(chain.request().method(), chain.request().body())
+                            .build();
+
+                    return chain.proceed(request);
+                })
+                .addInterceptor(loggingInterceptor)
+                .build();
+
 
         Gson gson = new GsonBuilder()
                 .setLenient()
@@ -58,14 +77,14 @@ public class AkafistApplication extends Application {
                 .baseUrl(getResources().getString(R.string.apiPath))
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .client(okHttpClient)
+                .client(okHttpClientPR)
                 .build();
 
         Retrofit retrofitAzbyka = new Retrofit.Builder()
                 .baseUrl(getResources().getString(R.string.azbykaApiPath))
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .client(okHttpClient)
+                .client(okHttpClientAzbyka)
                 .build();
 
         prAPI = retrofitPR.create(PrAPI.class);

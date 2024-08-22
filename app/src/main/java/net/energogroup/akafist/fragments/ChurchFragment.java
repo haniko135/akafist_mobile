@@ -16,7 +16,6 @@ import androidx.navigation.fragment.FragmentKt;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,8 +44,9 @@ public class ChurchFragment extends Fragment {
     private static final String TAG = "CHURCH_FRAGMENT";
     public static final String LAST_PRAYER_PREF_NAME = "app_pref_prayer_scroll_pos_";
     private String date, dateTxt, name;
-    public static ServicesRecyclerAdapter servicesRecyclerAdapter = new ServicesRecyclerAdapter();
+    public static final ServicesRecyclerAdapter servicesRecyclerAdapter = new ServicesRecyclerAdapter();
     public FragmentChurchBinding churchBinding;
+    public TypesRecyclerAdapter typesRV = new TypesRecyclerAdapter();
     private ChurchViewModel churchViewModel;
     private SharedPreferences appPref;
     private String lastViewedPrayerKey;
@@ -111,7 +111,15 @@ public class ChurchFragment extends Fragment {
                     churchViewModel.getLiveNameTxt().observe(getViewLifecycleOwner(), s -> churchBinding.churchName.setText(s));
 
                     churchBinding.upRvChurch.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
-                    churchViewModel.getMutableTypesList().observe(getViewLifecycleOwner(), typesModels -> churchBinding.upRvChurch.setAdapter(new TypesRecyclerAdapter(typesModels, this)));
+
+                    churchViewModel.getMutableTypesList().observe(getViewLifecycleOwner(), typesModels -> {
+                        typesRV = TypesRecyclerAdapter.newBuilder()
+                                .setFragment(this)
+                                .setData(typesModels)
+                                .setChurchViewModel()
+                                .build();
+                        churchBinding.upRvChurch.setAdapter(typesRV);
+                    });
 
                     churchBinding.downRvChurch.setLayoutManager(new LinearLayoutManager(getContext()));
 

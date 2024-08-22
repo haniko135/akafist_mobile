@@ -6,17 +6,15 @@ import android.database.sqlite.SQLiteDatabase;
 import androidx.annotation.OptIn;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.media3.common.util.Log;
 import androidx.media3.common.util.UnstableApi;
 
 import net.energogroup.akafist.db.PrayersDTO;
-import net.energogroup.akafist.db.StarredDTO;
 import net.energogroup.akafist.models.PrayersModels;
 
 public class PrayerDBViewModel extends ViewModel {
 
     private static final String TAG = "PRAYER_DB_VIEW_MODEL";
-    private MutableLiveData<PrayersModels> prayersModelMLD = new MutableLiveData<>();
+    private final MutableLiveData<PrayersModels> prayersModelMLD = new MutableLiveData<>();
 
     public MutableLiveData<PrayersModels> getPrayersModelMLD() {
         return prayersModelMLD;

@@ -1,6 +1,5 @@
 package net.energogroup.akafist.viewmodel;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,22 +8,14 @@ import android.view.ViewGroup;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-
-import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.api.PrAPI;
 import net.energogroup.akafist.fragments.PrayerFragment;
 import net.energogroup.akafist.models.PrayersModels;
 import net.energogroup.akafist.models.psaltir.PsalmModel;
 import net.energogroup.akafist.models.psaltir.PsaltirPrayerModel;
 import net.energogroup.akafist.models.psaltir.SlavaModel;
-import net.energogroup.akafist.service.RequestServiceHandler;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,7 +35,7 @@ import io.reactivex.schedulers.Schedulers;
 public class PrayerViewModel extends ViewModel {
 
     private final String TAG = "PRAYER_VIEW_MODEL";
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private PrayersModels prayersModel;
     private MutableLiveData<PrayersModels> prayersModelsMutableLiveData = new MutableLiveData<>();

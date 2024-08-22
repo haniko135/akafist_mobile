@@ -2,7 +2,6 @@ package net.energogroup.akafist.recyclers;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,7 @@ import net.energogroup.akafist.models.TypesModel;
 
 import net.energogroup.akafist.fragments.ChurchFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,19 +27,18 @@ import java.util.List;
  * @version 1.0.0
  */
 public class TypesRecyclerAdapter extends RecyclerView.Adapter<TypesRecyclerAdapter.TypesViewHolder>{
-    private final List<TypesModel> typesModels;
+    private List<TypesModel> typesModels = new ArrayList<>();
     private ChurchViewModel churchViewModel;
     private TypesViewHolder prevViewHolder;
-    Fragment fragment;
+    private Fragment fragment;
 
     /**
-     * Adapter's constructor
-     * @param typesModels list of types
-     * @param fragment ChurchFragment context
+     * The Adapter constructor
      */
-    public TypesRecyclerAdapter(List<TypesModel> typesModels, Fragment fragment) {
-        this.typesModels = typesModels;
-        this.fragment = fragment;
+    public TypesRecyclerAdapter() { }
+
+    public static TypesRecyclerAdapter.Builder newBuilder() {
+        return new TypesRecyclerAdapter().new Builder();
     }
 
     /**
@@ -47,7 +46,6 @@ public class TypesRecyclerAdapter extends RecyclerView.Adapter<TypesRecyclerAdap
      * @param parent   The ViewGroup into which the new View will be added after it is bound to
      *                 an adapter position.
      * @param viewType The view type of the new View.
-     * @return
      */
     @NonNull
     @Override
@@ -64,9 +62,6 @@ public class TypesRecyclerAdapter extends RecyclerView.Adapter<TypesRecyclerAdap
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull TypesViewHolder holder, int position) {
-        ViewModelProvider provider = new ViewModelProvider(fragment);
-        churchViewModel = provider.get(ChurchViewModel.class);
-
         if(prevViewHolder == null && position == 0) {
             churchViewModel.setCurId(typesModels.get(position).getId());
             holder.getHorizontalItem().setTextColor(Color.parseColor("#000000"));
@@ -79,9 +74,6 @@ public class TypesRecyclerAdapter extends RecyclerView.Adapter<TypesRecyclerAdap
             prevViewHolder.getHorizontalItem().setTextColor(Color.parseColor("#9A9A9A"));
             holder.getHorizontalItem().setTextColor(Color.parseColor("#000000"));
             prevViewHolder = holder;
-            Log.e("AdapterId", String.valueOf(typesModels.get(position).getId()));
-            Log.e("AdapterId", String.valueOf(R.color.borderBottom));
-            Log.e("AdapterId", String.valueOf(prevViewHolder.horizontalItem.getCurrentTextColor()));
         });
     }
 
@@ -105,6 +97,30 @@ public class TypesRecyclerAdapter extends RecyclerView.Adapter<TypesRecyclerAdap
 
         public TextView getHorizontalItem() {
             return horizontalItem;
+        }
+    }
+
+    public class Builder{
+        private Builder(){ }
+
+
+        public Builder setData(List<TypesModel> typesModels) {
+            TypesRecyclerAdapter.this.typesModels = typesModels;
+            return this;
+        }
+
+        public Builder setFragment(Fragment fragment) {
+            TypesRecyclerAdapter.this.fragment = fragment;
+            return this;
+        }
+
+        public Builder setChurchViewModel() {
+            TypesRecyclerAdapter.this.churchViewModel = new ViewModelProvider(TypesRecyclerAdapter.this.fragment).get(ChurchViewModel.class);
+            return this;
+        }
+
+        public TypesRecyclerAdapter build() {
+            return TypesRecyclerAdapter.this;
         }
     }
 }

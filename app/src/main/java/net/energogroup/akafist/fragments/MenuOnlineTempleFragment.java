@@ -2,6 +2,7 @@ package net.energogroup.akafist.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -29,7 +30,7 @@ public class MenuOnlineTempleFragment extends Fragment {
     private static final String TAG = "MENU_ONLINE_TEMPLE_FRAGMENT";
 
     private MenuOnlineTempleViewModel menuOnlineTempleVM;
-    private MenuOnlineTempleAdapter menuOnlineTempleAdapter = new MenuOnlineTempleAdapter();
+    private final MenuOnlineTempleAdapter menuOnlineTempleAdapter = new MenuOnlineTempleAdapter();
     private FragmentMenuOnlineTempleBinding binding;
     private String mode;
 
@@ -58,7 +59,7 @@ public class MenuOnlineTempleFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentMenuOnlineTempleBinding.inflate(inflater, container, false);
 

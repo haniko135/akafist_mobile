@@ -1,5 +1,7 @@
 package net.energogroup.akafist.models;
 
+import androidx.annotation.NonNull;
+
 import net.energogroup.akafist.fragments.ChurchFragment;
 import net.energogroup.akafist.viewmodel.ChurchViewModel;
 
@@ -73,6 +75,7 @@ public class ServicesModel {
         this.date = date;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "ServicesModel{" +

@@ -26,6 +26,7 @@ import net.energogroup.akafist.R;
 import net.energogroup.akafist.fragments.SkypesFragment;
 import net.energogroup.akafist.models.SkypesConfs;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,18 +38,24 @@ public class SkypesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private static final int TYPE_ZERO = 0;
     private static final int TYPE_ONE = 1;
 
-    private final List<SkypesConfs> skypesConfs;
-    private final Fragment fragment;
+    private final List<SkypesConfs> skypesConfs = new ArrayList<>();
+    private Fragment fragment;
     private int viewType;
 
     /**
      * List's constructor
-     * @param skypesConfs - list of skype conferences
-     * @param fragment - SkypesFragment context
      */
-    public SkypesRecyclerAdapter(List<SkypesConfs> skypesConfs, SkypesFragment fragment) {
-        this.skypesConfs = skypesConfs;
+    public SkypesRecyclerAdapter() { }
+
+    public void setFragment(Fragment fragment){
         this.fragment = fragment;
+    }
+
+    public void setData(List<SkypesConfs> skypesConfsTemp){
+        skypesConfs.clear();
+        skypesConfs.addAll(skypesConfsTemp);
+
+        notifyDataSetChanged();
     }
 
     @Override
@@ -65,7 +72,6 @@ public class SkypesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
      * @param parent   The ViewGroup into which the new View will be added after it is bound to
      *                 an adapter position.
      * @param viewType The view type of the new View.
-     * @return
      */
     @NonNull
     @Override
@@ -142,10 +148,10 @@ public class SkypesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     static class SkypesViewUrlHolder extends RecyclerView.ViewHolder{
-        public CardView skypeBlockListView;
-        public ImageButton skypeBlockListImage;
-        public TextView skypeBlockListTitle;
-        public ImageButton skypeBlockListForward;
+        public final CardView skypeBlockListView;
+        public final ImageButton skypeBlockListImage;
+        public final TextView skypeBlockListTitle;
+        public final ImageButton skypeBlockListForward;
 
         public SkypesViewUrlHolder(@NonNull View itemView) {
             super(itemView);
@@ -161,9 +167,9 @@ public class SkypesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
      */
     static class SkypesViewHolder extends RecyclerView.ViewHolder{
 
-        public TextView title;
-        public ImageView image;
-        public LinearLayout block;
+        public final TextView title;
+        public final ImageView image;
+        public final LinearLayout block;
 
         public SkypesViewHolder(View itemView) {
             super(itemView);

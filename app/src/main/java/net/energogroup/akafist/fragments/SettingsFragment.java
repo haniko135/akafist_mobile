@@ -30,7 +30,9 @@ import java.util.List;
 public class SettingsFragment extends Fragment {
 
     public FragmentSettingsBinding settingsBinding;
+    private final SettingsRecyclerAdapter settingsRecyclerAdapter = new SettingsRecyclerAdapter();
     private final List<String> settingsNames = new ArrayList<>();
+    private final List<Object> settingsLinks = new ArrayList<>();
 
     /**
      * Required class constructor
@@ -39,7 +41,6 @@ public class SettingsFragment extends Fragment {
 
     /**
      * This method is responsible for creating the settings fragment class
-     * @return
      */
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
@@ -55,8 +56,11 @@ public class SettingsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getResources().getString(R.string.settings_name));
         settingsNames.add("Изменить аккаунт");
+        settingsLinks.add(R.id.action_settingsFragment_to_loginFragment);
         settingsNames.add("Размер шрифта молитв");
+        settingsLinks.add("userTextSizeDialog");
         settingsNames.add("Связь с разработчиком");
+        settingsLinks.add("contactDeveloper");
     }
 
     /**
@@ -69,7 +73,6 @@ public class SettingsFragment extends Fragment {
      * @param savedInstanceState If non-null, this fragment is being re-constructed
      * from a previous saved state as given here.
      *
-     * @return
      */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -81,7 +84,9 @@ public class SettingsFragment extends Fragment {
         settingsBinding.userName.setText(userName);
 
         settingsBinding.settingsRV.setLayoutManager(new LinearLayoutManager(getContext()));
-        settingsBinding.settingsRV.setAdapter(new SettingsRecyclerAdapter(settingsNames, this));
+        settingsRecyclerAdapter.setData(settingsNames, settingsLinks);
+        settingsRecyclerAdapter.setFragment(this);
+        settingsBinding.settingsRV.setAdapter(settingsRecyclerAdapter);
 
         settingsBinding.userImage.setOnClickListener(view -> FragmentKt.findNavController(this).navigate(R.id.action_settingsFragment_to_accountFragment));
 

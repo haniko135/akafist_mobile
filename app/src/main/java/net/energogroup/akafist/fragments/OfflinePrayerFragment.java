@@ -24,7 +24,7 @@ public class OfflinePrayerFragment extends Fragment {
 
     private static final String TAG = "OFFLINE_PRAYER_FRAGMENT";
     private FragmentOfflinePrayerBinding binding;
-    private OfflinePrayerAdapter adapter = new OfflinePrayerAdapter();
+    private final OfflinePrayerAdapter adapter = new OfflinePrayerAdapter();
     private OfflinePrayerViewModel offlinePrayerViewModel;
 
     public static OfflinePrayerFragment newInstance() {
@@ -57,7 +57,8 @@ public class OfflinePrayerFragment extends Fragment {
         adapter.setFragment(this);
         adapter.setMainActivity((MainActivity) getActivity());
         offlinePrayerViewModel.getPrayersDB().observe(getViewLifecycleOwner(), prayers -> {
-            adapter.setPrayers(prayers);
+            if(prayers!= null)
+                adapter.setPrayers(prayers);
             binding.offlinePrayerRv.setAdapter(adapter);
         });
 

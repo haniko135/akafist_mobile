@@ -5,6 +5,8 @@ import android.graphics.Typeface;
 import android.text.TextPaint;
 import android.text.style.TypefaceSpan;
 
+import androidx.annotation.NonNull;
+
 public class CustomTypefaceSpan extends TypefaceSpan {
 
     private final Typeface newType;
@@ -15,12 +17,12 @@ public class CustomTypefaceSpan extends TypefaceSpan {
     }
 
     @Override
-    public void updateDrawState(TextPaint ds) {
+    public void updateDrawState(@NonNull TextPaint ds) {
         applyCustomTypeFace(ds, newType);
     }
 
     @Override
-    public void updateMeasureState(TextPaint paint) {
+    public void updateMeasureState(@NonNull TextPaint paint) {
         applyCustomTypeFace(paint, newType);
     }
 

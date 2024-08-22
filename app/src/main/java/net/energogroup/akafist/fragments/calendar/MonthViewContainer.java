@@ -9,7 +9,7 @@ import com.kizitonwose.calendar.view.ViewContainer;
 
 public class MonthViewContainer extends ViewContainer {
 
-    public ViewGroup titlesContainer;
+    public final ViewGroup titlesContainer;
     public MonthViewContainer(@NonNull View view) {
         super(view);
         titlesContainer = (ViewGroup) view;

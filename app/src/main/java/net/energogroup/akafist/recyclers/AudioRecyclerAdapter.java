@@ -8,7 +8,6 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,11 +28,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
 import net.energogroup.akafist.db.StarredDTO;
-import net.energogroup.akafist.fragments.LinksFragment;
 import net.energogroup.akafist.fragments.PlayerFragment;
 import net.energogroup.akafist.models.LinksModel;
 import net.energogroup.akafist.ui.CustomTypefaceSpan;
-import net.energogroup.akafist.viewmodel.LinksViewModel;
 import net.energogroup.akafist.viewmodel.PlayerViewModel;
 
 import java.io.File;
@@ -41,6 +38,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -57,57 +55,20 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
     private static final int URL_PATTERN_ID = R.string.listenPattern;
     private static final int DELETE_REPEAT_ID = R.string.deleteRepeat;
     private static final int DELETE_FILE_ID = R.string.deleteFile;
-    private static final String DEV_TAG = "AudioRecyclerAdapter";
-    private final Fragment fragment;
-    private final PlayerViewModel playerViewModel;
-    private LinksViewModel linksViewModel;
+    private static final String TAG = "AUDIO_RECYCLER_ADAPTER";
+    private Fragment fragment;
+    private PlayerViewModel playerViewModel;
     private SQLiteDatabase db;
-    private List<LinksModel> audios;
-    private List<String> audiosDown;
+    private final List<LinksModel> audios = new ArrayList<>();
+    private final List<String> audiosDown = new ArrayList<>();
     private MainActivity mainActivity;
     private String date;
     boolean recIsChecked;
 
-    /**
-     * This method updates the lists of downloaded audio and online audio
-     * @param audios Список онлайн-аудио
-     * @param audiosDownNames Список скачанных аудио
-     */
-    public void setList(List<LinksModel> audios, List<String> audiosDownNames){
-        this.audios = audios;
-        this.audiosDown = audiosDownNames;
-    }
+    public AudioRecyclerAdapter(){}
 
-    /**
-     * Constructor for list of audios that downloaded and online
-     * @param audios List of audios
-     * @param audiosDownNames List of names of audios
-     * @param fragment Current fragment
-     * @param filePath Path to downloaded file
-     */
-    public AudioRecyclerAdapter(List<LinksModel> audios, List<String> audiosDownNames,
-                                Fragment fragment, String filePath, String date){
-        this.fragment = fragment;
-        this.audios = audios;
-        this.audiosDown = audiosDownNames;
-        this.filePath = filePath;
-        this.date = date;
-        playerViewModel = new ViewModelProvider(fragment.getActivity()).get(PlayerViewModel.class);
-        linksViewModel = new ViewModelProvider(fragment.getActivity()).get(LinksViewModel.class);
-
-        mainActivity = (MainActivity) fragment.getActivity();
-        db = mainActivity.getDbHelper().getWritableDatabase();
-    }
-
-    /**
-     * Constuctor for list of downloaded audios
-     * @param audios List of audios
-     * @param fragment
-     */
-    public AudioRecyclerAdapter(List<LinksModel> audios, LinksFragment fragment){
-        this.fragment = fragment;
-        this.audios = audios;
-        playerViewModel = new ViewModelProvider(fragment.getActivity()).get(PlayerViewModel.class);
+    public static Builder newBuilder() {
+        return new AudioRecyclerAdapter().new Builder();
     }
 
     /**
@@ -122,7 +83,6 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.audios_list, parent, false);
         return new AudioViewHolder(itemView);
     }
-
 
     /**
      * This method is responsible for the logic occurring in each element of the Recycler View
@@ -139,25 +99,11 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
 
         Cursor cursorPrayer = db.rawQuery("SELECT * FROM " + StarredDTO.TABLE_NAME + " WHERE "
                 + StarredDTO.COLUMN_NAME_OBJECT_URL + "='" + audios.get(position).getUrl()+"'", null);
-        if(cursorPrayer.moveToFirst()){
-            holder.audioListItemStarBorder.setVisibility(View.GONE);
-            holder.audioListItemStar.setVisibility(View.VISIBLE);
-        }else {
-            holder.audioListItemStar.setVisibility(View.GONE);
-            holder.audioListItemStarBorder.setVisibility(View.VISIBLE);
-        }
+        holder.switchStarredStatus(cursorPrayer.moveToFirst());
         cursorPrayer.close();
 
         holder.audioListItemStarBorder.setOnClickListener(view -> {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(StarredDTO.COLUMN_NAME_OBJECT_URL, audios.get(position).getUrl());
-            contentValues.put(StarredDTO.COLUMN_NAME_OBJECT_TYPE, date);
-            contentValues.put(StarredDTO.COLUMN_NAME_ID, Math.round(Math.random()*1000));
-
-            db.insert(StarredDTO.TABLE_NAME,null, contentValues);
-
-            holder.audioListItemStarBorder.setVisibility(View.GONE);
-            holder.audioListItemStar.setVisibility(View.VISIBLE);
+            setStarredToDb(audios.get(position), holder);
         });
 
         holder.audioListItemStar.setOnClickListener(view -> {
@@ -166,14 +112,12 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
             db.delete(StarredDTO.TABLE_NAME,StarredDTO.COLUMN_NAME_OBJECT_URL + " LIKE ?",
                     selectionArgs);
 
-            holder.audioListItemStar.setVisibility(View.GONE);
-            holder.audioListItemStarBorder.setVisibility(View.VISIBLE);
+            holder.switchStarredStatus(false);
         });
 
         //checking for the presence in the list of downloaded files
-        if (audiosDown !=null && !audiosDown.isEmpty()) {
+        if (!audiosDown.isEmpty()) {
             if (audiosDown.contains(audios.get(position).getName())) {
-                Log.e("Download", "here");
                 Log.e("Name", audios.get(position).getName());
                 holder.isDownload = true;
                 holder.audioListItemDown.setVisibility(View.VISIBLE);
@@ -183,7 +127,6 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
                 holder.audioListItemDel.setOnClickListener(v -> {
                     String finalPath = filePath + "/";
                     String fileName = audios.get(position).getName() + ".mp3";
-                    Log.e("FINAL_PATH", finalPath + fileName);
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             Files.delete(Paths.get(finalPath + fileName));
@@ -197,7 +140,7 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
                             }
                         }
                     } catch (IOException e) {
-                        Log.e("ERROR_DELETE", Objects.requireNonNull(e.getLocalizedMessage()));
+                        Log.e(TAG, Objects.requireNonNull(e.getLocalizedMessage()));
                     }
                 });
             }
@@ -206,9 +149,7 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
         //processing of clicking on a list item
         holder.audiosListItem.setOnClickListener(view -> {
             //holder.progressBar.setVisibility(View.VISIBLE);
-            Log.e(DEV_TAG, String.valueOf(holder.audiosListItem.getId()));
-
-            Log.e("AUDIO_RECYCLER", audios.get(position).getName()+": "+audios.get(position).getUrl());
+            Log.e(TAG, audios.get(position).getName()+": "+audios.get(position).getUrl());
 
             checkPlaying();
             urlForLink = audios.get(position).getUrl();
@@ -290,30 +231,6 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
         return spannableString;
     }
 
-
-    /**
-     * The internal class responsible for the display of the RecyclerView element
-     */
-    static class AudioViewHolder extends RecyclerView.ViewHolder{
-        public TextView audiosListItem;
-        public ImageView audioListItemDown;
-        public ImageButton audioListItemDel;
-        public ImageButton audioListItemStar;
-        public ImageButton audioListItemStarBorder;
-        public ProgressBar progressBar;
-        public Boolean isDownload = false;
-
-        public AudioViewHolder(@NonNull View itemView) {
-            super(itemView);
-            this.audiosListItem = itemView.findViewById(R.id.audio_list_item);
-            this.audioListItemDown = itemView.findViewById(R.id.audio_list_item_down);
-            this.audioListItemDel = itemView.findViewById(R.id.audio_list_item_del);
-            this.audioListItemStar = itemView.findViewById(R.id.audio_list_item_star);
-            this.audioListItemStarBorder = itemView.findViewById(R.id.audio_list_item_star_border);
-            //this.progressBar = itemView.findViewById(R.id.audio_progress_bar);
-        }
-    }
-
     /**
      * This method checks if the previous audio file is playing
      */
@@ -327,5 +244,100 @@ public class AudioRecyclerAdapter extends RecyclerView.Adapter<AudioRecyclerAdap
                 }
         });
 
+    }
+
+    public void setStarredToDb(LinksModel audio, AudioViewHolder holder){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(StarredDTO.COLUMN_NAME_OBJECT_URL, audio.getUrl());
+        contentValues.put(StarredDTO.COLUMN_NAME_OBJECT_TYPE, date);
+        contentValues.put(StarredDTO.COLUMN_NAME_ID, Math.round(Math.random()*1000));
+
+        db.insert(StarredDTO.TABLE_NAME,null, contentValues);
+
+        holder.switchStarredStatus(true);
+    }
+
+
+    /**
+     * The internal class responsible for the display of the RecyclerView element
+     */
+    static class AudioViewHolder extends RecyclerView.ViewHolder{
+        public final TextView audiosListItem;
+        public final ImageView audioListItemDown;
+        public final ImageButton audioListItemDel;
+        public final ImageButton audioListItemStar;
+        public final ImageButton audioListItemStarBorder;
+        public ProgressBar progressBar;
+        public Boolean isDownload = false;
+
+        public AudioViewHolder(@NonNull View itemView) {
+            super(itemView);
+            this.audiosListItem = itemView.findViewById(R.id.audio_list_item);
+            this.audioListItemDown = itemView.findViewById(R.id.audio_list_item_down);
+            this.audioListItemDel = itemView.findViewById(R.id.audio_list_item_del);
+            this.audioListItemStar = itemView.findViewById(R.id.audio_list_item_star);
+            this.audioListItemStarBorder = itemView.findViewById(R.id.audio_list_item_star_border);
+            //this.progressBar = itemView.findViewById(R.id.audio_progress_bar);
+        }
+
+        public void switchStarredStatus(boolean status){
+            // status == true -> starred audio
+            // status == false -> unstarred audio
+
+            if(status){
+                this.audioListItemStarBorder.setVisibility(View.GONE);
+                this.audioListItemStar.setVisibility(View.VISIBLE);
+            }else {
+                this.audioListItemStar.setVisibility(View.GONE);
+                this.audioListItemStarBorder.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    public class Builder{
+
+        private Builder(){}
+
+        public Builder setAudiosData(List<LinksModel>audiosTemp){
+            AudioRecyclerAdapter.this.audios.clear();
+            AudioRecyclerAdapter.this.audios.addAll(audiosTemp);
+            return this;
+        }
+
+        public Builder setAudiosDownData(List<String>audiosDownTemp){
+            AudioRecyclerAdapter.this.audiosDown.clear();
+            AudioRecyclerAdapter.this.audiosDown.addAll(audiosDownTemp);
+            return this;
+        }
+
+        public Builder setFragment(Fragment fragment) {
+            AudioRecyclerAdapter.this.fragment = fragment;
+            return this;
+        }
+
+        public Builder setFilePath(String filePath) {
+            AudioRecyclerAdapter.this.filePath = filePath;
+            return this;
+        }
+
+        public Builder setDate(String date) {
+            AudioRecyclerAdapter.this.date = date;
+            return this;
+        }
+
+        public Builder setPlayerViewModel() {
+            AudioRecyclerAdapter.this.playerViewModel = new ViewModelProvider(fragment.getActivity()).get(PlayerViewModel.class);
+            return this;
+        }
+
+        public Builder init(){
+            AudioRecyclerAdapter.this.mainActivity = (MainActivity) AudioRecyclerAdapter.this.fragment.getActivity();
+            AudioRecyclerAdapter.this.db = AudioRecyclerAdapter.this.mainActivity.getDbHelper().getWritableDatabase();
+            return this;
+        }
+
+        public AudioRecyclerAdapter build(){
+            return AudioRecyclerAdapter.this;
+        }
     }
 }

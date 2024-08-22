@@ -5,13 +5,10 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,7 +16,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.FragmentKt;
 import androidx.recyclerview.widget.RecyclerView;
 
-import net.energogroup.akafist.AkafistApplication;
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
 import net.energogroup.akafist.db.PrayersDTO;
@@ -38,7 +34,7 @@ import java.util.List;
  * @version 1.0.0
  */
 public class ServicesRecyclerAdapter extends RecyclerView.Adapter<ServicesRecyclerAdapter.ServicesViewHolder> {
-    private List<ServicesModel> servicesModels = new ArrayList<>();
+    private final List<ServicesModel> servicesModels = new ArrayList<>();
     private Fragment fragment;
     private MainActivity mainActivity;
     private SQLiteDatabase db;
@@ -54,7 +50,6 @@ public class ServicesRecyclerAdapter extends RecyclerView.Adapter<ServicesRecycl
 
     /**
      * This method assigns the data to the adapter
-     * @param servicesModelsL
      */
     public void setData(List<ServicesModel> servicesModelsL){
         servicesModels.clear();
@@ -63,7 +58,6 @@ public class ServicesRecyclerAdapter extends RecyclerView.Adapter<ServicesRecycl
 
     /**
      * This method assigns the current fragment
-     * @param fragment
      */
     public void setFragment(Fragment fragment) {
         this.fragment = fragment;
@@ -74,7 +68,6 @@ public class ServicesRecyclerAdapter extends RecyclerView.Adapter<ServicesRecycl
      * @param parent   The ViewGroup into which the new View will be added after it is bound to
      *                 an adapter position.
      * @param viewType The view type of the new View.
-     * @return
      */
     @NonNull
     @Override
@@ -127,6 +120,7 @@ public class ServicesRecyclerAdapter extends RecyclerView.Adapter<ServicesRecycl
             db.insert(StarredDTO.TABLE_NAME,null, contentValues);
 
             holder.switchStarredStatus(true);
+            notifyItemChanged(position);
         });
 
         holder.getServiceListItemStar().setOnClickListener(view -> {
@@ -136,6 +130,7 @@ public class ServicesRecyclerAdapter extends RecyclerView.Adapter<ServicesRecycl
                     selectionArgs);
 
             holder.switchStarredStatus(false);
+            notifyItemChanged(position);
         });
 
 
@@ -147,6 +142,7 @@ public class ServicesRecyclerAdapter extends RecyclerView.Adapter<ServicesRecycl
             downloadPrayer.downloadPrayer();
 
             holder.switchDownloadStatus(true);
+            notifyItemChanged(position);
         });
 
         holder.getServiceListItemDownloaded().setOnClickListener(view -> {
@@ -155,6 +151,7 @@ public class ServicesRecyclerAdapter extends RecyclerView.Adapter<ServicesRecycl
             downloadPrayer.deletePrayer(servicesModels.get(position).getDate(), servicesModels.get(position).getName());
 
             holder.switchDownloadStatus(false);
+            notifyItemChanged(position);
         });
     }
 

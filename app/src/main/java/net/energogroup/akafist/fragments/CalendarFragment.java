@@ -25,7 +25,9 @@ import com.kizitonwose.calendar.core.DayPosition;
 import com.kizitonwose.calendar.view.MonthDayBinder;
 import com.kizitonwose.calendar.view.MonthHeaderFooterBinder;
 
+import net.energogroup.akafist.AkafistApplication;
 import net.energogroup.akafist.R;
+import net.energogroup.akafist.api.AzbykaAPI;
 import net.energogroup.akafist.databinding.FragmentCalendarBinding;
 import net.energogroup.akafist.fragments.calendar.CalendarDayView;
 import net.energogroup.akafist.fragments.calendar.MonthViewContainer;
@@ -50,6 +52,7 @@ public class CalendarFragment extends Fragment {
 
     private FragmentCalendarBinding calendarBinding;
     private CalendarViewModel calendarViewModel;
+    private AzbykaAPI azbykaAPI;
 
     /**
      * Required empty public constructor
@@ -71,6 +74,8 @@ public class CalendarFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.calendar_name);
         calendarViewModel = new ViewModelProvider(this).get(CalendarViewModel.class);
+        calendarViewModel.initialize(getContext());
+        azbykaAPI = ((AkafistApplication)getActivity().getApplication()).azbykaAPI;
     }
 
     @SuppressLint("SetTextI18n")
@@ -85,7 +90,8 @@ public class CalendarFragment extends Fragment {
         int monthToday = today.getMonthValue();
         int yearValue = today.getYear();
 
-        calendarViewModel.getByDate(String.valueOf(today), getContext());
+        //calendarViewModel.getByDate(String.valueOf(today), getContext());
+        calendarViewModel.getByDate(azbykaAPI,String.valueOf(today), getContext());
 
         Fragment thisContext = this;
         calendarBinding.calendarMain.setDayBinder(new MonthDayBinder<CalendarDayView>() {
@@ -113,15 +119,27 @@ public class CalendarFragment extends Fragment {
                                 );
                                 calendarViewModel.getIsFinishedTexts().observe(getViewLifecycleOwner(), aBoolean1 -> {
                                     if(aBoolean1){
-                                        calendarBinding.calendarChurchBlockReadDayText.setText(
+                                        if(wholeDays.get(0).getTexts().stream().anyMatch(s->s.getText() != null)) {
+                                            calendarBinding.calendarChurchBlockReadDayText.setText(
+                                                    Html.fromHtml(wholeDays.get(0).getTexts()
+                                                                    .stream()
+                                                                    .filter(wholeDayText -> wholeDayText.getType() == 1 && wholeDayText.getText()!= null)
+                                                                    .collect(Collectors.toList())
+                                                                    .get(0)
+                                                                    .getText(),
+                                                            Html.FROM_HTML_MODE_COMPACT)
+                                            );
+                                        }else if(wholeDays.get(0).getTexts().stream().anyMatch(s->s.getTitle()!= null)){
+                                            calendarBinding.calendarChurchBlockReadDayText.setText(
                                                 Html.fromHtml(wholeDays.get(0).getTexts()
-                                                        .stream()
-                                                        .filter(wholeDayText -> wholeDayText.getType() == 1)
-                                                        .collect(Collectors.toList())
-                                                        .get(0)
-                                                        .getText(),
+                                                                .stream()
+                                                                .filter(wholeDayText -> wholeDayText.getType() == 1 && wholeDayText.getTitle()!= null)
+                                                                .collect(Collectors.toList())
+                                                                .get(0)
+                                                                .getText(),
                                                         Html.FROM_HTML_MODE_COMPACT)
-                                        );
+                                            );
+                                        }
                                     }
                                 });
                             });
@@ -145,7 +163,7 @@ public class CalendarFragment extends Fragment {
             @NonNull
             @Override
             public CalendarDayView create(@NonNull View view) {
-                return new CalendarDayView(view, calendarViewModel);
+                return new CalendarDayView(view, calendarViewModel, azbykaAPI);
             }
 
         });

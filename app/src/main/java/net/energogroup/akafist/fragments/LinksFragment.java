@@ -45,7 +45,7 @@ public class LinksFragment extends Fragment {
     private String finalPath;
     private Boolean isStarredFrag;
     private LinksViewModel linksViewModel;
-    private AudioRecyclerAdapter recyclerAdapter;
+    private AudioRecyclerAdapter recyclerAdapter = new AudioRecyclerAdapter();
     private MainActivity mainActivity;
     private SQLiteDatabase db;
     private List<LinksModel> downloadAudio = new ArrayList<>();
@@ -121,6 +121,7 @@ public class LinksFragment extends Fragment {
             dialogLinks.show(requireActivity().getSupportFragmentManager(), "userAlertLinks");
         }
 
+        binding.linksRv.setLayoutManager(new LinearLayoutManager(getContext()));
 
         if(getActivity().getApplicationContext() != null) {
             //checking for an internet connection
@@ -128,8 +129,6 @@ public class LinksFragment extends Fragment {
                 if (isCheckeds) {
 
                     //creating RecyclerView
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-                    binding.linksRv.setLayoutManager(linearLayoutManager);
                     linksViewModel.getMutableLinksDate().observe(getViewLifecycleOwner(), linksModels -> {
                         List<LinksModel> filtered;
                         if(isStarredFrag != null){
@@ -141,21 +140,26 @@ public class LinksFragment extends Fragment {
                             filtered = linksModels;
                         }
 
-                        if (recyclerAdapter == null) {
-                            recyclerAdapter = new AudioRecyclerAdapter(filtered, downloadAudioNames,
-                                    this, finalPath, date);
-                        }
-                        recyclerAdapter.setList(filtered, downloadAudioNames);
+                        recyclerAdapter = AudioRecyclerAdapter.newBuilder()
+                                .setAudiosData(filtered)
+                                .setAudiosDownData(downloadAudioNames)
+                                .setFragment(this)
+                                .setFilePath(finalPath)
+                                .setDate(date)
+                                .setPlayerViewModel()
+                                .init()
+                                .build();
                         binding.linksRv.setAdapter(recyclerAdapter);
                     });
 
                 } else {
 
                     //creating RecyclerView
-                    binding.linksRv.setLayoutManager(new LinearLayoutManager(getContext()));
-                    if (recyclerAdapter == null)
-                        recyclerAdapter = new AudioRecyclerAdapter(linksViewModel.getDownload(finalPath), this);
-                    recyclerAdapter.setList(linksViewModel.getDownload(finalPath), downloadAudioNames);
+                    recyclerAdapter = AudioRecyclerAdapter.newBuilder()
+                            .setAudiosData(linksViewModel.getDownload(finalPath))
+                            .setFragment(this)
+                            .setPlayerViewModel()
+                            .build();
                     binding.linksRv.setAdapter(recyclerAdapter);
                 }
             });
@@ -192,8 +196,7 @@ public class LinksFragment extends Fragment {
 
         prAPI = ((AkafistApplication)getActivity().getApplication()).prAPI;
 
-        ViewModelProvider provider = new ViewModelProvider(this);
-        linksViewModel = provider.get(LinksViewModel.class);
+        linksViewModel = new ViewModelProvider(this).get(LinksViewModel.class);
         if(getActivity() != null) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(dateTxt);
             linksViewModel.getJson(date, getLayoutInflater(), prAPI);

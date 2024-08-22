@@ -26,6 +26,7 @@ import net.energogroup.akafist.viewmodel.SkypeViewModel;
 public class SkypesFragment extends Fragment {
 
     private SkypeViewModel skypeViewModel;
+    private final SkypesRecyclerAdapter skypeRA = new SkypesRecyclerAdapter();
     public FragmentSkypesBinding skypesBinding;
 
     /**
@@ -83,8 +84,9 @@ public class SkypesFragment extends Fragment {
                         skypesBinding.confsList.setLayoutManager(new LinearLayoutManager(getContext()));
                         skypeViewModel.getConfsMutableLiveData().observe(getViewLifecycleOwner(),
                                 skypesConfs -> {
-                                    SkypesRecyclerAdapter adapter  = new SkypesRecyclerAdapter(skypesConfs, this);
-                                    skypesBinding.confsList.setAdapter(adapter);
+                                    skypeRA.setFragment(this);
+                                    skypeRA.setData(skypesConfs);
+                                    skypesBinding.confsList.setAdapter(skypeRA);
                                 });
                     } else {
                         skypesBinding.noInternet3.setVisibility(View.VISIBLE);

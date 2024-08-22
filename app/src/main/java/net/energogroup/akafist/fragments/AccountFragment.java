@@ -7,7 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.FragmentKt;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,8 +19,11 @@ import android.widget.EditText;
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
 import net.energogroup.akafist.databinding.FragmentAccountBinding;
+import net.energogroup.akafist.recyclers.SettingsRecyclerAdapter;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -31,6 +34,10 @@ import java.util.Locale;
 public class AccountFragment extends Fragment {
 
     private FragmentAccountBinding accountBinding;
+    private final List<String> pagesList = new ArrayList<>();
+    private final List<Object> pagesLinks = new ArrayList<>();
+    private final SettingsRecyclerAdapter settingsRecyclerAdapter = new SettingsRecyclerAdapter();
+
     private EditText accountBirthday;
     private EditText accountNameday;
     private final TextWatcher textWatcherBirthday = new TextWatcher() {
@@ -157,6 +164,12 @@ public class AccountFragment extends Fragment {
         if(getActivity() != null) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Профиль");
         }
+        pagesList.add("Избранное");
+        pagesLinks.add(R.id.action_accountFragment_to_starredFragment);
+        pagesList.add("Молитвенное правило");
+        pagesLinks.add(R.id.action_accountFragment_to_prayerRuleFragment);
+        pagesList.add("Мой календарь");
+        pagesLinks.add(R.id.action_accountFragment_to_accountCalendarFragment);
     }
 
     @Override
@@ -195,15 +208,20 @@ public class AccountFragment extends Fragment {
             accountBirthday.setHint(appPref.getString("app_pref_birthday", "01.01.2000"));
         }
 
-        accountBinding.starred.setOnClickListener(view ->
-            FragmentKt.findNavController(this).navigate(R.id.action_accountFragment_to_starredFragment)
+        /*accountBinding.starred.setOnClickListener(view ->
+            FragmentKt.findNavController(this).navigate()
         );
         accountBinding.molitvaPravilo.setOnClickListener(view ->
-            FragmentKt.findNavController(this).navigate(R.id.action_accountFragment_to_prayerRuleFragment)
+            FragmentKt.findNavController(this).navigate()
         );
         accountBinding.calendarAccount.setOnClickListener(view ->
-            FragmentKt.findNavController(this).navigate(R.id.action_accountFragment_to_accountCalendarFragment)
-        );
+            FragmentKt.findNavController(this).navigate()
+        );*/
+
+        accountBinding.accountRV.setLayoutManager(new LinearLayoutManager(getContext()));
+        settingsRecyclerAdapter.setData(pagesList, pagesLinks);
+        settingsRecyclerAdapter.setFragment(this);
+        accountBinding.accountRV.setAdapter(settingsRecyclerAdapter);
 
         return accountBinding.getRoot();
     }

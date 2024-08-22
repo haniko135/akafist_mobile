@@ -131,7 +131,7 @@ public class PlayerViewModel extends ViewModel {
                 (Response.Listener<JSONObject>) response -> {
                     String resName, resLink;
                     try {
-                        resName = response.getString("name");
+                        response.getString("name");
 
                         //имя файла
                         File newFile = new File(filePath + "/" + fileName + ".mp3");

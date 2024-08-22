@@ -247,7 +247,6 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * This method responds to a configuration change
-     * @param newConfig
      */
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {

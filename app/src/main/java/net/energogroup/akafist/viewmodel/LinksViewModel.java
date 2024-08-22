@@ -11,22 +11,12 @@ import android.view.ViewGroup;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-
-import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
 import net.energogroup.akafist.api.PrAPI;
 import net.energogroup.akafist.db.StarredDTO;
 import net.energogroup.akafist.fragments.LinksFragment;
 import net.energogroup.akafist.models.LinksModel;
 import net.energogroup.akafist.models.StarredModel;
-import net.energogroup.akafist.service.RequestServiceHandler;
-
-import org.apache.commons.lang.StringEscapeUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -46,7 +36,7 @@ import io.reactivex.schedulers.Schedulers;
 public class LinksViewModel extends ViewModel {
 
     public static final String TAG = "LINKS_VIEW_MODEL";
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private List<LinksModel> linksModelList = new ArrayList<>();
     private final MutableLiveData<List<LinksModel>> mutableLinksDate = new MutableLiveData<>();
     private final List<LinksModel> downloadAudio = new ArrayList<>();

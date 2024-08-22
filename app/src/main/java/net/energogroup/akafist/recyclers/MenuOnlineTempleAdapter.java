@@ -30,13 +30,15 @@ import java.util.Locale;
 public class MenuOnlineTempleAdapter extends RecyclerView.Adapter<MenuOnlineTempleAdapter.MenuOnlineTempleVH> {
 
     private Fragment fr;
-    private List<HomeBlocksModel> onlineTempleList = new ArrayList<>();
+    private final List<HomeBlocksModel> onlineTempleList = new ArrayList<>();
 
     public MenuOnlineTempleAdapter() { }
 
     public void setData(List<HomeBlocksModel> onlineTempleListTemp){
         onlineTempleList.clear();
         onlineTempleList.addAll(onlineTempleListTemp);
+
+        notifyDataSetChanged();
     }
 
     public void setFragment(Fragment fr){
@@ -174,9 +176,9 @@ public class MenuOnlineTempleAdapter extends RecyclerView.Adapter<MenuOnlineTemp
     }
 
     static class MenuOnlineTempleVH extends RecyclerView.ViewHolder{
-        public TextView title;
-        public ImageView image;
-        public LinearLayout block;
+        public final TextView title;
+        public final ImageView image;
+        public final LinearLayout block;
 
         public MenuOnlineTempleVH(View itemView) {
             super(itemView);

@@ -28,7 +28,7 @@ public class SkypesBlocksFragment extends Fragment {
     private SkypeViewModel skypeViewModel;
     private String nameTitle;
     private int urlId;
-
+    private final SkypesGridRecyclerAdapter gridAdapter = new SkypesGridRecyclerAdapter();
     public FragmentSkypesBlocksBinding skypesBlocksBinding;
 
     /**
@@ -85,7 +85,10 @@ public class SkypesBlocksFragment extends Fragment {
                     skypesBlocksBinding.noInternet4.setVisibility(View.INVISIBLE);
                     skypesBlocksBinding.groupBlocks.setLayoutManager(new GridLayoutManager(getContext(), 2));
                     skypeViewModel.getConfsMutableLiveData().observe(getViewLifecycleOwner(),
-                            view -> skypesBlocksBinding.groupBlocks.setAdapter(new SkypesGridRecyclerAdapter(view)));
+                            confs -> {
+                                gridAdapter.setData(confs);
+                                skypesBlocksBinding.groupBlocks.setAdapter(gridAdapter);
+                            });
                 } else {
                     skypesBlocksBinding.noInternet4.setVisibility(View.VISIBLE);
                 }

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OfflinePrayerViewModel extends ViewModel {
-    private MutableLiveData<List<ServicesModel>> prayersDB = new MutableLiveData<>();
+    private final MutableLiveData<List<ServicesModel>> prayersDB = new MutableLiveData<>();
 
     public MutableLiveData<List<ServicesModel>> getPrayersDB() {
         return prayersDB;

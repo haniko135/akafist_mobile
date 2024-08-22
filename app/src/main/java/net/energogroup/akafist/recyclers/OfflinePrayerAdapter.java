@@ -1,5 +1,6 @@
 package net.energogroup.akafist.recyclers;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.FragmentKt;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,7 +15,6 @@ import android.widget.TextView;
 
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
-import net.energogroup.akafist.models.PrayersModels;
 import net.energogroup.akafist.models.ServicesModel;
 import net.energogroup.akafist.service.background.DownloadPrayer;
 
@@ -24,7 +24,7 @@ import java.util.List;
 
 public class OfflinePrayerAdapter extends RecyclerView.Adapter<OfflinePrayerAdapter.OfflinePrayerViewHolder> {
 
-    private List<ServicesModel> prayers = new ArrayList<>();
+    private final List<ServicesModel> prayers = new ArrayList<>();
     private Fragment fragment;
     private MainActivity mainActivity;
 
@@ -33,6 +33,8 @@ public class OfflinePrayerAdapter extends RecyclerView.Adapter<OfflinePrayerAdap
     public void setPrayers(List<ServicesModel> prayersTemp){
         prayers.clear();
         prayers.addAll(prayersTemp);
+
+        notifyDataSetChanged();
     }
 
     public void setFragment(Fragment fragment) {
@@ -43,6 +45,7 @@ public class OfflinePrayerAdapter extends RecyclerView.Adapter<OfflinePrayerAdap
         this.mainActivity = mainActivity;
     }
 
+    @NonNull
     @Override
     public OfflinePrayerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.prayers_list, parent, false);
@@ -67,6 +70,7 @@ public class OfflinePrayerAdapter extends RecyclerView.Adapter<OfflinePrayerAdap
             holder.switchDownloadStatus(false);
 
             deletePrayer(prayers.get(position));
+            notifyItemChanged(position);
         });
     }
 

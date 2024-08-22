@@ -52,7 +52,13 @@ public class StarredListFragment extends Fragment {
         starredListBinding.starredTextListRv.setLayoutManager(new LinearLayoutManager(getContext()));
 
         starredViewModel.getTextPrayers().observe(getViewLifecycleOwner(), servicesModel -> {
-            starredRecyclerAdapter = new StarredRecyclerAdapter(mainActivity, this, servicesModel);
+            //starredRecyclerAdapter = new StarredRecyclerAdapter(mainActivity, this, servicesModel);
+            starredRecyclerAdapter = StarredRecyclerAdapter.newBuilder()
+                    .setFragment(this)
+                    .setMainActivity(mainActivity)
+                    .setPrayersModels(servicesModel)
+                    .init()
+                    .build();
             starredListBinding.starredTextListRv.setAdapter(starredRecyclerAdapter);
         });
 

@@ -120,7 +120,6 @@ public class OnlineTempleFragment extends Fragment {
      * This method initializes ExoPlayer for live streams
      * @param s URL of liturgy
      * @param context fragment context
-     * @return
      */
     public void initializePlayer(String s, Context context){
         player = new ExoPlayer.Builder(context).build();
@@ -138,7 +137,6 @@ public class OnlineTempleFragment extends Fragment {
 
     /**
      * This method releases audio thread of liturgy
-     * @return
      */
     public void releasePlayer(){
         Log.e("ONLINE_TEMPLE_ERROR", "RELEASE PLAYER");

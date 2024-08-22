@@ -16,6 +16,7 @@ import net.energogroup.akafist.models.SkypesConfs;
 
 import net.energogroup.akafist.fragments.SkypesBlocksFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,10 +26,13 @@ import java.util.List;
  */
 public class SkypesGridRecyclerAdapter extends RecyclerView.Adapter<SkypesGridRecyclerAdapter.SkypesGridViewHolder> {
 
-    private final List<SkypesConfs> skypesConfs;
+    private final List<SkypesConfs> skypesConfs = new ArrayList<>();
 
-    public SkypesGridRecyclerAdapter(List<SkypesConfs> skypesConfs) {
-        this.skypesConfs = skypesConfs;
+    public SkypesGridRecyclerAdapter() { }
+
+    public void setData(List<SkypesConfs> skypesConfsTemp){
+        skypesConfs.clear();
+        skypesConfs.addAll(skypesConfsTemp);
     }
 
     @NonNull

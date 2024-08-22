@@ -2,7 +2,6 @@ package net.energogroup.akafist.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Observable;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -35,7 +34,6 @@ import net.energogroup.akafist.R;
 
 import net.energogroup.akafist.api.PrAPI;
 import net.energogroup.akafist.databinding.FragmentPrayerBinding;
-import net.energogroup.akafist.models.PrayersModels;
 import net.energogroup.akafist.service.SavePrayerData;
 import net.energogroup.akafist.viewmodel.PrayerDBViewModel;
 import net.energogroup.akafist.viewmodel.PrayerViewModel;
@@ -44,12 +42,6 @@ import net.energogroup.akafist.viewmodel.StarredViewModel;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Prayer Fragment Class

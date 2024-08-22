@@ -1,6 +1,5 @@
 package net.energogroup.akafist.viewmodel;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,20 +8,12 @@ import android.view.ViewGroup;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-
-import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.api.PrAPI;
 import net.energogroup.akafist.fragments.SkypesFragment;
 import net.energogroup.akafist.fragments.SkypesBlocksFragment;
 import net.energogroup.akafist.models.SkypesConfs;
-import net.energogroup.akafist.service.RequestServiceHandler;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +31,7 @@ import io.reactivex.schedulers.Schedulers;
 public class SkypeViewModel extends ViewModel {
 
     private final String TAG = "SKYPE_VM";
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private final List<SkypesConfs> confsModels = new ArrayList<>();
     private final MutableLiveData<List<SkypesConfs>> confsMutableLiveData = new MutableLiveData<>();
 
@@ -75,7 +66,6 @@ public class SkypeViewModel extends ViewModel {
      * used in the method {@link SkypesBlocksFragment#onCreateView(LayoutInflater, ViewGroup, Bundle)}.
      * This method is used in {@link SkypesBlocksFragment#onCreate(Bundle)}
      * @param urlId Conference ID
-     * @exception JSONException
      */
     public void getJsonSkypeBlock(PrAPI prAPI, int urlId){
         compositeDisposable.add(prAPI.getSkypeBlock(String.valueOf(urlId))

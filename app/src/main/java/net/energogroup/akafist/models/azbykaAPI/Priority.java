@@ -1,19 +1,41 @@
 package net.energogroup.akafist.models.azbykaAPI;
 
-import java.util.List;
-
 public class Priority {
-    private List<DayItem> items;
 
-    public Priority(List<DayItem> items) {
-        this.items = items;
+    private int paragraph;
+    private int number;
+    private MemorialDay memorialDay;
+
+    public Priority() {
     }
 
-    public List<DayItem> getItems() {
-        return items;
+    public Priority(int paragraph, int number, MemorialDay memorialDay) {
+        this.paragraph = paragraph;
+        this.number = number;
+        this.memorialDay = memorialDay;
     }
 
-    public void setItems(List<DayItem> items) {
-        this.items = items;
+    public int getParagraph() {
+        return paragraph;
+    }
+
+    public void setParagraph(int paragraph) {
+        this.paragraph = paragraph;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public MemorialDay getMemorialDay() {
+        return memorialDay;
+    }
+
+    public void setMemorialDay(MemorialDay memorialDay) {
+        this.memorialDay = memorialDay;
     }
 }

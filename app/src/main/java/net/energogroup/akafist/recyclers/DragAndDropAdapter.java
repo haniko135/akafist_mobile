@@ -41,7 +41,7 @@ public class DragAndDropAdapter extends RecyclerView.Adapter<DragAndDropAdapter.
     private final List<ServicesModel> textPrayers;
     private final TextPrayersDragDropListFragment fragment;
     private final SQLiteDatabase db;
-    private PrAPI prAPI;
+    private final PrAPI prAPI;
 
     public List<ServicesModel> getTextPrayers() {
         return textPrayers;
@@ -174,7 +174,7 @@ public class DragAndDropAdapter extends RecyclerView.Adapter<DragAndDropAdapter.
 
         private final TextView dragAndDropTitle;
         private final ImageButton dragAnDropTouch;
-        View rowView;
+        final View rowView;
 
         public DragAndDropViewHolder(@NonNull View itemView) {
             super(itemView);

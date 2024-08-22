@@ -6,9 +6,6 @@ import net.energogroup.akafist.models.LinksModel;
 import net.energogroup.akafist.models.PrayersModels;
 import net.energogroup.akafist.models.SkypeBlockAPIModel;
 import net.energogroup.akafist.models.SkypesAPIModel;
-import net.energogroup.akafist.models.SkypesConfs;
-import net.energogroup.akafist.models.TypesModel;
-import net.energogroup.akafist.models.psaltir.PsaltirKafismaModel;
 import net.energogroup.akafist.models.psaltir.PsaltirModel;
 import net.energogroup.akafist.models.psaltir.PsaltirPrayerModel;
 

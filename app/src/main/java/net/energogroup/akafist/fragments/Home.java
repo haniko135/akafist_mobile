@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,7 +43,7 @@ public class Home extends Fragment {
     public FragmentHomeBinding homeBinding;
     private SharedPreferences appPref;
     private String userName;
-    private HomeRecyclerAdapter homeAdapter = new HomeRecyclerAdapter();
+    private final HomeRecyclerAdapter homeAdapter = new HomeRecyclerAdapter();
     private final boolean isFirstTime = false;
     AppCompatActivity fragActivity;
 

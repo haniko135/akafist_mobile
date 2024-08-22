@@ -4,8 +4,8 @@ public class SkypeBlockItem {
     private String id;
     private String name;
     private String order;
-    private String created_at;
-    private String updated_at;
+    private final String created_at;
+    private final String updated_at;
 
     public SkypeBlockItem(String id, String name, String order, String created_at, String updated_at) {
         this.id = id;

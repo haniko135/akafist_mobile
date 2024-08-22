@@ -9,20 +9,10 @@ import android.view.ViewGroup;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-
-import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.R;
 import net.energogroup.akafist.api.PrAPI;
 import net.energogroup.akafist.fragments.Home;
 import net.energogroup.akafist.models.HomeBlocksModel;
-import net.energogroup.akafist.service.RequestServiceHandler;
-
-import org.apache.commons.lang.StringEscapeUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +24,9 @@ import io.reactivex.schedulers.Schedulers;
 public class MenuOnlineTempleViewModel extends ViewModel {
 
     private final String TAG = "MENU_ONLINE_TEMPLE_VM";
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private final MutableLiveData<List<HomeBlocksModel>> onlineTempleListMLD = new MutableLiveData<>();
-    private List<HomeBlocksModel> onlineTempleList = new ArrayList<>();
+    private final List<HomeBlocksModel> onlineTempleList = new ArrayList<>();
 
     public MutableLiveData<List<HomeBlocksModel>> getOnlineTempleListMLD() {
         return onlineTempleListMLD;
@@ -54,9 +44,6 @@ public class MenuOnlineTempleViewModel extends ViewModel {
 
     /**
      * This method initialize base menu items
-     * @param prAPI
-     * @param context
-     * @param mode
      */
     public void initialize(PrAPI prAPI, Context context, String mode){
         if(mode.equals("menuOnlineTemple")){

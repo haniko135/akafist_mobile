@@ -8,7 +8,6 @@ import net.energogroup.akafist.AkafistApplication;
 import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.api.PrAPI;
 import net.energogroup.akafist.db.PrayersDTO;
-import net.energogroup.akafist.db.StarredDTO;
 import net.energogroup.akafist.models.PrayersModels;
 import net.energogroup.akafist.models.psaltir.PsalmModel;
 import net.energogroup.akafist.models.psaltir.SlavaModel;
@@ -17,7 +16,6 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import java.util.List;
 
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -25,7 +23,7 @@ import io.reactivex.schedulers.Schedulers;
 public class DownloadPrayer {
 
     public static final String TAG = "DOWNLOAD_PRAYER";
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private String prevMenu;
     private Integer prayerId;
     private MainActivity mainActivity;
@@ -61,7 +59,7 @@ public class DownloadPrayer {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(success->{
-                            PrayersModels model = new PrayersModels();
+                            PrayersModels model;
 
                             if(!success.getPsalms().isEmpty()){
                                 success.getPsalms().forEach(psalmModel -> {

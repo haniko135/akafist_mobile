@@ -6,16 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
-import net.energogroup.akafist.MainActivity;
 import net.energogroup.akafist.api.PrAPI;
 import net.energogroup.akafist.db.StarredDTO;
 import net.energogroup.akafist.models.PrayersModels;
@@ -24,12 +20,8 @@ import net.energogroup.akafist.models.StarredModel;
 import net.energogroup.akafist.models.psaltir.PsalmModel;
 import net.energogroup.akafist.models.psaltir.PsaltirPrayerModel;
 import net.energogroup.akafist.models.psaltir.SlavaModel;
-import net.energogroup.akafist.service.RequestServiceHandler;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -44,7 +36,7 @@ import io.reactivex.schedulers.Schedulers;
 public class StarredViewModel extends ViewModel {
 
     private static final String TAG = "STARRED_VIEW_MODEL";
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private final MutableLiveData<List<ServicesModel>> textPrayers = new MutableLiveData<>();
     private final MutableLiveData<List<ServicesModel>> prayerRules = new MutableLiveData<>();
     private final List<PrayersModels> prayersCollection = new ArrayList<>();

@@ -21,23 +21,21 @@ import net.energogroup.akafist.R;
 import net.energogroup.akafist.db.StarredDTO;
 import net.energogroup.akafist.models.ServicesModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StarredRecyclerAdapter extends RecyclerView.Adapter<StarredRecyclerAdapter.StarredViewHolder> {
 
     private MainActivity mainActivity;
-    private final Fragment fragment;
-    private final SQLiteDatabase db;
-    private final List<ServicesModel> prayersModels;
+    private Fragment fragment;
+    private SQLiteDatabase db;
+    private List<ServicesModel> prayersModels = new ArrayList<>();
 
 
-    public StarredRecyclerAdapter(MainActivity mainActivity, Fragment fragment, List<ServicesModel> prayersModels) {
-        this.mainActivity = mainActivity;
-        this.fragment = fragment;
-        this.prayersModels = prayersModels;
+    public StarredRecyclerAdapter() { }
 
-        this.mainActivity = (MainActivity) this.fragment.getActivity();
-        db = mainActivity.getDbHelper().getWritableDatabase();
+    public static Builder newBuilder() {
+        return new StarredRecyclerAdapter().new Builder();
     }
 
     @NonNull
@@ -104,14 +102,42 @@ public class StarredRecyclerAdapter extends RecyclerView.Adapter<StarredRecycler
     }
 
     static class StarredViewHolder extends RecyclerView.ViewHolder{
-        public TextView prayersListItem;
-        public ImageButton prayersListItemStarBorder;
-        public ImageButton prayersListItemStar;
+        public final TextView prayersListItem;
+        public final ImageButton prayersListItemStarBorder;
+        public final ImageButton prayersListItemStar;
         public StarredViewHolder(@NonNull View itemView) {
             super(itemView);
             this.prayersListItem = itemView.findViewById(R.id.prayers_list_item);
             this.prayersListItemStarBorder = itemView.findViewById(R.id.prayers_list_item_star_border);
             this.prayersListItemStar = itemView.findViewById(R.id.prayers_list_item_star);
+        }
+    }
+
+    public class Builder {
+        private Builder(){ }
+
+        public Builder setPrayersModels(List<ServicesModel> prayersModels){
+            StarredRecyclerAdapter.this.prayersModels = prayersModels;
+            return this;
+        }
+
+        public Builder setFragment(Fragment fragment){
+            StarredRecyclerAdapter.this.fragment = fragment;
+            return this;
+        }
+
+        public Builder setMainActivity(MainActivity mainActivity){
+            StarredRecyclerAdapter.this.mainActivity = mainActivity;
+            return this;
+        }
+
+        public Builder init(){
+            StarredRecyclerAdapter.this.db = StarredRecyclerAdapter.this.mainActivity.getDbHelper().getWritableDatabase();
+            return this;
+        }
+
+        public StarredRecyclerAdapter build(){
+            return StarredRecyclerAdapter.this;
         }
     }
 }

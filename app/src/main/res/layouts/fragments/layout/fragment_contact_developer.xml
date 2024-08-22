@@ -6,17 +6,32 @@
     android:padding="15dp">
 
     <TextView
+        android:id="@+id/askForUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/ask_for_user"
+        android:fontFamily="@font/montserrat_alternates_bold"
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@+id/text_for_user"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:id="@+id/text_for_user"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:text="@string/text_for_user"
-        android:fontFamily="@font/cyrillic_old"
-        android:textSize="18sp"
+        android:fontFamily="@font/montserrat_alternates_regular"
+        android:textSize="12sp"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/subjectET"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/askForUser" />
 
     <EditText
         android:id="@+id/subjectET"
@@ -24,7 +39,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:hint="@string/subjectET"
-        android:fontFamily="@font/cyrillic_old"
+        android:fontFamily="@font/montserrat_light"
+        android:textSize="11sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_for_user"
@@ -37,13 +53,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:hint="@string/contentET"
-        android:fontFamily="@font/cyrillic_old"
+        android:fontFamily="@font/montserrat_light"
         android:inputType="textMultiLine"
         android:lines="8"
         android:minLines="5"
         android:maxLines="12"
         android:scrollbars="vertical"
         android:gravity="top|start"
+        android:textSize="11sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/subjectET" />
@@ -53,10 +70,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="@color/pink_700"
-        android:fontFamily="@font/cyrillic_old"
+        android:background="@drawable/button_main"
+        android:fontFamily="@font/montserrat_semibold"
         android:text="@string/submit_button"
         android:textColor="@color/white"
+        android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
